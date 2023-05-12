@@ -1,0 +1,41 @@
+TY  - JOUR
+AU  - Harris, Charles R.
+AU  - Millman, K. Jarrod
+AU  - van der Walt, Stéfan J.
+AU  - Gommers, Ralf
+AU  - Virtanen, Pauli
+AU  - Cournapeau, David
+AU  - Wieser, Eric
+AU  - Taylor, Julian
+AU  - Berg, Sebastian
+AU  - Smith, Nathaniel J.
+AU  - Kern, Robert
+AU  - Picus, Matti
+AU  - Hoyer, Stephan
+AU  - van Kerkwijk, Marten H.
+AU  - Brett, Matthew
+AU  - Haldane, Allan
+AU  - del Río, Jaime Fernández
+AU  - Wiebe, Mark
+AU  - Peterson, Pearu
+AU  - Gérard-Marchant, Pierre
+AU  - Sheppard, Kevin
+AU  - Reddy, Tyler
+AU  - Weckesser, Warren
+AU  - Abbasi, Hameer
+AU  - Gohlke, Christoph
+AU  - Oliphant, Travis E.
+PY  - 2020
+DA  - 2020/09/01
+TI  - Array programming with NumPy
+JO  - Nature
+SP  - 357
+EP  - 362
+VL  - 585
+IS  - 7825
+AB  - Array programming provides a powerful, compact and expressive syntax for accessing, manipulating and operating on data in vectors, matrices and higher-dimensional arrays. NumPy is the primary array programming library for the Python language. It has an essential role in research analysis pipelines in fields as diverse as physics, chemistry, astronomy, geoscience, biology, psychology, materials science, engineering, finance and economics. For example, in astronomy, NumPy was an important part of the software stack used in the discovery of gravitational waves1 and in the first imaging of a black hole2. Here we review how a few fundamental array concepts lead to a simple and powerful programming paradigm for organizing, exploring and analysing scientific data. NumPy is the foundation upon which the scientific Python ecosystem is constructed. It is so pervasive that several projects, targeting audiences with specialized needs, have developed their own NumPy-like interfaces and array objects. Owing to its central position in the ecosystem, NumPy increasingly acts as an interoperability layer between such array computation libraries and, together with its application programming interface (API), provides a flexible framework to support the next decade of scientific and industrial analysis.
+SN  - 1476-4687
+UR  - https://doi.org/10.1038/s41586-020-2649-2
+DO  - 10.1038/s41586-020-2649-2
+ID  - Harris2020
+ER  - 

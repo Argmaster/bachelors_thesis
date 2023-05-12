@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "licencjat"
+version = "0.1.0"
+description = ""
+authors = ["Krzysztof Wisniewski <argmaster.world@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+black = "^23.3.0"
+isort = "^5.12.0"
+ipykernel = "^6.23.0"
+matplotlib = "^3.7.1"
+numpy = "^1.24.3"
+pandas = "^2.0.1"
+ruff = "^0.0.265"
+requests = "^2.30.0"
+beautifulsoup4 = "^4.12.2"
+requests-cache = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

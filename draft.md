@@ -6,6 +6,10 @@
 
 Kierunek studiów: Bioinformatyka<br/> Specjalność: Ogólna
 
+<center>
+<h1>Optymalizacja programu do analizy stanów kwantowych.</h1>
+</center>
+
 <div style="text-align: right">
 Praca licencjacka<br/>
 wykonana<br/>
@@ -17,4 +21,8 @@ dr hab. Marcin Wieśniak, prof. UG<br/>
 
 ---
 
-Optymalizacja algorytmu 
+
+## Wstęp
+
+### Cel pracy
+
