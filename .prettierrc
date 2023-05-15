@@ -2,18 +2,35 @@
     "semi": true,
     "useTabs": false,
     "endOfLine": "lf",
-    "printWidth": 79,
+    "printWidth": 88,
     "overrides": [
         {
-            "files": ["*.html", "*.js", "*.json", "*.prettierrc"],
+            "files": [
+                "*.html",
+                "*.js",
+                "*.json",
+                "*.prettierrc"
+            ],
             "options": {
                 "tabWidth": 4
             }
         },
         {
-            "files": ["*.md"],
+            "files": [
+                "*.md"
+            ],
             "options": {
                 "proseWrap": "always"
+            }
+        },
+        {
+            "files": [
+                "*.tex"
+            ],
+            "options": {
+                "proseWrap": "always",
+                "printWidth": 88,
+                "tabWidth": 2
             }
         }
     ]
