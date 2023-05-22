@@ -9,6 +9,8 @@
 \usepackage[font=footnotesize, labelfont=bf]{caption}
 \usepackage{csquotes}
 \usepackage{placeins}
+\usepackage{booktabs}
+\usepackage{siunitx}
 
 
 \usepackage[backend=biber, sorting=ynt]{biblatex}
@@ -104,7 +106,8 @@ Wiśniewski}
     \FloatBarrier
     \begin{figure}[h]
       \centering
-      \includegraphics[width=0.75\textwidth]{"images/python_language_results.png"}
+      \includegraphics
+      [width=0.75\textwidth]{"resources/images/python_language_results.png"}
       \caption{Ilość wyników zwróconych przez wyszukiwarkę Google Scholar dla zapytania 'python language' z podziałem na rok wydania.}
     \end{figure}
     \FloatBarrier
@@ -151,102 +154,197 @@ Wiśniewski}
     Algorytm ten wielokrotnie, z sukcesem, był wykorzystany do analizy problemów z
     dziedziny fizyki kwantowej\cite{MW_56_Year_Algorithm}\cite{MW_Variational_approach}.
 
+    \section{Metody}
+
+
+    \subsection{Wstępne profilowanie}
+
+
+    Prace nad optymalizacją kodu rozpocząłem od wstępnego profilowania pracy programu w
+    trybie 1 (full separability of an n-quDit state) na układzie 5 qubitów (macierz $32\times
+    32$ podwójnej precyzji zmiennoprzecinkowych liczb zespolonych) do uzyskania 1000
+    korekcji. Wykorzystałem do tego moduł z biblioteki standardowej języka Python, \code{cProfile}.
+    Ze względu na silnie obciążającą procesor naturę programu i stosunkowo krótki czas
+    pracy, istniała obawa że dodatkowe obciążenie ze strony modułu \code{profile}
+    mogłoby zafałszować wyniki, dlatego preferowane było wykorzystanie \code{cProfile}. Przy
+    analizie tak uzyskanych wyników posiłkowałem się wizualizacjami wykonanymi przy pomocy
+    biblioteki \code{snakeviz}\cite{Snakeviz_PyPI}. Podczas testów, program wykorzystywał
+    domyślny globalny generator biblioteki NumPy (PCG64\cite{NumpyDefaultGenerator}) z
+    ziarnem ustawionym na wartość 0.
+
+    \FloatBarrier
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/profiling_1/graph.png"}
+      \caption{Diagram przedstawiający udział całkowitego czasu wykonywania wywołań funkcji w całkowitym czasie programu. Pierwszy blok od góry to pierwsze wywołanie pochodzące z interpretera. Następnie bloki, których opisy zaczynają się od \code{CSSFinder.py} to wywołania w kodzie programu. Najniższe bloki to wywołania do funkcji bibliotek, głównie NumPy. \code{Snakeviz} automatycznie podejmuje decyzję o nie adnotowaniu bloku gdy opis nie ma szansy zmieścić się w obrębie bloku. Program pracował w trybie 1 (full separability of an n-quDit state) na 5 qubitach (macierz $3
+      2\times32$ podwójnej precyzji zmiennoprzecinkowych liczb zespolonych)}
+    \end{figure}
+    \FloatBarrier
+    \begin{table}[!ht]
+      \tiny
+      \centering
+      \input{resources/profiling_1/profiling.tex}
+      \caption{{} Dane dotyczące pracy oryginalnej implementacji programu CSSFinder uzyskane przy pomocy programy cProfile. Ujęte zostały tylko wywołania funkcji z kodu programu CSSFinder. Program pracował w trybie 1 (full separability of an n-quDit state) na 5 qubitach (macierz $3
+      2\times32$ podwójnej precyzji zmiennoprzecinkowych liczb zespolonych). Tabela posiada oryginalne nazwy kolumn, nadane przez program \code{snakeviz}. Znaczenia kolumn, kolejno od lewej: \code{ncalls} - ilość wywołań funkcji. \code{tottime} - całkowity czas spędzony w ciele funkcji bez czasu spędzonego w wywołaniach do podfunkcji. \code{percall} - \code{totime} dzielone przez \code{ncalls}. \code{cumtime} - całkowity czas spędzony w wewnątrz funkcji i w wywołaniach podfunkcji. \code{percall} - \code{cumtime} dzielone przez \code{ncalls}. \code{filename:lineno(function)} - Plik, linia i nazwa funkcji.}
+    \end{table}
+    \FloatBarrier
+
+    Z uzyskanych danych wynika że znakomitą większość (77\%\footnote{Wartość 77\% jak i
+    wartości procentowe dalszej części tego akapitu zostały zaokrąglone do jedności, ze względu
+    na małe znaczenie rzeczowe części ułamkowych.}) czasu pracy programu zajmuje funkcja
+    \code{OptimizedFS()} . W jej wnętrzu 38\% czasu pochłania proces generowania
+    losowych macierzy unitarnych, który w dużej mierze wykorzystuje mnożenia tensorowe (26\%).
+    Poza funkcją \code{OptimizedFS()}, znaczący wpływ na czas wykonywania ma też funkcja
+    `rotate()`, która pochłania około 21\% czasu działania programu. Kolejne 20\% czasu zajmuje
+    funkcja \code{product()}, obliczająca odległość Hilberta-Schmidta pomiędzy dwoma stanami.
+    Pozostałe wywołania mają stosunkowo marginalny wpływ na czas pracy i ich analiza na
+    tym etapie nie niesie za sobą znaczących korzyści.
+
+    Takie wyniki wskazują jednoznacznie że kluczowa dla wydajności jest tu
+    maksymalizacja wydajności operacji macierzowych. W uzyskanych danych nie widać problemów
+    z operacjami I/O\footnote{I/O - operacje wejścia wyjścia, w tym wypadku odczyt z i pisanie
+    do plików.}.
+
+    \subsection{Współbieżność}
+
+
+    Algorytm z którego korzysta program CSSFinder nie pozwala się efektywnie uwspółbieżniać
+    obliczeń dla pojedynczego stanu. O ile możliwe jest współbieżne wykonywanie mnożeń
+    macierzowych, to rozsądniejszym rozwiazaniem jest polegać na bibliotekach zewnętrznych,
+    jako że są one efektem starań wielu zespołów doświadczonych programistów. Szczególnie
+    interesujące są biblioteki które posiadają dedykowane dla platformy, optymalizowane,
+    warianty implementacji mnożeń macierzowych i podobnych operacji. Do takich bibliotek
+    należy OpenBLAS, wykorzystywany przez NumPy.
+
+    NumPy automatycznie wykorzystuje wiele wątków do mnożeń macierzowych jeśli te są wykonywane
+    na odpowiednio dużych macierzach. W przypadku małych macierzy, kosztowność synchronizacji
+    obliczeń wielowątkowych przekroczyła uzyskiwane korzyści, szczególnie biorąc pod
+    uwagę, że współczesne procesory obsługują instrukcje SIMD, pozwalające na
+    uzyskiwanie wysokiej przepustowości obliczeniowej.
+
+    Wykonalne jest uzyskanie współbieżności na poziomie wielu stanów. Ten efekt można całkiem
+    efektywnie uzyskać przy pomocy odpowiednio spreparowanych skryptów powłoki,
+    wywołujących program wielokrotnie w tle. Jednocześnie wygodniejsze jest posiadanie wbudowanego
+    mechanizmu zarządzania zadaniami wbudowanego w program. Z tego względu do nowo
+    powstałego kodu dodałem mechanizm automatycznego zarządzania wieloma procesami. Załącza
+    się on automatycznie i jest całkowicie niewidoczny dla użytkownika.
+
+    % TODO
+    %%  PLOT OF SCRIPT VS SCHEDULER
+
+    %Algorytm jest ściśle sekwencyjny. W nielicznych miejscach gdzie
+    % współbieżność można teoretycznie zaimplementować, albo jest już ona zaimplementowana,
+    % jak w przypadku mnożeń macierzowych, albo nie daje efektów ze względu na czas który
+    % pochłania komunikacja pomiędzy wątkami w języku Python w porównaniu do ilości
+    % operacji które można wykonać jednocześnie. Można natomiast efektywnie zaimplementować
+    % współbieżność na poziomie wielu zadań. Program może automatycznie zarządzać wieloma
+    % procesami które powadzą optymalizację.
+
+    \subsection{Modularyzacja}
+
+
+    Podczas procesu optymalizacji planowałem wypróbować liczne rozwiązania, które
+    wymagały zasadniczych zmian w algorytmie. Jednocześnie część programu odpowiadająca za
+    interakcję z użytkownikiem i ładowanie zasobów pozostawała taka sama. Zdecydowałem
+    więc że tworzony przeze mnie kod musi być modularny. Tak też program został podzielony
+    na część, główną (core) oraz część implementującą algorytm (backend). Korpus jest w całości
+    napisany w języku Python i wykorzystuje wbudowany w ten język mechanizm importowania
+    w celu wykrywania i ładowania implementacji algorytmu. Dane Macierzowe w obrębie
+    korpusu przechowywane są jako obiekty \code{ndarray} z biblioteki NumPy, ze względu
+    na uniwersalność w świecie bibliotek do obliczeń tensorowych. Pozwala to na proste podmiany
+    implementacji o dowolnie różnym pochodzeniu, co było kluczowe w procesie weryfikacji
+    wydajności różnych implementacji.
+
     \subsection{Dostępne narzędzia}
 
 
-    Poniżej wymienię powszechnie wykorzystywane metody pozwalające na skrócenie czasu
-    wykonania kodu napisanego w języku Python. Do tych metod zaliczam też przepisanie kodu
-    na język niższego poziomu. Przez niektóre osoby może być to uznane za nadużycie, poddam
-    tą kwestię pod dyskusję w dalszej części tekstu.
-
-    \subsubsection{Kompilacja AOT\protect\footnote{AOT compilation (Ahead Of Time compilation) - kompilacja przed czasem wykonywania programu.}}
+    \subsubsection{Kompilacja AOT}
 
 
-    Pierwsza i obecnie najpopularniejsza implementacja języka Python została utworzona z
-    wykorzystaniem języka C. Posiada ona możliwość importowania bibliotek
-    współdzielonych napisanych w językach niższego poziomu (C, C++, Rust, oraz inne).
-    Efekt ten można uzyskać na kilka sposobów:
+    % \footnote{AOT compilation (Ahead Of Time compilation) - kompilacja przed czasem
+    % wykonywania programu.}
+
+    Obecnie najpowszechniej używana implementacja języka Python, CPython, posiada możliwość
+    korzystania z bibliotek współdzielonych (\code{.so} - Linux, \code{.dll}/\code{.pyd}
+    - Windows). Dostęp do funkcji zawartych w takich bibliotekach można uzyskać na kilka
+    sposobów:
+
     \begin{enumerate}
-      \item \code{Moduł ctypes}\cite{Python_ctypes} - posiada on API które pozwala opisać
+      \item Przy pomocy API modułu \code{ctypes}\cite{Python_ctypes} które pozwala opisać
         interfejs funkcji obcej (tj. takiej która została napisana w języku niższego poziomu
-        i skompilowana do kodu maszynowego) i wywołać tak opisaną funkcję. Metoda ta nie
-        cieszy się popularnością pośród bibliotek otwartoźródłowych.
+        i skompilowana do kodu maszynowego) i wywołać tak opisaną funkcję.
 
-      \item \code{Moduły rozszerzeń}\cite{Extending_Python_With_C_Cpp} - interpreter posiada
-        interfejs w języku C oraz wsparcie dla dobrze opisanych konwencji które pozwalają
-        odpowiednio spreparować bibliotekę współdzieloną (linux - so, windows - dll), tak
-        żeby interpreter Pythona był w stanie automatycznie wykryć dostępne w bibliotece
-        symbole. W tym przypadku warto dodać, że pomimo, że oficjalna dokumentacja
-        wspomina tylko o językach C i C++, w rzeczywistości powstały biblioteki które pozwalają
-        wykorzystać wiele innych języków programowania, takich jak Rust przy pomocy Py03\cite{PyO3}
-        lub GO z użyciem biblioteki gopy\cite{gopy}.
+      \item Poprzez zawarcie w bibliotece odpowiednio nazwanych symboli, automatycznie
+        rozpoznawanych przez interpreter języka Python. Takie biblioteki określa się mianem
+        modułów rozszerzeń \cite{Extending_Python_With_C_Cpp}. W tym przypadku warto
+        dodać, że pomimo, że oficjalna dokumentacja wspomina tylko o językach \code{C} i
+        \code{C++}, natomiast powstały biblioteki które pozwalają wykorzystać w łatwy sposób
+        wiele innych języków programowania, takich jak \code{Rust} przy pomocy \code{Py03}\cite{PyO3}
+        lub \code{GO} z użyciem biblioteki \code{gopy}\cite{gopy}.
 
-      \item \code{Cython}\cite{Cython_Org}\cite{Cython_The_Best_Of_Both} - jest to
-        zarówno nadzbiór języka Python, który rozszerza jego składnię o możliwość statycznego
-        typowania, jak i pakiet dostępny na PyPI, zawierający transpilator, potrafiący
-        przetłumaczyć dedykowany język na C/C++, a następnie, wykorzystując osobno
-        zainstalowany kompilator, skompilować do kodu maszynowego. Cython nie wymaga aby
-        w kompilowanym kodzie znajdowały się dodatkowe adnotacje, wzwiązku z czym możliwe
-        jest skompilowanie czystego, nietypowanego, kodu Pythona do kodu maszynowego.
-        Pozwala to na pozbycie się obciążenia ze strony procesu interpretacji oraz
-        skorzystać z optymalizacji, oferowanych przez współczesne kompilatory. Nie usuwa
-        to jednak obciążenia ze strony dynamicznego systemu typów, czyniąc kompilację bez
-        adnotacji mało efektywną.
+      \item Wykorzystując bibliotekę \code{Cython}\cite{Cython_Org}\cite{Cython_The_Best_Of_Both}.
+        Oferuje ona dedykowany język, o tej samej nazwie, który jest nadzbiorem języka Python,
+        który rozszerza jego składnię o możliwość statycznego typowania. Biblioteka zawiera
+        zawieraja transpilator, zdolny przetłumaczyć dedykowany język na C/C++, a następnie,
+        wykorzystując osobno zainstalowany kompilator, skompilować do kodu maszynowego.
+        % Cython nie wymaga aby w kompilowanym kodzie znajdowały się dodatkowe adnotacje, wzwiązku
+        % z czym możliwe jest skompilowanie czystego, nietypowanego, kodu Pythona do kodu maszynowego.
+        % Pozwala to na pozbycie się obciążenia ze strony procesu interpretacji oraz
+        % skorzystać z optymalizacji, oferowanych przez współczesne kompilatory. Nie usuwa
+        % to jednak obciążenia ze strony dynamicznego systemu typów, czyniąc kompilację bez
+        % adnotacji mało efektywną.
 
-      \item \code{mypyc}\cite{mypyc} - podobnie do Cythona, jest to transpilator, natomiast
-        zamiast korzystać z dedykowanego języka , bazuje na dodanych w Pythonie 3.5\cite{Python_3_5},
-        pierwotnie opisanych przez PEP 484\cite{PEP_484} i PEP 483\cite{PEP_483},
-        adnotacjach typów. Jest on rozwijany obok projektu mypy - pakietu do statycznej analizy
-        typów dla języka Python, również opartej na adnotacjach typów\cite{mypy}.
+
+      \item Kompilując kod pythona z użyciem biblioteki\code{mypyc}\cite{mypyc}. Ta,
+        podobnie do Cythona, również zawiera transpilator, natomiast zamiast korzystać z
+        dedykowanego języka , bazuje on na dodanych w Pythonie 3.5\cite{Python_3_5} (PEP
+        484\cite{PEP_484} i PEP 483\cite{PEP_483}), adnotacjach typów. Jest on rozwijany
+        obok projektu mypy - pakietu do statycznej analizy typów dla języka Python,
+        również opartej na adnotacjach typów\cite{mypy}.
     \end{enumerate}
 
-    Ponieważ w każdym z wymienionych przypadków, kod niższego poziomu jest kompilowany przed
-    dostarczeniem do użytkownika, pozwala to na wykorzystanie zaawansowanych możliwości
+    Ponieważ w każdym z wymienionych przypadków, kod niższego poziomu jest kompilowany
+    przed dostarczeniem do użytkownika, pozwala to na wykorzystanie zaawansowanych możliwości
     automatycznej optymalizacji dostarczanych przez współczesne kompilatory, na przykład
     LLVM, które jest sercem implementacji \code{clang} (język C++) oraz \code{rustc} (język
-    Rust).
+    Rust). Wiele bibliotek korzysta z mieszanek wymienionych powyżej metod.
+
+    Powyższe rozwiązania są wykorzystywane przez:
+    \begin{itemize}
+      \item NumPy
+
+      \item CuPy
+
+      \item Tensorflow
+
+      \item PyTorch
+    \end{itemize}
+
+    Każda z tych bibliotek oferuje zestaw funkcjonalności wystarczający do akceleracji
+    interesującego nas algorytmu.
 
     \subsubsection{Kompilacja JIT}
 
-
-    Niektóre języki, w calu maksymalizacji wydajności sięgają po kompilację w czasie działania
-    programu, zazwyczaj skrótowo określaną JIT\footnote{JIT compilation (Just In Time
-    compilation) - kompilacja wykonywana w trakcie działania aplikacji\cite{Wikipedia_JIT}.}.
-    Ta występuje w różnych odmianach, natomiast najszerzej wykorzystywane są środowiska
-    uruchomieniowe które rozpoczyna pracę w trybie interpretera i śledzą zachowanie
-    programu, po czym na podstawie charakterystyki wykonywania kodu wybierają które jego
-    fragmenty przekształcić w kod maszynowy.
-
-    Na takiej zasadzie działa silnik języka JavaScript - V8\cite{Java_Script_V8}. Ze względu
-    na dynamiczne typowanie tego językach, kompilacja bez śledzenia byłaby nieefektywna.
-    Co ciekawe tą samą drogą podążyły też języki takie jak Java czy C\#, które ze względu
-    na wykorzystywane w nich statyczne typowanie, mogłyby być teoretycznie pre-kompilowane\footnote{W
-    gwoli ścisłości, oba te języki najpierw kompilowane są do formy pośredniej, kodu bajtowego,
-    jeszcze przed trafieniem do użytkownika, a dopiero później, po uruchomieniu
-    aplikacji, do kodu maszynowego\cite{Csh_bytecode}\cite{Java_bytecode}.}, czy to
-    przed dostarczeniem do użytkownika, czy też po uruchomieniu aplikacji. Kompilacja
-    wspierana profilowaniem w czasie pracy (PGO - Profile Guided Optimization), jest jednak
-    znacznie oszczędniejsza, ponieważ unika kompilacji rzadko wykorzystywanych
-    fragmentów kodu.
 
     W momencie pisania tej pracy istnieją dwa szeroko dostępne i aktywnie utrzymywane
     narzędzia oferujące kompilację JIT dla języka Python. Jednym z nich jest pełna alternatywna
     implementacja języka Python - PyPy\cite{PyPy_Home_Page}. Wykonywana przez nią kompilacja
     JIT działa on na podobnej zasadzie do uprzednio wymienionych - śledzi cały kod który
     wykonuje i automatycznie decyduje które fragmenty skompilować do kodu maszynowego\cite{PyPy_JIT}.
-    Drugą jest biblioteka Numba\cite{Numba_Article}\cite{Numba_Doc}. Ona, w przeciwieństwie
+    Drugim narzędziem jest biblioteka Numba\cite{Numba_Article}\cite{Numba_Doc}. Ona, w przeciwieństwie
     do PyPy, wymaga aby fragmenty kodu, które mają być skompilowane, miały postać
     funkcji oznaczonych dedykowanymi dekoratorami\footnote{Obecnie dostępny jest też dekorator
-    pozwalający na kompilację klas, niestety jest on raczej niestabilny i nie radzi
-    sobie w wielu sytuacjach.}.
+    pozwalający na kompilację klas, niestety jest on niestabilny i nie radzi sobie w
+    wielu sytuacjach.}.
 
-    \subsection{Selekcja narzędzi}
+    \subsection{Optymalizacja}
 
 
-    Weryfikacja każdej z tych metod byłaby czasochłonna oraz często nieuzasadniona -
+    Weryfikacja każdej dostępnych metod byłaby czasochłonna oraz często nieuzasadniona -
     wiele z tych narzędzi nie było tworzonych z myślą o przypadku który rozważamy lub
     wykazuje się mniejszą wydajnością od rozwiązań równoważnych. Ostatecznie analizie poddałem
     następujące warianty implementacji programu CSSFinder:
+
     \begin{itemize}
       \item w języku Python, bazującą na bibliotece NumPy,
 
@@ -259,8 +357,51 @@ Wiśniewski}
       \item w języku Rust, bazującą na bibliotece ndarray z kompilacją AOT z
         wykorzystaniem rustc (LLVM)
     \end{itemize}
-  \end{sloppypar}
 
+    \subsection{Re-implementacje}
+
+
+    \subsubsection{ Python i NumPy }
+
+
+    \subsubsection{ Python i NumPy z JIT }
+
+
+    \subsubsection{ Python i NumPy z AOT }
+
+
+    \subsubsection{ Rust }
+
+
+    \subsection{Precyzja obliczeń}
+
+
+    Oryginalny program posługiwał się liczbami zespolonymi stworzonymi na bazie
+    zmiennoprzecinkowych podwójnej precyzji. Jednak ponieważ analizowane dane utrzymują zakres
+    wartości blisko 0, do efektywnych obliczeń nie jest konieczna podwójna precyzja. Podstawową
+    zaletą tej zmiany jest zmniejszenie rozmiaru macierzy w pamięci, a to w pozwala na
+    umieszczenie większej części macierzy w pamięci podręcznej procesora. Dodatkowo zwiększa
+    to przepustowość wektoryzowanego kodu (Zestawy instrukcji FMA uzywają rejestrów o
+    rozmiarach 128 i 256 bit, można więc w jednym takim rejestrze umieścić dwukrotnie więcej
+    32 bitowych liczb pojedynczej precyzji niż 64 bitowych podwójnej).
+
+    \subsection{Pomiary czasu pracy}
+
+
+    \subsection{Ponowne profilowanie}
+
+
+    \subsection{Funkcja kronecker}
+
+
+    \subsection{Funkcja product}
+
+
+    \section{Wyniki}
+
+
+    \section{Dyskusja}
+  \end{sloppypar}
   \newpage
   \begin{sloppypar}
     \medskip
