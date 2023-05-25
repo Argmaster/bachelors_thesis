@@ -1,0 +1,30 @@
+task_4
+Execution time: 6.392602 seconds
+Execution time: 6.223264 seconds
+Execution time: 6.315662 seconds
+Execution time: 6.075753 seconds
+task_8
+Execution time: 10.007133 seconds
+Execution time: 10.048594 seconds
+Execution time: 10.145933 seconds
+Execution time: 10.147876 seconds
+task_16
+Execution time: 15.302059 seconds
+Execution time: 15.253169 seconds
+Execution time: 15.082352 seconds
+Execution time: 15.569242 seconds
+task_32
+Execution time: 33.332312 seconds
+Execution time: 33.508812 seconds
+Execution time: 33.676550 seconds
+Execution time: 33.990577 seconds
+task_64
+Execution time: 197.972171 seconds
+Execution time: 197.690525 seconds
+Execution time: 194.104837 seconds
+Execution time: 197.236684 seconds
+5qubits_in
+Execution time: 27.538935 seconds
+Execution time: 28.512014 seconds
+Execution time: 28.438468 seconds
+Execution time: 27.848728 seconds
