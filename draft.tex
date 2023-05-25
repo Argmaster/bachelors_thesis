@@ -12,6 +12,7 @@
 \usepackage{booktabs}
 \usepackage{siunitx}
 \usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
 
 
 \usepackage[backend=biber, sorting=ynt]{biblatex}
@@ -225,10 +226,11 @@ Wiśniewski}
 
     Aby uzyskać dobrą bazę porównawczą, wykonałem serię pomiarów czasu pracy programu na
     o różnych wymiarach macierzach gęstości. Reprezentowały one układy od 2 do 6 kubitów
-    i przyjmowały rozmiary od 4×4 do 64×64. Przyjmowały one następującą postać:
+    i przyjmowały rozmiary od $4\times4$ do $64\times64$. Przyjmowały one następującą
+    postać:
 
     \[
-      \rho =
+      \rho_{n}=
       \begin{bmatrix}
         0.5    & 0      & \hdots & 0      & 0.5    \\
         0      & 0      & \hdots & 0      & 0      \\
@@ -238,34 +240,47 @@ Wiśniewski}
       \end{bmatrix}
     \]
 
-    Dane przekazywałem kolejno do programu z poleceniem działania w trybie 1 (full
-    separability of an n-quDit state) do osiągnięcia 1000 korekcji lub do 2.000.000
-    iteracji algorytmu, co nastąpi szybciej. Dla wszystkich macierzy algorytm uzyskał
-    1000 korekcji i w żadnym przypadku nie osiągnął maksymalnej ilości iteracji. Dla każdej
-    macierzy pomiar był powtarzany pięciokrotnie. Podczas obliczeń ziarno globalnego
-    generatora liczb losowych biblioteki NumPy było ustawione na 0.
+    W dalszej części pracy wielokrotnie będę wykorzystywał tę grupę macierzy do testów wydajności.
+    W tekście macierze te będą oznaczane jako $\rho_{2}$ do $\rho_{6}$, w zależności od reprezentowanej
+    ilości kubitów\footnote{Tak więc macierz $\rho_{2}$ ma wymiary $4\times4$ i
+    reprezentuje 2 kubity, macierz $\rho_{3}$ ma wymiary $8\times8$ i reprezentuje 3 kubity,
+    macierz $\rho_{4}$ ma wymiary $16\times16$ i reprezentuje 4 kubity, itd. aż do
+    $\rho_{6}$.}.
+
+    Dane przekazywałem kolejno do programu z poleceniem działania w trybie 1 (full separability
+    of an n-quDit state) do osiągnięcia 1000 korekcji lub do 2.000.000 iteracji algorytmu,
+    w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy algorytm uzyskał 1000
+    korekcji i w żadnym przypadku nie osiągnął maksymalnej ilości iteracji. Dla każdej
+    macierzy pomiar był powtarzany pięciokrotnie. Podczas obliczeń ziarno globalnego generatora
+    liczb losowych biblioteki NumPy było ustawione na 0. Pomiary czasu pracy dotyczyły wyłącznie
+    samego algorytmu\footnote{tj. funkcji `Gilbert()', nie biorą więc pod uwagę czasu
+    pochłoniętego przez importowanie modułów, ładowanie danych itp. natomiast operacje
+    pisania do plików które były wykonywane w obrębie tej funkcji są wliczane w czas
+    pracy.}.
 
     \FloatBarrier
     \begin{figure}[h]
       \centering
-      \includegraphics[width=0.75\textwidth]{"resources/benchmark_1/plot.png"}
-      \caption{Wyniki testów wydajności.}
+      \includegraphics[width=0.9\textwidth]{"resources/benchmark_1/plot.png"}
+      \caption{Wyniki wstępnych testów wydajności oryginalnego kodu z zablokowaną (niebieski) i odblokowaną (pomarańczowy) liczbą wątków obliczeniowych dla macierzy $\rho
+      _{2}$ - $\rho_{6}$.}
       \label{pre-perf}
     \end{figure}
     \FloatBarrier
 
-    Na wykresie \ref{pre-perf}, linia w kolorze niebieskim reprezentuje wyniki uzyskane z
-    zablokowaną na 1 ilością wątków.
-
     Podczas testów zaobserwowałem interesujące zjawisko dotyczące wydajności dla macierzy
-    64×64. W przypadku takich macierzy biblioteka NumPy automatycznie decyduje o
+    $64\times64$. W przypadku takich macierzy biblioteka NumPy automatycznie decyduje o
     wykorzystaniu wielowątkowej implementacji mnożenia macierzowego. Niestety, daje to
-    efekt odwrotny do zamierzonego - obliczenia zamiast przyspieszać zwalniają. Jeśli przy
-    pomocy zmiennych środowiskowych ustawimy ilość wątków wykorzystywanych do obliczeń na
-    1, uzyskujemy którzy czas trwania obliczeń. Warto dodać że ilość iteracji wykonywanych
-    przez program nie zmienia się. Czerwony punk wskazuje czas pracy, dla macierzy w rozmiarze
-    64×64, z odblokowaną ilością wątków. Dla macierzy mniejszych nie odnotowałem różnicy
-    w wydajności ani obciążeniu procesora.
+    efekt odwrotny do zamierzonego - obliczenia zamiast przyspieszać zwalniają. Na rysunku
+    \ref{pre-perf} czasy obliczeń dla różnych rozmiarów macierzy z domyślnym zachowaniem
+    biblioteki przedstawiają kolumny pomarańczowe. Jeśli przy pomocy zmiennych
+    środowiskowych ustawimy ilość wątków wykorzystywanych do obliczeń na 1, co przedstawiają
+    kolumny niebieskie, uzyskujemy znaczące skrócenie czasu obliczeń dla macierzy
+    $64\times64$. Dla macierzy w mniejszych rozmiarach nie odnotowałem różnicy w wydajności
+    pomiędzy konfiguracją domyślną, a manualnie dostosowywaną. Warto dodać że ilość iteracji
+    wykonywanych przez program nie zmienia się, różnica wynika wyłącznie z czasu trwania
+    operacji arytmetycznych. Taki stan rzeczy najprawdopodobniej jest wynikiem dodatkowego
+    obciążenia ze strony komunikacji i/lub synchronizacji między wątkami.
 
     % \subsection{Współbieżność}
 
@@ -306,15 +321,19 @@ Wiśniewski}
 
     Podczas procesu optymalizacji planowałem wypróbować liczne rozwiązania, które
     wymagały zasadniczych zmian w algorytmie. Jednocześnie część programu odpowiadająca za
-    interakcję z użytkownikiem i ładowanie zasobów pozostawała taka sama. Zdecydowałem
-    więc że tworzony przeze mnie kod musi być modularny. Tak też program został podzielony
-    na część, główną (core) oraz część implementującą algorytm (backend). Korpus jest w całości
-    napisany w języku Python i wykorzystuje wbudowany w ten język mechanizm importowania
-    w celu wykrywania i ładowania implementacji algorytmu. Dane macierzowe w obrębie
-    korpusu przechowywane są jako obiekty \code{ndarray} z biblioteki NumPy, ze względu
-    na uniwersalność w świecie bibliotek do obliczeń tensorowych. Pozwala to na proste podmiany
-    implementacji o dowolnie różnym pochodzeniu. Uprościło to znacznie proces
-    weryfikacji zmian w zachowaniu programu.
+    interakcję z użytkownikiem i ładowanie zasobów miała pozostawać taka sama.
+    Zdecydowałem więc że tworzony przeze mnie kod musi być modularny, aby uniknąć duplikacji
+    kodu. Tak też program został podzielony na dwie części: główną (core), z interfejsem
+    użytkowników i narzędziami pomocniczymi oraz część implementującą algorytm (backend).
+    Korpus jest w całości napisany w języku Python i wykorzystuje wbudowany w ten język mechanizm
+    importowania bibliotek w celu wykrywania i ładowania implementacji algorytmu. Dane
+    macierzowe w obrębie korpusu przechowywane są jako obiekty \code{ndarray} z biblioteki
+    NumPy, ze względu na uniwersalność w świecie bibliotek do obliczeń tensorowych. Pozwala
+    to na proste podmiany implementacji o dowolnie różnym pochodzeniu, w tym
+    implementacje w językach kompilowanych. Uprościło to znacznie proces weryfikacji zmian
+    w zachowaniu programu i przyspieszyło proces tworzenia kolejnych implementacji, jako
+    że kod interfejsu programistycznego jest mniej pracochłonny niż kod pozwalający na
+    interakcję z użytkownikiem.
 
     \subsection{Dostępne narzędzia}
 
@@ -385,23 +404,123 @@ Wiśniewski}
     dostępny jest też dekorator pozwalający na kompilację klas, niestety jest on niestabilny
     i nie radzi sobie w wielu sytuacjach.}.
 
+    \newpage
+
+
     \subsection{Re-implementacje}
 
 
     \subsubsection{ Python i NumPy }
 
 
-    Pierwsza wykonana przeze mnie re-implementacja wykorzystywała ten sam zestaw narzędzi
-    co oryginalny kod. Podczas przepisywania podjąłem jednak dodatkowe wysiłki aby
-    zmaksymalizować wykorzystanie funkcji zawartych w bibliotece NumPy. Ponieważ są one zaimplementowane
-    w języku niższego poziomu, a następnie skompilowane kompilatorem optymalizującym, oferują
-    one znacznie większą wydajność niż analogiczny kod napisany w języku Python. Proces
-    ten pozwolił mi zapoznać się lepiej z charakterystyką programu i udoskonalić
-    interfejs służący do łączenia części głównej programu z implementacją.
+    Pierwsza wykonana przeze mnie re-implementacja algorytmu wykorzystywała ten sam zestaw
+    narzędzi co oryginalny kod. Podczas przepisywania podjąłem jednak dodatkowe wysiłki
+    aby zmaksymalizować wykorzystanie funkcji zawartych w bibliotece NumPy. Ponieważ kluczowe
+    dla wydajności fragmenty kodu są zaimplementowane w języku niższego poziomu, a
+    następnie skompilowane kompilatorem optymalizującym, oferują znacznie wyższą wydajność
+    niż analogiczny kod napisany w języku Python. Proces ten pozwolił mi zapoznać się
+    lepiej z charakterystyką programu i udoskonalić interfejs służący do łączenia części
+    głównej programu z implementacją. Sam algorytm pozostał niezmieniony.
 
-    Uzyskane w ten sposób efekty nie są spektakularne, natomiast uznałem je za zachęcające.
-    Relatywnie niewielkim nakładem pracy udało się uzyskać kilkuprocentowe skrócenie
-    czasu pracy.
+    Pomiary czasu pracy były wykonywane przy użyciu macierzy $\rho_{2}$ - $\rho_{6}$.
+    Dane przekazywałem kolejno do programu z poleceniem działania w trybie FSnQd\footnote{Tryb
+    FSnQd jest odpowiednikiem trybu 1 (full separability of an n-quDit state) z oryginalnego
+    kodu.} do osiągnięcia co najmniej 1000 korekcji lub do 2.000.000 iteracji algorytmu,
+    w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy algorytm uzyskał
+    co najmniej 1000 korekcji i w żadnym przypadku nie osiągnął maksymalnej ilości
+    iteracji. Dla każdej macierzy pomiar był powtarzany pięciokrotnie. Podczas obliczeń
+    ziarno globalnego generatora liczb losowych biblioteki NumPy było ustawione na 0.
+    Pomiary czasu pracy dotyczyły przede wszystkim samego algorytmu\footnote{Nie biorą więc
+    pod uwagę czasu pochłoniętego przez importowanie modułów itp., natomiast operacje wczytywania
+    danych i pisania do plików które były wykonywane w obrębie tego fragmentu programu są
+    wliczane w czas pracy.}.
+
+    \FloatBarrier
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=0.9\textwidth]{"resources/benchmark_2/plot.png"}
+      \caption{Wyniki testów wydajności alternatywnej implementacji Python i NumPy (niebieski) w porównaniu do implementacji oryginalnej z zablokowaną ilością wątków (pomarańczowy) dla macierzy $\rho
+      _{2}$ - $\rho_{6}$.}
+      \label{first-perf}
+    \end{figure}
+    \FloatBarrier
+
+    W testach uzyskałem blisko 30\% redukcję długości czasu pracy. Na rysunku
+    \ref{first-perf} kolorem pomarańczowym oznaczone zostały czasy pracy programu, w zależności
+    od rozmiaru macierzy gęstości. Niebieskie kolumny to czasy pracy alternatywnej
+    implementacji. Warto tutaj zauważyć że to, o ile wzrośnie wydajność, w dużej mierze zależy
+    od danych wejściowych, ponieważ inny zestaw macierzy gęstości może spowodować, że inne
+    fragmenty kodu będą podlegały szczególnemu obciążeniu.
+
+    \FloatBarrier
+    \begin{figure}[h]
+      \centering
+      \setcounter{MaxMatrixCols}{33}
+      \[
+        \rho_{7}= \left[
+        \begin{smallmatrix}
+          0.25  & 0 & 0.25  & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0.25  & 0 & 0 & 0 & 0 & 0 & 0 & -0.25 \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0.25  & 0 & 0.25  & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0.25  & 0 & 0 & 0 & 0 & 0 & 0 & -0.25 \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0.25  & 0 & 0.25  & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0.25  & 0 & 0 & 0 & 0 & 0 & 0 & -0.25 \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          0     & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0     & 0 & 0 & 0 & 0 & 0 & 0 & 0     \\
+          -0.25 & 0 & -0.25 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -0.25 & 0 & 0 & 0 & 0 & 0 & 0 & 0.25  \\
+        \end{smallmatrix}
+        \right]
+      \]
+      \caption{Macierz $\rho_{7}$.}
+      \label{matrix-first-alt-perf}
+    \end{figure}
+
+    \FloatBarrier
+
+    \begin{figure}[h]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/benchmark_2/plot2.png"}
+      \caption{Wyniki testów wydajności alternatywnej implementacji Python i NumPy (niebieski) w porównaniu do implementacji oryginalnej z zablokowaną ilością wątków (pomarańczowy) dla macierzy $\rho
+      _{7}$.}
+      \label{first-alt-perf}
+    \end{figure}
+    \FloatBarrier
+
+    Tak też sięgając po macierz postaci $\rho_{7}$, przedstawioną na rysunku \ref{matrix-first-alt-perf},
+    uzyskałem wyniki różniące się od tych wykorzystujących macierze $\rho_{2}$ -
+    $\rho_{6}$. Zostały one przedstawione na rysunku \ref{first-alt-perf}, gdzie kolorem
+    pomarańczowym oznaczone są wyniki oryginalnej implementacji, natomiast kolorem niebieskim,
+    wyniki nowo utworzonego kodu. Na wykresie widoczna jest około 20\% redukcja długości
+    czasu pracy przy takich samych danych wejściowych.
+
+    Ponieważ macierz $\rho_{7}$ występuje tylko w jednym rozmiarze, nie jest możliwe aby
+    uzyskać tak szerokie spektrum wyników jak w przypadku macierzy $\rho_{2}$ - $\rho_{6}$.
+    Z tego względu macierze $\rho_{2}$ - $\rho_{6}$ stanowią wygodny zestaw danych do
+    weryfikacji ogólnej charakterystyki zachowania alternatywnych implementacji
+    algorytmu.
 
     \subsubsection{ Python i NumPy z AOT }
 
