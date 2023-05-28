@@ -17,6 +17,7 @@ ruff = "^0.0.265"
 requests = "^2.30.0"
 beautifulsoup4 = "^4.12.2"
 requests-cache = "^1.0.1"
+ptpython = "^3.0.23"
 
 
 [build-system]
