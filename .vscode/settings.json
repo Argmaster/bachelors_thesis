@@ -4,6 +4,7 @@
     "cSpell.words": [
         "bibintoc",
         "biblatex",
+        "BLAS",
         "Cython",
         "Cythona",
         "Cythonie",
@@ -13,15 +14,19 @@
         "kubity",
         "midrule",
         "mypy",
+        "Ndarray",
         "Numba",
+        "numpy",
         "optymalizcji",
         "otwartoźródłową",
         "otwartoźródłowych",
+        "otwartoźródłowym",
         "podfunkcji",
         "qubitach",
         "Rossum",
         "Ryzen",
         "separowalność",
+        "tensordot",
         "TIOBE",
         "transpilator",
         "transpilować",
@@ -36,5 +41,6 @@
         "editor.wordWrapColumn": 110,
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "indentRainbow.ignoreErrorLanguages": ["bibtex", "markdown", "latex", "tex"]
+    "indentRainbow.ignoreErrorLanguages": ["bibtex", "markdown", "latex", "tex"],
+    "powershell.developer.featureFlags": ["-shell-escape"]
 }
