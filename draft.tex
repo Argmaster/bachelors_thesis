@@ -22,7 +22,7 @@
   linkcolor=black,
   urlcolor=black
 }
-\usepackage[backend=biber, sorting=ynt]{biblatex}
+\usepackage[backend=biber, sorting=none]{biblatex}
 \addbibresource{draft.bib}
 
 \newcommand{\code}[1]{\texttt{#1}}
@@ -107,7 +107,7 @@ Wiśniewski}
     Zalety języka Python są powszechnie dostrzegane zarówno przez środowiska akademickie,
     jak i komercyjne, co wyraźnie widać w zestawieniach takich jak wydane przez GitHub,
     Inc. `The top programming languages' (2022)\cite{GitHub_Top_languages}. Język Python
-    plasuje się w tym zestawieniu na drugim miejscu.
+    plasuje się w nim na drugim miejscu.
 
     Alternatywy w postaci języków C, C++ czy Fortran wymagałyby większej ilości bardziej
     skompilowanego kodu, jednocześnie zmuszając do ręcznego skompletowania systemu budowania,
@@ -162,8 +162,6 @@ Wiśniewski}
 
       \item weryfikacja poszczególnych z tych rozwiązań pod kątem zmian w czasie pracy programu,
 
-      \item udoskonalenie interfejsu użytkownika programu CSSFinder,
-
       \item dostosowane postaci i sposób dystrybucji programu do standardów ekosystemu języka
         Python.
     \end{itemize}
@@ -204,31 +202,6 @@ Wiśniewski}
     kompromisy i wymagając różnej ilości dodatkowego wysiłku aby uzyskać sprawny program.
     Jednocześnie pokażę też, że nie jest konieczne pisanie kodu asemblera własnoręcznie,
     by uzyskać wysoką wydajność.
-
-    \subsection{Uzyskane efekty}
-
-
-    Wybrane z wykonanych przeze mnie implementacji wykazują kilkukrotne skrócenie czasu pracy
-    programu. Dotyczy to przede wszystkim wariantu w języku Python z kompilacją JIT oraz
-    wariantu w języku Rust wykorzystującego OpenBLAS. Wytworzony kod został zamieszczony
-    w trzech repozytoriach:
-    \begin{enumerate}
-      \item cssfinder\cite{CSSFinder_New},
-
-      \item cssfinder\_backend\_numpy\cite{CSSFinder_New_Numpy},
-
-      \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust},
-    \end{enumerate}
-    Dla każdego z tych repozytorium istnieje odpowiadający pakiet menadżera pakietów pip
-    zamieszczony na serwerze PyPI. Pozwala to w bardzo prosty sposób rozpocząć korzystanie
-    z programu poprzez instalację następujących pakietów:
-    \begin{enumerate}
-      \item cssfinder\cite{CSSFinder_New_PyPI},
-
-      \item cssfinder\_backend\_numpy\cite{CSSFinder_New_Numpy_PyPI},
-
-      \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust_PyPI},
-    \end{enumerate}
 
     \section{Narzędzia}
     \subsection{Kompilacja AOT}
@@ -731,7 +704,6 @@ Wiśniewski}
     wbudowany w program mechanizm pomiaru czasu pracy rozpoczyna pomiar zanim dane zostaną
     załadowane.}.
 
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics
@@ -740,7 +712,6 @@ Wiśniewski}
       _{1}$ - $\rho_{6}$.}
       \label{python-numpy-double-precision}
     \end{figure}
-    \FloatBarrier
 
     Uzyskane wyniki zostały przedstawione na rysunku \ref{python-numpy-double-precision}.
     W przypadku małych macierzy wyniki są bardzo zbliżone, natomiast w przypadku
@@ -748,10 +719,11 @@ Wiśniewski}
     $7.9s$ ($\approx 21\%$) dla $\rho_{1}$, $12.7s$ ($\approx 27\%$) dla $\rho_{5}$ i
     $20 5.2s$ ($\approx 50\%$) dla $\rho_{6}$.
 
+    \FloatBarrier
+
     \subsubsection{ Python i NumPy z AOT }
     Pomiary czasu pracy były wykonywane w taki sam sposób jak dla implementacji bez AOT.
 
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics
@@ -760,20 +732,21 @@ Wiśniewski}
       _{1}$ - $\rho_{6}$.}
       \label{python-numpy-aot-double-precision}
     \end{figure}
-    \FloatBarrier
 
-    Na rysunku \ref{python-numpy-aot-double-precision} przedstawione zostały wyniki pomiarów
-    czasu pracy skompilowanej wersji w języku Python bazującej na bibliotece NumPy wykorzystujące
-    macierze $\rho_{1}$ - $\rho_{6}$. kompilacja nie poskutkowała istotnym skróceniem
-    czasu pracy programu względem wariantu bez AOT, różnice wynoszą koło 1\%. Uzysk ten może
-    być spowodowany usunięciem szczątkowego obciążenia ze strony interpretera, które nie
-    jest mierzalne podczas krótszych testów z mniejszymi macierzami. Możliwe jest również
-    że ta różnica wynika z korzystniejszych warunków losowo zapewnionych przez system operacyjny.
+    Na rysunku \ref{python-numpy-aot-double-precision} przedstawione zostały wyniki
+    pomiarów czasu pracy skompilowanej wersji w języku Python bazującej na bibliotece
+    NumPy wykorzystujące macierze $\rho_{1}$ - $\rho_{6}$. kompilacja nie poskutkowała istotnym
+    skróceniem czasu pracy programu względem wariantu bez AOT, różnice wynoszą koło 1\%.
+    Uzysk ten może być spowodowany usunięciem szczątkowego obciążenia ze strony
+    interpretera, które nie jest mierzalne podczas krótszych testów z mniejszymi macierzami.
+    Możliwe jest również że ta różnica wynika z korzystniejszych warunków losowo
+    zapewnionych przez system operacyjny.
+
+    \FloatBarrier
 
     \subsubsection{ Python i NumPy z JIT }
     Pomiary czasu pracy były wykonywane w taki sam sposób jak dla implementacji bez JIT.
 
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics
@@ -782,7 +755,6 @@ Wiśniewski}
       _{1}$ - $\rho_{6}$.}
       \label{python-numpy-jit-double-precision}
     \end{figure}
-    \FloatBarrier
 
     Na rysunku \ref{python-numpy-jit-double-precision} przedstawione zostały wyniki
     uzyskane podczas pomiarów czasu pracy implementacji z kompilacją JIT wykonywaną przy
@@ -802,20 +774,21 @@ Wiśniewski}
     zmaksymalizować przenośność kodu. Dodatkowo kompilator może brać pod uwagę inne charakterystyczne
     cechy konkretnych architektur.
 
+    \FloatBarrier
+
     \subsubsection{ Rust i Ndaray}
 
 
     Pomiary czasu pracy implementacji w języku Rust były wykonywane przy użyciu macierzy
-    $\rho_{2}$ - $\rho_{6}$. Dane przekazywałem kolejno do programu z poleceniem
-    działania w trybie FSnQd do osiągnięcia co najmniej 1000 korekcji lub do 2.000.000 iteracji
-    algorytmu, w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy algorytm
-    uzyskał co najmniej 1000 korekcji i w żadnym przypadku nie osiągnął maksymalnej liczby
-    iteracji. Dla każdej macierzy pomiar był powtarzany pięciokrotnie a wyniki zostały
-    uśrednione. Pomiary czasu pracy dotyczyły przede wszystkim samego algorytmu\footnote{Nie
-    biorą więc pod uwagę czasu pochłoniętego przez importowanie modułów itp., natomiast
-    operacje wczytywania danych i pisania do plików są wliczane w czas pracy.}.
+    $\rho_{2}$ - $\rho_{6}$. Dane przekazywałem kolejno do programu z poleceniem działania
+    w trybie FSnQd do osiągnięcia co najmniej 1000 korekcji lub do 2.000.000 iteracji
+    algorytmu, w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy
+    algorytm uzyskał co najmniej 1000 korekcji i w żadnym przypadku nie osiągnął
+    maksymalnej liczby iteracji. Dla każdej macierzy pomiar był powtarzany pięciokrotnie
+    a wyniki zostały uśrednione. Pomiary czasu pracy dotyczyły przede wszystkim samego
+    algorytmu\footnote{Nie biorą więc pod uwagę czasu pochłoniętego przez importowanie modułów
+    itp., natomiast operacje wczytywania danych i pisania do plików są wliczane w czas pracy.}.
 
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rust_performance_tests.png"}
@@ -823,25 +796,24 @@ Wiśniewski}
       _{6}$.}
       \label{rust-double-precision}
     \end{figure}
-    \FloatBarrier
 
-    Na rysunku \ref{rust-double-precision} zaprezentowane zostały wyniki pomiarów czasu pracy
-    implementacja w języku Rust. Względem oryginału czas pracy dla małych macierzy
-    skrócił się około pięciokrotnie, dotyczy to rozmiarów $4\times4$ i $8\times8$. W
-    przypadku macierzy $16\times16$ uzysk jest już tylko dwukrotny, natomiast dla większych
+    Na rysunku \ref{rust-double-precision} zaprezentowane zostały wyniki pomiarów czasu
+    pracy implementacja w języku Rust. Względem oryginału czas pracy dla małych macierzy
+    skrócił się około pięciokrotnie, dotyczy to rozmiarów $4\times4$ i $8\times8$. W przypadku
+    macierzy $16\times16$ uzysk jest już tylko dwukrotny, natomiast dla większych
     macierzy uzyskuje ona wyniki gorsze niż oryginał.
 
-    Jest to prawdopodobnie spowodowane tym, że sama implementacja mnożenia macierzowego
-    korzysta z ograniczonego zasobu instrukcji SIMD, aby zachować jak najszerszą kompatybilność
-    w przeciwieństwie do biblioteki NumPy, która wewnętrznie wykorzystuje bibliotekę
-    OpenBLAS\cite{NumPy_Doc}.
+    Jest to prawdopodobnie spowodowane tym, że sama implementacja mnożenia macierzowego korzysta
+    z ograniczonego zasobu instrukcji SIMD, aby zachować jak najszerszą kompatybilność w
+    przeciwieństwie do biblioteki NumPy, która wewnętrznie wykorzystuje bibliotekę OpenBLAS\cite{NumPy_Doc}.
+
+    \FloatBarrier
 
     \subsubsection{ Rust i Ndaray z OpenBLAS }
     Pomiary czasu pracy implementacji w języku Rust wykorzystującej OpenBLAS do wykonywania
     mnożenia macierzowego były wykonywane w taki sam sposób jak dla implementacji która nie
     korzystała z tej biblioteki.
 
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rust_blas_perf_tests.png"}
@@ -849,7 +821,6 @@ Wiśniewski}
       _{1}$ - $\rho_{6}$.}
       \label{rust-openblas-double-precision}
     \end{figure}
-    \FloatBarrier
 
     Wyniki testów przeprowadzanych na implementacji korzystającej z biblioteki OpenBLAS
     poskutkowało znaczącym skróceniem czasu pracy względem oryginału. Wyniki te zaprezentowane
@@ -861,6 +832,8 @@ Wiśniewski}
     pomocy wyspecjalizowanego kodu w języku Asemblera, który został wykorzystany w
     bibliotece OpenBLAS do stworzenia wyspecjalizowanych implementacji mnożenia
     macierzowego.
+
+    \FloatBarrier
 
     \subsection{Pomiary z pojedynczą precyzją}
     Wszystkie testy wydajności z dla obliczeń wykorzystujących liczby zmiennoprzecinkowe
@@ -877,28 +850,30 @@ Wiśniewski}
       \label{sp-numpy-perf}
     \end{figure}
 
-    Na wykresie \ref{sp-numpy-perf} przedstawiłem wyniki wydajności dla implementacji napisanej
-    w języku Python wykorzystującej bibliotekę NumPy do przeprowadzania obliczeń na macierzach
-    liczb zespolonych pojedynczej precyzji. W przypadku mniejszych macierzy ($4\times4$,
-    $8\times8$, $16\times16$) różnice w czasie pracy, względem wariantu opartego na liczbach
-    podwójnej precyzji, są minimalne. Dzieje się tak prawdopodobnie dlatego, że macierze
-    te są na tyle niewielkie (do 4KB) że mieszczą się w pamięci cache L1 procesora\footnote{Wykorzystywany
-    tutaj Ryzen 9 7950X posiada $32\times16$KB cache L1}, więc wymnażanie ich jest
-    procesem bardzo szybkim. W momencie kiedy docieramy do macierzy $32\times32$ wzrost wydajności
-    staje się zauważalny, co również można wytłumaczyć odwołując się do pojemności
-    pamięci cache procesora. Macierze podwójnej precyzji zajmują dokładnie 16KB ($32\times
-    32\times2\times 8$), natomiast dostęp do tej pamięci nie jest ekskluzywny dla
-    jednego procesu, nie może on więc korzystać z całych 16KB. W efekcie część danych
-    przebywa poza pamięcią cache. Natomiast macierze wykorzystujące liczby pojedynczej precyzji
-    zajmują tylko 8KB. Można się więc spodziewać że większość czasu spędzają one w
-    pamięciach L1 i L2, co pozwala przyspieszyć obliczenia. Dodatkowo mniejszy rozmiar
-    liczb pojedynczej precyzji pozwala dwukrotnie zwiększyć przepustowość instrukcji
-    SIMD, co prawdopodobnie odgrywa również bardzo istotną rolę, szczególnie w przypadku
-    macierzy $64\times64$, dla których obliczenia przyspieszają znacznie bardziej niż w przypadku
-    mniejszych macierzy.
+    Na wykresie \ref{sp-numpy-perf} przedstawiłem wyniki wydajności dla implementacji
+    napisanej w języku Python wykorzystującej bibliotekę NumPy do przeprowadzania
+    obliczeń na macierzach liczb zespolonych pojedynczej precyzji. W przypadku mniejszych
+    macierzy ($4\times4$, $8\times8$, $16\times16$) różnice w czasie pracy, względem
+    wariantu opartego na liczbach podwójnej precyzji, są minimalne. Dzieje się tak
+    prawdopodobnie dlatego, że macierze te są na tyle niewielkie (do 4KB) że mieszczą się
+    w pamięci cache L1 procesora\footnote{Wykorzystywany tutaj Ryzen 9 7950X posiada
+    $32\times16$KB cache L1}, więc wymnażanie ich jest procesem bardzo szybkim. W
+    momencie kiedy docieramy do macierzy $32\times32$ wzrost wydajności staje się
+    zauważalny, co również można wytłumaczyć odwołując się do pojemności pamięci cache procesora.
+    Macierze podwójnej precyzji zajmują dokładnie 16KB ($32\times 32\times2\times 8$), natomiast
+    dostęp do tej pamięci nie jest ekskluzywny dla jednego procesu, nie może on więc
+    korzystać z całych 16KB. W efekcie część danych przebywa poza pamięcią cache.
+    Natomiast macierze wykorzystujące liczby pojedynczej precyzji zajmują tylko 8KB. Można
+    się więc spodziewać że większość czasu spędzają one w pamięciach L1 i L2, co pozwala
+    przyspieszyć obliczenia. Dodatkowo mniejszy rozmiar liczb pojedynczej precyzji pozwala
+    dwukrotnie zwiększyć przepustowość instrukcji SIMD, co prawdopodobnie odgrywa
+    również bardzo istotną rolę, szczególnie w przypadku macierzy $64\times64$, dla
+    których obliczenia przyspieszają znacznie bardziej niż w przypadku mniejszych
+    macierzy.
+
+    \FloatBarrier
 
     \subsubsection{ Python i NumPy z AOT }
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics
@@ -907,7 +882,6 @@ Wiśniewski}
       _{1}$ - $\rho_{6}$ i obliczeniami pojedynczej precyzji.}
       \label{python-numpy-cython-single-precision}
     \end{figure}
-    \FloatBarrier
 
     Wyniki dla wariantu pre-kompilowanego przy pomocy biblioteki Cython nie różnią się
     znacząco od wariantu nie pre-kompilowanego, podobnie jak w przypadku obliczeń podwójnej
@@ -915,8 +889,9 @@ Wiśniewski}
     \ref{python-numpy-cython-single-precision}. Podobnie jak w przypadku wyników dla obliczeń
     podwójnej precyzji, pre-kompilacja nie przynosi istotnych zysków wydajnościowych.
 
-    \subsubsection{ Python i NumPy z JIT }
     \FloatBarrier
+
+    \subsubsection{ Python i NumPy z JIT }
     \begin{figure}[ht]
       \centering
       \includegraphics
@@ -925,15 +900,15 @@ Wiśniewski}
       _{1}$ - $\rho_{6}$ i obliczeniami pojedynczej precyzji.}
       \label{sp-numpy-jit-perf}
     \end{figure}
-    \FloatBarrier
 
-    W przypadku wariantu wykorzystującego kompilację JIT, zysk czasowy wynikający z
-    redukcji precyzji obliczeń jest minimalny lub wręcz nie występuje. Wyjątkiem są tutaj
-    wyniki dla macierzy $\rho_{1}$ w przypadku której czas pracy skrócił się o $4.7s$ ( $\approx
-    21\%$).
+    W przypadku wariantu wykorzystującego kompilację JIT, zysk czasowy wynikający z redukcji
+    precyzji obliczeń jest minimalny lub wręcz nie występuje. Wyjątkiem są tutaj wyniki
+    dla macierzy $\rho_{1}$ w przypadku której czas pracy skrócił się o $4.7s$ (
+    $\approx 21\%$).
+
+    \FloatBarrier
 
     \subsubsection{ Rust i Ndaray}
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rust_single_tests.png"}
@@ -941,7 +916,6 @@ Wiśniewski}
       _{1}$ - $\rho_{6}$ i obliczeniami pojedynczej precyzji.}
       \label{sp-rust-perf}
     \end{figure}
-    \FloatBarrier
 
     Implementacja w języku Rust wykorzystująca bibliotekę Ndarray prezentuje znaczną poprawę
     wydajności dla wszystkich wymiarów macierzy. Podczas obliczeń na małych macierzach, do
@@ -949,8 +923,9 @@ Wiśniewski}
     macierzy poprawa występuje, ale ciągle implementacja w języku Python z JIT daje
     lepsze efekty.
 
-    \subsubsection{ Rust i Ndaray z OpenBLAS }
     \FloatBarrier
+
+    \subsubsection{ Rust i Ndaray z OpenBLAS }
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rust_blas_single_tests.png"}
@@ -958,14 +933,14 @@ Wiśniewski}
       _{1}$ - $\rho_{6}$ i obliczeniami pojedynczej precyzji.}
       \label{sp-rust-blas-perf}
     \end{figure}
-    \FloatBarrier
 
-    Zestawienie języka Rust i biblioteki Ndaray z pakietem OpenBLAS i liczbami zmiennoprzecinkowymi
-    pojedynczej precyzji poskutkowało uzyskaniem znaczącej poprawy wyników wydajności,
-    które zostały przedstawione na rysunku \ref{sp-rust-blas-perf}. W przypadku macierzy
-    $4\times4$ i $8\times8$ wydajność jest bardzo zbliżona do wariantu nie korzystającego
-    z OpenBLAS, natomiast wraz ze wzrostem rozmiaru macierzy, skrócenie czasu pracy staje
-    się coraz bardziej widoczne. Względem oryginału, obliczenia dla macierzy:
+    Zestawienie języka Rust i biblioteki Ndaray z pakietem OpenBLAS i liczbami
+    zmiennoprzecinkowymi pojedynczej precyzji poskutkowało uzyskaniem znaczącej poprawy
+    wyników wydajności, które zostały przedstawione na rysunku \ref{sp-rust-blas-perf}.
+    W przypadku macierzy $4\times4$ i $8\times8$ wydajność jest bardzo zbliżona do
+    wariantu nie korzystającego z OpenBLAS, natomiast wraz ze wzrostem rozmiaru macierzy,
+    skrócenie czasu pracy staje się coraz bardziej widoczne. Względem oryginału,
+    obliczenia dla macierzy:
     \begin{itemize}
       \item $\rho_{1}$ trwają $\approx 5.8\times$ krócej,
 
@@ -973,10 +948,12 @@ Wiśniewski}
 
       \item $\rho_{6}$ trwają $\approx 7.4\times$ krócej,
     \end{itemize}
-    Biorąc pod zyski wydajności, wynikające z obniżenia precyzji obliczeń, dla
-    pozostałych implementacji, tak istotne skrócenie czasu pracy jest zaskakujące. Z
-    tego względu powtórnie upewniłem się, że praca programu kończy się uzyskaniem odpowiednich
-    wyników liczbowych i nie wykryłem żadnych nieprawidłowości.
+    Biorąc pod zyski wydajności, wynikające z obniżenia precyzji obliczeń, dla pozostałych
+    implementacji, tak istotne skrócenie czasu pracy jest zaskakujące. Z tego względu powtórnie
+    upewniłem się, że praca programu kończy się uzyskaniem odpowiednich wyników
+    liczbowych i nie wykryłem żadnych nieprawidłowości.
+
+    \FloatBarrier
 
     \subsection{Zestawienia dla macierzy}
     W tej sekcji prezentuję wyniki tych samych pomiarów co w sekcjach 4.3 i 4.4 zestawiając
@@ -988,7 +965,6 @@ Wiśniewski}
     to ten sam kod ale z zablokowaną ilością wątków obliczeniowych.
 
     \subsubsection{Macierz \texorpdfstring{$\rho_{1}$ $(32\times32)$}{rho1 32x32}}
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rho_1_matrix_comparison.png"}
@@ -996,71 +972,148 @@ Wiśniewski}
       _{1}$.}
       \label{matrix-comparison-rho-1-plot}
     \end{figure}
+
+    Na rysunku \ref{matrix-comparison-rho-1-plot} przedstawione zostało zestawienie
+    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{1}$. Najkrótszy
+    czas pracy w zestawieniu, $17.9s$, uzyskała implementacja napisana w języku Python z
+    użyciem biblioteki NumPy z kompilacją JIT wykonująca obliczenia pojedynczej precyzji.
+    Niewiele ustępuje jej wariant pracujący na liczbach podwójnej precyzji z wynikiem
+    $22 .6s$.
+
     \FloatBarrier
 
     \subsubsection{Macierz \texorpdfstring{$\rho_{2}$ $(4\times4)$}{rho2 4x4}}
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rho_2_matrix_comparison.png"}
       \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
-      _{1}$.}
+      _{2}$.}
       \label{matrix-comparison-rho-2-plot}
     \end{figure}
-    \FloatBarrier
 
-    \newpage
+    Na rysunku \ref{matrix-comparison-rho-2-plot} przedstawione zostało zestawienie
+    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{2}$. Najkrótszy
+    czas pracy w zestawieniu, $0.5s$, uzyskała implementacja napisana w języku Rust wykonująca
+    obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant korzystający
+    z biblioteki OpenBLAS$0.6s$.
+
+    Z pośród implementacji w języku Python najlepiej sprawował się wariant z JIT (F64),
+    natomiast jego czas pracy był około $7.6\times$ dłuższy.
+
+    \FloatBarrier
 
     \subsubsection{Macierz \texorpdfstring{$\rho_{3}$ $(8\times8)$}{rho3 8x8}}
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rho_3_matrix_comparison.png"}
       \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
-      _{1}$.}
+      _{3}$.}
       \label{matrix-comparison-rho-3-plot}
     \end{figure}
+    Na rysunku \ref{matrix-comparison-rho-3-plot} przedstawione zostało zestawienie wyników
+    wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{3}$. Najkrótszy
+    czas pracy w zestawieniu, $0.6s$, uzyskała implementacja napisana w języku Rust z
+    OpenBLAS wykonująca obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant
+    który nie korzystał z OpenBLAS ($0.9s$).
+
     \FloatBarrier
 
     \subsubsection{Macierz \texorpdfstring{$\rho_{4}$ $(16\times16)$}{rho4 16x16}}
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rho_4_matrix_comparison.png"}
       \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
-      _{1}$.}
+      _{4}$.}
       \label{matrix-comparison-rho-4-plot}
     \end{figure}
+    Na rysunku \ref{matrix-comparison-rho-4-plot} przedstawione zostało zestawienie
+    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{4}$. Najkrótszy
+    czas pracy w zestawieniu, $1.5s$, uzyskała implementacja napisana w języku Rust z OpenBLAS
+    wykonująca obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant
+    który nie korzystał z OpenBLAS ($4s$).
+
     \FloatBarrier
 
-    \newpage
-    
     \subsubsection{Macierz \texorpdfstring{$\rho_{5}$ $(32\times32)$}{rho5 32x32}}
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rho_5_matrix_comparison.png"}
       \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
-      _{1}$.}
+      _{5}$.}
       \label{matrix-comparison-rho-5-plot}
     \end{figure}
-    \FloatBarrier
+    Na rysunku \ref{matrix-comparison-rho-5-plot} przedstawione zostało zestawienie wyników
+    wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{5}$. Najkrótszy
+    czas pracy w zestawieniu, $7.2s$, uzyskała implementacja napisana w języku Rust z
+    OpenBLAS wykonująca obliczenia pojedynczej precyzji. Następny najniższy wynik wynosił
+    $18.2s$ i był osiągany przez wariant w języku Python korzystający z JIT, niezależnie
+    od precyzji obliczeń.
 
     \subsubsection{Macierz \texorpdfstring{$\rho_{6}$ $(64\times64)$}{rho6 64x64}}
-    \FloatBarrier
     \begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{"resources/rho_6_matrix_comparison.png"}
       \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
-      _{1}$.}
+      _{6}$.}
       \label{matrix-comparison-rho-6-plot}
     \end{figure}
+    Na rysunku \ref{matrix-comparison-rho-6-plot} przedstawione zostało zestawienie
+    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{6}$. Najkrótszy
+    czas pracy w zestawieniu, $54.8s$, uzyskała implementacja napisana w języku Rust z OpenBLAS
+    wykonująca obliczenia pojedynczej precyzji. Następny najniższy wynik wynosił $93.1s$
+    i był osiągany przez wariant w języku Python korzystający z JIT przy obliczeniach
+    podwójnej precyzji. Kod wykonujący obliczenia pojedynczej precyzji wypadł nieznacznie
+    gorzej.
+
     \FloatBarrier
 
     \subsection{Pomiary dla wielu zadań}
 
 
     \section{Dyskusja}
+
+
+    Praca ta miała na celu eksplorację dostępnych metod maksymalizacji wydajności
+    algorytmu QGA. Udało mi się w jej ramach zbadać skuteczność wykorzystania dziesięciu
+    wariantów programu, w tym dwóch implementacji w różnych językach programowania. Algorytm
+    QGA został z powodzeniem wielokrotnie zaimplementowany, a wszystkie stworzone
+    implementacje pozwalały uzyskać oczekiwane wyniki liczbowe.
+
+    Przeprowadziłem również liczne testy wydajności dla różnych danych wejściowych dla
+    wszystkich wariantów programu, co pozwoliło mi ustalić które metody okazały się najbardziej
+    skuteczne. W przypadku dwóch wariantów programu, udało się się uzyskać znaczącą poprawę
+    wydajności. Są nimi:
+    \begin{enumerate}
+      \item Python i NumPy z JIT
+
+      \item Rust i Ndarray z OpenBLAS
+    \end{enumerate}
+    Z zastrzeżeniem, że w przypadku wariantu 1. dotyczy to zarówno obliczeń podwójnej
+    jak i pojedynczej precyzji, natomiast w przypadku 2. znacząca poprawa występowała dla
+    obliczeń pojedynczej precyzji.
+
+    Ponadto, stworzony przeze mnie kod został zamieszczony w trzech repozytoriach:
+    \begin{enumerate}
+      \item cssfinder\cite{CSSFinder_New},
+
+      \item cssfinder\_backend\_numpy\cite{CSSFinder_New_Numpy},
+
+      \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust},
+    \end{enumerate}
+
+    Dla każdego z tych repozytorium istnieje odpowiadający pakiet menadżera pakietów pip
+    zamieszczony na serwerze PyPI. Pozwala to w bardzo prosty sposób rozpocząć korzystanie
+    z programu poprzez instalację następujących pakietów:
+    \begin{enumerate}
+      \item cssfinder\cite{CSSFinder_New_PyPI},
+
+      \item cssfinder\_backend\_numpy\cite{CSSFinder_New_Numpy_PyPI},
+
+      \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust_PyPI},
+    \end{enumerate}
+
+    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera języka
+    Python w wersji 3.8 lub nowszej.
   \end{sloppypar}
   \newpage
   \begin{sloppypar}
