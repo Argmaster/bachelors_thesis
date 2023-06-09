@@ -98,7 +98,7 @@ Wiśniewski}
     `Hilbert-Schmidt distance and entanglement witnessing' której autorami byli Palash Pandya,
     Omer Sakarya i Marcin Wieśniak\cite{MW_Hilbert_Schmidt_distance}.
 
-    Profesor Marcin Wieśniak utworzył implementację algorytmu QGA w języku Python,
+    Dr hab. Marcin Wieśniak, prof. UG, utworzył implementację algorytmu QGA w języku Python,
     wykorzystując bibliotekę NumPy do przeprowadzania koniecznych obliczeń macierzowych.
     Wybór ten był podyktowany możliwościami oferowanymi przez taki zestaw narzędzi.
     Pozwalały one w szybki sposób stworzyć prosty kod, zdolny by relatywnie wydajnie przeprowadzać
@@ -982,23 +982,80 @@ Wiśniewski}
     W tej sekcji prezentuję wyniki tych samych pomiarów co w sekcjach 4.3 i 4.4 zestawiając
     je ze sobą względem macierzy wykorzystanej do testów.
 
-    \subsubsection{Macierz $\rho_{1}$ $(32\times32)$}
+    Oznaczenie `(F64)' przy nazwie implementacji oznacza obliczenia z podwójną precyzją,
+    analogicznie `(F32)' oznacza obliczenia z pojedynczą precyzją. `Oryginał' to kod implementacji
+    autorstwa dr hab. Marcin Wieśniak, prof. UG, natomiast pozycja podpisana `Oryginał (zablokowany)'
+    to ten sam kod ale z zablokowaną ilością wątków obliczeniowych.
 
+    \subsubsection{Macierz \texorpdfstring{$\rho_{1}$ $(32\times32)$}{rho1 32x32}}
+    \FloatBarrier
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/rho_1_matrix_comparison.png"}
+      \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
+      _{1}$.}
+      \label{matrix-comparison-rho-1-plot}
+    \end{figure}
+    \FloatBarrier
 
-    \subsubsection{Macierz $\rho_{2}$ $(4\times4)$}
+    \subsubsection{Macierz \texorpdfstring{$\rho_{2}$ $(4\times4)$}{rho2 4x4}}
+    \FloatBarrier
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/rho_2_matrix_comparison.png"}
+      \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
+      _{1}$.}
+      \label{matrix-comparison-rho-2-plot}
+    \end{figure}
+    \FloatBarrier
 
+    \newpage
 
-    \subsubsection{Macierz $\rho_{3}$ $(8\times8)$}
+    \subsubsection{Macierz \texorpdfstring{$\rho_{3}$ $(8\times8)$}{rho3 8x8}}
+    \FloatBarrier
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/rho_3_matrix_comparison.png"}
+      \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
+      _{1}$.}
+      \label{matrix-comparison-rho-3-plot}
+    \end{figure}
+    \FloatBarrier
 
+    \subsubsection{Macierz \texorpdfstring{$\rho_{4}$ $(16\times16)$}{rho4 16x16}}
+    \FloatBarrier
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/rho_4_matrix_comparison.png"}
+      \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
+      _{1}$.}
+      \label{matrix-comparison-rho-4-plot}
+    \end{figure}
+    \FloatBarrier
 
-    \subsubsection{Macierz $\rho_{4}$ $(16\times16)$}
+    \newpage
+    
+    \subsubsection{Macierz \texorpdfstring{$\rho_{5}$ $(32\times32)$}{rho5 32x32}}
+    \FloatBarrier
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/rho_5_matrix_comparison.png"}
+      \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
+      _{1}$.}
+      \label{matrix-comparison-rho-5-plot}
+    \end{figure}
+    \FloatBarrier
 
-
-    \subsubsection{Macierz $\rho_{5}$ $(32\times32)$}
-
-
-    \subsubsection{Macierz $\rho_{6}$ $(64\times64)$}
-
+    \subsubsection{Macierz \texorpdfstring{$\rho_{6}$ $(64\times64)$}{rho6 64x64}}
+    \FloatBarrier
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/rho_6_matrix_comparison.png"}
+      \caption{Zestawienie wyników testów wydajności wszystkich implementacji dla macierzy $\rho
+      _{1}$.}
+      \label{matrix-comparison-rho-6-plot}
+    \end{figure}
+    \FloatBarrier
 
     \subsection{Pomiary dla wielu zadań}
 
