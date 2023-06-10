@@ -1067,22 +1067,51 @@ Wiśniewski}
 
     \FloatBarrier
 
+    \subsection{Profilowanie Rust z OpenBLAS}
+
+
+    Po przeprowadzeniu testów wydajności uznałem że konieczne jest wykonanie
+    profilowania na najwydajniejszej implementacji, aby sprawdzić czy i gdzie istnieje jeszcze
+    szansa na poprawę. Dlatego też przygotowałem odpowiedni program pomocniczy który
+    wywoływał implementację w języku Rust z OpenBLAS i pojedynczą precyzją bez
+    konieczności angażowania interpretera. Było to rozwiązanie które zarówno pozwalało usunąć
+    duże ilości zbędnych informacji z danych profilowania jak również obejść błędy które
+    otrzymywałem gdy próbowałem profilować zachowanie interpretera.
+
+    \FloatBarrier
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=1.0\textwidth]{"resources/rust_flame_graph_perf.png"}
+      \caption{Wizualizacja charakterystyki zachowania implementacji Rust i Ndaray z OpenBLAS podczas obliczeń pojedynczej precyzji.}
+      \label{rust-flame-graph-prof}
+    \end{figure}
+    \FloatBarrier
+
+    Wizualizacja typu flame graph wyników tego profilowania została umieszczona na
+    rysunku \ref{rust-flame-graph-prof}. Obraz został stworzony przy pomocy programu Hotspot\cite{HOTSPOT}
+    rozwijanego przez firmę KDAB.
+
     \subsection{Pomiary dla wielu zadań}
 
 
     \section{Dyskusja}
 
 
+    \subsection{Skuteczność}
+
+
     Praca ta miała na celu eksplorację dostępnych metod maksymalizacji wydajności
-    algorytmu QGA. Udało mi się w jej ramach zbadać skuteczność wykorzystania dziesięciu
-    wariantów programu, w tym dwóch implementacji w różnych językach programowania. Algorytm
-    QGA został z powodzeniem wielokrotnie zaimplementowany, a wszystkie stworzone
-    implementacje pozwalały uzyskać oczekiwane wyniki liczbowe.
+    algorytmu QGA. Udało mi się w jej ramach zbadać skuteczność wykorzystania pięciu wariantów
+    programu, w tym implementacji w dwóch różnych językach programowania. Algorytm QGA został
+    z powodzeniem wielokrotnie zaimplementowany, a wszystkie stworzone implementacje
+    pozwalały uzyskać oczekiwane wyniki liczbowe.
 
     Przeprowadziłem również liczne testy wydajności dla różnych danych wejściowych dla
     wszystkich wariantów programu, co pozwoliło mi ustalić które metody okazały się najbardziej
-    skuteczne. W przypadku dwóch wariantów programu, udało się się uzyskać znaczącą poprawę
-    wydajności. Są nimi:
+    skuteczne. Ponadto każdy z wariantów był testowany zarówno podczas obliczeń
+    pojedynczej jak i podwójnej precyzji, co pozwoliło zbadać wpływ precyzji obliczeń na
+    wydajność kodu. W przypadku dwóch wariantów programu, udało się się uzyskać znaczącą
+    poprawę wydajności. Są nimi:
     \begin{enumerate}
       \item Python i NumPy z JIT
 
@@ -1092,7 +1121,26 @@ Wiśniewski}
     jak i pojedynczej precyzji, natomiast w przypadku 2. znacząca poprawa występowała dla
     obliczeń pojedynczej precyzji.
 
-    Ponadto, stworzony przeze mnie kod został zamieszczony w trzech repozytoriach:
+    Warto podkreślić, że wydajność obu wariantów jest zbliżona, natomiast nakład pracy konieczny
+    do stworzenia implementacji w języku Rust był nieporównywalnie większy niż ten potrzebny
+    do dodania kompilacji JIT do kodu w języku Python. Podobnych wyników można
+    spodziewać sie w przypadku wielu innych programów skupiających się na dużej ilości
+    obliczeń macierzowych - kompilacja JIT jest w stane dość skutecznie usunąć wady
+    języka Python. Wymaga to poświęcenia pewnej części swobody którą ten język daje, ale
+    ciągle pozostawia jej na tyle dużo, że proces pisania kodu jest mniej szybszy niż w przypadku
+    języków niskopoziomowych. Oczywiście, języki te dają większą kontrolę nad komputerem
+    i pozwalają na wiele błyskotliwych manualnych optymalizacji, tak jak ma się to w
+    przypadku biblioteki OpenBLAS.
+
+    Kolejnym ważnym spostrzeżeniem jest, że 4 z 5 zaprezentowanych implementacji wykorzystywały
+    do wykonywania mnożenia macierzowego bibliotekę OpenBLAS. Pomimo tego różnice w
+    wydajności pomiędzy nimi są bardzo znaczące, ponieważ znaczącą część czasu wykonywania
+    kodu zajmowały inne operacje.
+
+    \subsection{Opublikowany kod}
+
+
+    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie GitHub:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New},
 
@@ -1102,8 +1150,9 @@ Wiśniewski}
     \end{enumerate}
 
     Dla każdego z tych repozytorium istnieje odpowiadający pakiet menadżera pakietów pip
-    zamieszczony na serwerze PyPI. Pozwala to w bardzo prosty sposób rozpocząć korzystanie
-    z programu poprzez instalację następujących pakietów:
+    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem
+    języka Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
+    instalację następujących pakietów:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New_PyPI},
 
