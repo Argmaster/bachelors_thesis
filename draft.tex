@@ -92,29 +92,28 @@ Wiśniewski}
     kwantowego układu oraz określenie jak silnie owe splątanie jest. Bazuje on na
     dostosowanym algorytmie Elmera G. Gilberta\cite{Lindemann_Gilbert}, pozwalającym na wyliczenie
     przybliżonej wartości odległości Hilberta-Schmidta (ang. Hilberta-Schmidta distance,
-    HSD) pomiędzy stanem a zbiorem stanów separowanych. W literaturze algorytm ten
-    pojawia się pod nazwą `kwantowy algorytm Gilberta'(ang. quantum Gilbert algorithm,
-    QGA)\cite{MW_Variational_approach}. Działanie tego algorytmu zostało opisane w pracy
-    `Hilbert-Schmidt distance and entanglement witnessing' której autorami byli Palash Pandya,
-    Omer Sakarya i Marcin Wieśniak\cite{MW_Hilbert_Schmidt_distance}.
+    HSD) pomiędzy stanem kwantowym a zbiorem stanów separowanych. Działanie tego
+    algorytmu zostało opisane w pracy `Hilbert-Schmidt distance and entanglement witnessing'
+    której autorami byli Palash Pandya, Omer Sakarya i Marcin Wieśniak\cite{MW_Hilbert_Schmidt_distance}.
 
-    Dr hab. Marcin Wieśniak, prof. UG, utworzył implementację algorytmu QGA w języku Python,
-    wykorzystując bibliotekę NumPy do przeprowadzania koniecznych obliczeń macierzowych.
-    Wybór ten był podyktowany możliwościami oferowanymi przez taki zestaw narzędzi.
-    Pozwalały one w szybki sposób stworzyć prosty kod, zdolny by relatywnie wydajnie przeprowadzać
+    Dr hab. Marcin Wieśniak, prof. UG, utworzył implementację algorytmu CSSF w języku
+    Python, wykorzystując bibliotekę NumPy do przeprowadzania koniecznych obliczeń macierzowych.
+    Wybór ten był podyktowany możliwościami oferowanymi przez taki zestaw narzędzi. Pozwalały
+    one w szybki sposób stworzyć prosty kod, zdolny by relatywnie wydajnie przeprowadzać
     obliczenia na wszystkich najpopularniejszych systemach dla komputerów stacjonarnych.
 
     Zalety języka Python są powszechnie dostrzegane zarówno przez środowiska akademickie,
-    jak i komercyjne, co wyraźnie widać w zestawieniach takich jak wydane przez GitHub,
-    Inc. `The top programming languages' (2022)\cite{GitHub_Top_languages}. Język Python
+    jak i komercyjne, co wyraźnie widać w zestawieniach takich jak wydane przez GitHub, Inc.
+    `The top programming languages' (2022)\cite{GitHub_Top_languages}. Język Python
     plasuje się w nim na drugim miejscu.
 
     Alternatywy w postaci języków C, C++ czy Fortran wymagałyby większej ilości bardziej
-    skompilowanego kodu, jednocześnie zmuszając do ręcznego skompletowania systemu budowania,
-    bibliotek oraz zastosowania dedykowanych rozwiązań dla każdego systemu operacyjnego,
+    skompilowanego kodu, jednocześnie zmuszając do ręcznego skompletowania systemu
+    budowania, bibliotek oraz zastosowania dedykowanych rozwiązań dla każdego systemu operacyjnego,
     a przeprowadzanie obliczeń byłoby utrudnione.
 
     \subsection{Działanie programu}
+
     Oryginalny program i jego re-implementacja posiadają praktycznie identyczną zasadę działania
     i tylko szczegóły dotyczące sposobu interakcji z nim zmieniły się. Z tego względu w
     dalszej części tekstu sposób działania programu będzie opisywany bez rozgraniczenia
@@ -152,67 +151,61 @@ Wiśniewski}
     odpowiednio niewielka (tj. mniejsza niż $1 \cdot 10^{-4}$) stan jest praktycznie separowalny
     w przeciwnym wypadku może być uważany za splątany.
 
-    \subsection{Cele pracy}
-    Celami tej pracy sa:
+    \subsection{Cel pracy}
+    Celem tej pracy jest eksploracja dostępnych metod maksymalizacji wydajności programu
+    CSSFinder. Zakłada on:
+    \begin{enumerate}
+      \item określenie które fragmenty kodu programu są kluczowe dla jego wydajności,
 
-    \begin{itemize}
-      \item eksploracja dostępnych metod maksymalizacji wydajności algorytmu QGA,
+      \item zidentyfikowanie dostępnych metod (narzędzi) pozwalających na optymalizację czasu
+        wykonania programu,
 
-      \item implementacja algorytmu QGA wybranymi z metod,
+      \item wstępną selekcję metod ocenianych jako potencjalnie najbardziej skuteczne,
 
-      \item weryfikacja poszczególnych z tych rozwiązań pod kątem zmian w czasie pracy programu,
+      \item dokonanie odpowiednich modyfikacji w programie, w tym pełnej re-implementacji
+        wszystkich kluczowych dla wydajności elementów programu z wykorzystaniem kolejno
+        każdej z metod,
 
-      \item dostosowane postaci i sposób dystrybucji programu do standardów ekosystemu języka
-        Python.
-    \end{itemize}
+      \item weryfikację uzyskanej poprawy wydajności poprzez przeprowadzenie pomiarów czasu
+        pracy dla tych samych danych wejściowych w przypadku różnych wariantów kodu,
+
+      \item podsumowanie, które z metod okazały się najbardziej skuteczne.
+    \end{enumerate}
 
     \subsection{Przyczyny przystąpienia do optymalizacji}
-    Na ogół rozpatruje się wiele stanów kwantowych, aby zapoznać się z wybranymi obszarami
-    przestrzeni stanów kwantowych. Wymaga to więc wielokrotnego wywoływania programu
-    CSSFinder na wielu różnych macierzach wejściowych. W naturalny sposób preferowanym jest
-    więc aby obliczenia dla jednego stanu trwały jak najkrócej, im mniej czasu zajmą tym
-    więcej stanów zostanie zbadanych w tym samym czasie.
+    Podczas analizy przestrzeni stanów kwantowych często konieczne jest przeanalizowanie
+    wielu stanów. Wymaga to wielokrotnego wywoływania programu CSSFinder dla wielu różnych
+    macierzy wejściowych. Dlatego też preferowanym jest aby obliczenia dla jednego stanu
+    trwały jak najkrócej.
 
     Niestety, język Python wykorzystany do stworzenia oryginalnej implementacji jest powszechnie
     znany z problemów z wydajnością\cite{srinath2017python}. Są one pokłosiem faktu że jest
     to interpretowany język programowania, a więc konieczne jest by specjalny program (tak
     zwany interpreter) wykonywał instrukcje zawarte w kodzie programu. Dodatkowo jest to
-    język dynamicznie typowany z bardzo rozbudowanymi możliwościami introspekcji,
-    uniemożliwia to zastosowanie wielu z optymalizacji powszechnie wykorzystywanych w
-    innych językach programowania. Cechy te są jednocześnie jednymi z największych zalet
-    Pythona, obok czytelnej składni i rozbudowanego ekosystemu.
+    język dynamicznie typowany z bardzo rozbudowanymi możliwościami introspekcji.
+    Uniemożliwia to zastosowanie wielu z optymalizacji powszechnie wykorzystywanych w
+    innych językach programowania. Warto jednak mieć na uwadze że cechy te są jednocześnie
+    jednymi z największych zalet Pythona, więc nie bez powodu pozostają częścią języka.
 
     Aby zwiększyć wydajność, koniecznym jest więc poczynić pewne kompromisy i zrezygnować
     z rozwiązań wygodnych na rzecz rozwiązań bardziej optymalnych dla wydajności.
-    Jednocześnie niekorzystnym byłoby od razu sięgać po język asemblera, ponieważ posiada
-    on najmniejsze dodatkowe obciążenie i oferuje największą kontrolę nad urządzeniem na
-    którym program jest wykonywany. Chociażby ze względu na fakt że program ten będzie:
-
-    \begin{enumerate}
-      \item nie przenośny pomiędzy architekturami,
-
-      \item czasochłonny do napisania,
-
-      \item istnieje bardzo niewielka szansa że będzie wydajniejszy,
-
-      \item wielokrotnie bardziej objętościowy.
-    \end{enumerate}
-
-    Z tego względu w pracy tej rozważę kilka rozwiązań, czynią mniej radykalne
-    kompromisy i wymagając różnej ilości dodatkowego wysiłku aby uzyskać sprawny program.
-    Jednocześnie pokażę też, że nie jest konieczne pisanie kodu asemblera własnoręcznie,
-    by uzyskać wysoką wydajność.
+    Jednocześnie niekorzystnym byłoby zacząć od podejmowania zbyt radykalnych kroków, na
+    przykład od razu sięgać po język asemblera, który wymaga stworzenia dużej ilości
+    skompilowanego kodu, jeśli języki wyższego poziomu mogą zaoferować podobne osiągi. Z
+    tego względu w dalszej części pracy rozważę kilka rozwiązań które czynią mniej
+    radykalne kompromisy i wymagają różnej ilości dodatkowego wysiłku aby uzyskać
+    sprawny program.
 
     \section{Narzędzia}
     \subsection{Kompilacja AOT}
     Kompilacja AOT (Ahead Of Time) to proces tłumaczenia jednej reprezentacji programu (na
-    przykład w języku programowania wysokiego poziomu) na inną (na przykład kod
-    maszynowy) przed rozpoczęciem pracy kompilowanego programu.
+    przykład w języku programowania wysokiego poziomu) na inną (na przykład kod maszynowy)
+    przed rozpoczęciem pracy kompilowanego programu.
 
-    Obecnie najpowszechniej używana implementacja języka Python, CPython, posiada możliwość
-    korzystania z bibliotek współdzielonych (.so - Linux, .dll/.pyd - Windows) które powstały
-    w skutek kompilacji kodu wysokiego poziomu. Dostęp do funkcji zawartych w takich
-    bibliotekach można uzyskać na kilka sposobów:
+    Obecnie najpowszechniej używana implementacja języka Python, CPython, posiada
+    możliwość korzystania z bibliotek współdzielonych (.so - Linux, .dll/.pyd - Windows)
+    które powstały w skutek kompilacji kodu wysokiego poziomu. Dostęp do funkcji zawartych
+    w takich bibliotekach można uzyskać na kilka sposobów:
 
     \begin{enumerate}
       \item Przy pomocy API modułu ctypes\cite{Python_ctypes}. Pozwala ono opisać interfejs
@@ -242,25 +235,25 @@ Wiśniewski}
         Python, również opartej na adnotacjach typów\cite{mypy}.
     \end{enumerate}
 
-    Ponieważ w każdym z wymienionych przypadków, kod niższego poziomu jest kompilowany
-    przed dostarczeniem do użytkownika, pozwala to na wykorzystanie zaawansowanych możliwości
+    Ponieważ w każdym z wymienionych przypadków, kod niższego poziomu jest kompilowany przed
+    dostarczeniem do użytkownika, pozwala to na wykorzystanie zaawansowanych możliwości
     automatycznej optymalizacji dostarczanych przez współczesne kompilatory, na przykład
     LLVM, które jest sercem implementacji clang (język C++) oraz rustc (język Rust).
 
     \subsection{Kompilacja JIT}
-    Kompilacja JIT to proces tłumaczenia jednej reprezentacji programu (na przykład w
-    języku programowania wysokiego poziomu) na inną (na przykład kod maszynowy) po rozpoczęciu
-    pracy programu. Zazwyczaj wymaga to aby program rozpoczynał pracę w trybie
-    interpretowanym, a następne kompilował sam siebie i przechodził w tryb wykonywania skompilowanego
+    Kompilacja JIT to proces tłumaczenia jednej reprezentacji programu (na przykład w języku
+    programowania wysokiego poziomu) na inną (na przykład kod maszynowy) po rozpoczęciu
+    pracy programu. Zazwyczaj wymaga to aby program rozpoczynał pracę w trybie interpretowanym,
+    a następne kompilował sam siebie i przechodził w tryb wykonywania skompilowanego
     kodu.
 
-    W momencie pisania tej pracy istnieją dwa szeroko dostępne i aktywnie utrzymywane narzędzia
-    oferujące kompilację JIT dla języka Python.
+    W momencie pisania tej pracy istnieją dwa szeroko dostępne i aktywnie utrzymywane
+    narzędzia oferujące kompilację JIT dla języka Python.
 
     Pierwszym z nich jest pełna alternatywna implementacja języka Python - PyPy\cite{PyPy_Home_Page}.
-    Wykonywana przez nią kompilacja JIT działa on na podobnej zasadzie do uprzednio wymienionych
-    - śledzi cały kod który wykonuje i automatycznie decyduje które fragmenty skompilować
-    do kodu maszynowego\cite{PyPy_JIT}.
+    Wykonywana przez nią kompilacja JIT działa on na podobnej zasadzie do uprzednio
+    wymienionych - śledzi cały kod który wykonuje i automatycznie decyduje które
+    fragmenty skompilować do kodu maszynowego\cite{PyPy_JIT}.
 
     % ROZWIĄZANIE ODRZUCONE
     % Niestety, posiada ona zasadniczą
@@ -273,9 +266,9 @@ Wiśniewski}
     % że PyPy nadaje się głównie do wykonywania aplikacji napisanych w czystym języku
     % Python.
 
-    Drugim narzędziem jest biblioteka Numba\cite{Numba_Article}\cite{Numba_Doc}. Ona, w przeciwieństwie
-    do PyPy, wymaga aby fragmenty kodu, które mają być skompilowane, miały postać
-    funkcji oznaczonych dedykowanymi dekoratorami.
+    Drugim narzędziem jest biblioteka Numba\cite{Numba_Article}\cite{Numba_Doc}. Ona, w
+    przeciwieństwie do PyPy, wymaga aby fragmenty kodu, które mają być skompilowane, miały
+    postać funkcji oznaczonych dedykowanymi dekoratorami.
 
     % Została ona również zaprojektowana aby dobrze współgrać
     % z biblioteką NumPy. Jej zastosowanie z założenia ma generować wzrost wydajności nawet
@@ -296,67 +289,67 @@ Wiśniewski}
     \FloatBarrier
 
     Tabela \ref{selected-tool} zawiera zestawienie języków programowania i zastosowanych
-    bibliotek użytych do wykonania re-implementacji algorytmu QGA.
+    bibliotek użytych do wykonania re-implementacji algorytmu CSSF.
 
     \subsubsection{Python i NumPy}
-    Pierwsza wykonana przeze mnie re-implementacja algorytmu, została napisana w języku
-    Python, a do realizowania obliczeń na macierzach liczb zespolonych wykorzystywała bibliotekę
-    NumPy. Był to dokładnie taki same zestaw, jak wykorzystany do oryginalnej implementacji.
-    Podczas przepisywania podjąłem jednak dodatkowe wysiłki aby zastępować kod Pythona
-    wywołaniami do funkcji zawartych w bibliotece NumPy. Ponieważ kluczowe dla wydajności
-    fragmenty kodu tego pakietu są zaimplementowane w języku niższego poziomu, a
-    następnie skompilowane kompilatorem optymalizującym, oferują znacznie wyższą wydajność
-    niż analogiczny kod napisany w języku Python. Proces ten pozwolił mi również
-    zapoznać się lepiej z charakterystyką programu i udoskonalić interfejs służący do
-    komunikacji pomiędzy częścią główną, a samą implementacją (backend'em).
+    Pierwsza wykonana przeze mnie re-implementacja algorytmu, została napisana w języku Python,
+    a do realizowania obliczeń na macierzach liczb zespolonych wykorzystywała bibliotekę
+    NumPy. Był to dokładnie taki same zestaw, jak wykorzystany do oryginalnej
+    implementacji. Podczas przepisywania podjąłem jednak dodatkowe wysiłki aby zastępować
+    kod Pythona wywołaniami do funkcji zawartych w bibliotece NumPy. Ponieważ kluczowe
+    dla wydajności fragmenty kodu tego pakietu są zaimplementowane w języku niższego
+    poziomu, a następnie skompilowane kompilatorem optymalizującym, oferują znacznie
+    wyższą wydajność niż analogiczny kod napisany w języku Python. Proces ten pozwolił mi
+    również zapoznać się lepiej z charakterystyką programu i udoskonalić interfejs służący
+    do komunikacji pomiędzy częścią główną, a samą implementacją (backend'em).
 
     \subsubsection{Python i NumPy z AOT}
-    Następnym wykonanym przeze mnie krokiem było skompilowanie mojej implementacji korzystającej
-    z NumPy do kodu maszynowego przy pomocy biblioteki Cython. Kod przeznaczony do
-    takiej kompilacji nie musi być adnotowany dedykowanymi informacjami o typach. Zostanie
-    on w tedy przetłumaczony na odpowiednie operacje w języku C/C++, a potem
-    skompilowany do kodu maszynowego. Brak adnotacji powoduje niestety, że program
-    zachowuje swoją dynamiczną naturę, charakterystyczną dla języka Python. Kompilacja
-    pozwala jednak usunąć dodatkowy narzut na procesor ze strony interpretera. W takim scenariuszu
-    spodziewać należy się, że zyski z kompilacji będą niewielkie, ale mogą wystąpić.
+    Następnym wykonanym przeze mnie krokiem było skompilowanie mojej implementacji
+    korzystającej z NumPy do kodu maszynowego przy pomocy biblioteki Cython. Kod przeznaczony
+    do takiej kompilacji nie musi być adnotowany dedykowanymi informacjami o typach.
+    Zostanie on w tedy przetłumaczony na odpowiednie operacje w języku C/C++, a potem skompilowany
+    do kodu maszynowego. Brak adnotacji powoduje niestety, że program zachowuje swoją dynamiczną
+    naturę, charakterystyczną dla języka Python. Kompilacja pozwala jednak usunąć dodatkowy
+    narzut na procesor ze strony interpretera. W takim scenariuszu spodziewać należy się,
+    że zyski z kompilacji będą niewielkie, ale mogą wystąpić.
 
     \subsubsection{Python i NumPy z JIT}
-    Ostatnia stworzona przeze mnie re-implementacja w języku Python bazująca na bibliotece
-    NumPy dodatkowo korzysta z kompilacji JIT. Pakiet Numba, który został wykorzystany do
-    zrealizowania kompilacji JIT, posiada dwa tryby pracy. Pierwszy wykonuje kompilację na
-    podstawie specjalnie dostarczonych przez programistę deklaracji typów dla funkcji podlegających
-    kompilacji i jest wykonywany zaraz po rozpoczęciu pracy programu\footnote{ang. eager
-    (compilation) - niecierpliwa (kompilacja).}. Drugi polega na śledzeniu typów
-    wejściowych i wyjściowych funkcji i automatycznie kompiluje funkcję dla tych typów
-    danych które są odpowiednio często używane używane\footnote{ang. lazy (compilation)
-    - leniwa (kompilacja).}.
+    Ostatnia stworzona przeze mnie re-implementacja w języku Python bazująca na
+    bibliotece NumPy dodatkowo korzysta z kompilacji JIT. Pakiet Numba, który został
+    wykorzystany do zrealizowania kompilacji JIT, posiada dwa tryby pracy. Pierwszy
+    wykonuje kompilację na podstawie specjalnie dostarczonych przez programistę
+    deklaracji typów dla funkcji podlegających kompilacji i jest wykonywany zaraz po
+    rozpoczęciu pracy programu\footnote{ang. eager (compilation) - niecierpliwa (kompilacja).}.
+    Drugi polega na śledzeniu typów wejściowych i wyjściowych funkcji i automatycznie kompiluje
+    funkcję dla tych typów danych które są odpowiednio często używane używane\footnote{ang.
+    lazy (compilation) - leniwa (kompilacja).}.
 
-    Ponadto, Numba posiada dodatkowe parametry kompilacji, które można przekazać do
-    funkcji \code{numba.jit}. Jednym z nich, posiadającym szczególnie duży wpływ na wydajność,
-    flaga \code{nopython}. Tryb \code{nopython=True} oferuje znacznie większe możliwości
-    optymalizacji i potencjalnie lepszą wydajność. Niestety nie wszystkie funkcje
-    dostępne w bibliotece NumPy są akceptowane przez kompilator JIT pakietu Numba w
-    trybie \code{nopython=True}. Do niekompatybilnych należy między innymi funkcja
-    tensordot która implementuje mnożenie tensorowe. Wspomniana funkcja może zostać skompilowana
-    tylko w trybie obiektowym (\code{nopython=False}), który po kompilacji zachowuje dynamiczną
-    naturę Pythona. Niestety, brak możliwości skompilowania funkcji używającej tensordot
-    powoduje również brak możliwości skompilowania funkcji wyżej w drzewie wywołań. W
-    efekcie znacząca część implementacji używającej JIT musi używać trybu obiektowego.
+    Ponadto, Numba posiada dodatkowe parametry kompilacji, które można przekazać do funkcji
+    \code{numba.jit}. Jednym z nich, posiadającym szczególnie duży wpływ na wydajność, flaga
+    \code{nopython}. Tryb \code{nopython=True} oferuje znacznie większe możliwości
+    optymalizacji i potencjalnie lepszą wydajność. Niestety nie wszystkie funkcje dostępne
+    w bibliotece NumPy są akceptowane przez kompilator JIT pakietu Numba w trybie \code{nopython=True}.
+    Do niekompatybilnych należy między innymi funkcja tensordot która implementuje mnożenie
+    tensorowe. Wspomniana funkcja może zostać skompilowana tylko w trybie obiektowym (\code{nopython=False}),
+    który po kompilacji zachowuje dynamiczną naturę Pythona. Niestety, brak możliwości
+    skompilowania funkcji używającej tensordot powoduje również brak możliwości
+    skompilowania funkcji wyżej w drzewie wywołań. W efekcie znacząca część implementacji
+    używającej JIT musi używać trybu obiektowego.
 
     \subsubsection{Rust i Ndarray}
-    Aby uczynić to porównanie jak najpełniejszym, podjąłem również wysiłek zaimplementowania
-    części obliczeniowej programu w języku Rust.
+    Aby uczynić to porównanie jak najpełniejszym, podjąłem również wysiłek
+    zaimplementowania części obliczeniowej programu w języku Rust.
 
     Język ten wybrałem z kilku względów. Przede wszystkim posiada on gotową, rozbudowaną
-    infrastrukturę narzędzi pomocniczych. Do tych narzędzi zaliczyć należy menadżera
-    pakietów cargo, który zarówno pozwala w łatwy sposób kompilować bardziej rozbudowane
-    projekty i tworzyć z nich łatwe do obsługi pakiety, ale również daje możliwość
-    korzystania z pakietów udostępnionych przez innych programistów.
+    infrastrukturę narzędzi pomocniczych. Do tych narzędzi zaliczyć należy menadżera pakietów
+    cargo, który zarówno pozwala w łatwy sposób kompilować bardziej rozbudowane projekty
+    i tworzyć z nich łatwe do obsługi pakiety, ale również daje możliwość korzystania z pakietów
+    udostępnionych przez innych programistów.
 
-    Pozwoliło to w łatwy i szybki sposób skompletować zestaw bibliotek umożliwiających
-    wydajne i wygodne tworzenie kodu implementacji algorytmu QGA. Ponadto istnienie biblioteki
-    PyO3 znacząco uprościło proces tworzenia interfejsu pozwalającemu interpreterowi języka
-    Python na interakcję z tą implementacją.
+    Pozwoliło to w łatwy i szybki sposób skompletować zestaw bibliotek umożliwiających wydajne
+    i wygodne tworzenie kodu implementacji algorytmu CSSF. Ponadto istnienie biblioteki
+    PyO3 znacząco uprościło proces tworzenia interfejsu pozwalającemu interpreterowi
+    języka Python na interakcję z tą implementacją.
 
     Jednocześnie język Rust jest językiem:
     \begin{enumerate}
@@ -372,25 +365,25 @@ Wiśniewski}
         dedykowanego automatycznego `odśmiecacza' (ang. garbage collector).
     \end{enumerate}
 
-    Cechy te pozwalają oczekiwać, że skompilowany kod będzie osiągał wydajność zbliżoną
-    do kodu C/C++, skompilowanych przy pomocy kompilatora clang, który również
-    wykorzystuje LLVM do optymalizacji kodu.
+    Cechy te pozwalają oczekiwać, że skompilowany kod będzie osiągał wydajność zbliżoną do
+    kodu C/C++, skompilowanych przy pomocy kompilatora clang, który również wykorzystuje
+    LLVM do optymalizacji kodu.
 
-    Cały proces wstępnej konfiguracji sprowadził się do około godziny, co stanowi wyśmienity
-    wynik, a cały proces implementacji zajął niewiele więcej czasu niż implementacja w
-    języku Python. Jednocześnie język Rust posiada system typów który jest w stanie pomieścić
-    bardzo dużo informacji o zamiarach programisty. W efekcie kompilator ma możliwość
+    Cały proces wstępnej konfiguracji sprowadził się do około godziny, co stanowi
+    wyśmienity wynik, a cały proces implementacji zajął niewiele więcej czasu niż implementacja
+    w języku Python. Jednocześnie język Rust posiada system typów który jest w stanie
+    pomieścić bardzo dużo informacji o zamiarach programisty. W efekcie kompilator ma możliwość
     wychwycić wiele błędów, których nie może zauważyć kompilator języka C++.
 
     \subsubsection{Rust i Ndarray z OpenBLAS}
-    Biblioteka Ndarray, która jest sercem implementacji w języku Rust, posiada przełącznik
-    funkcjonalności\footnote{ang. feature switch} który pozwala wykorzystać funkcje
-    zawarte w bibliotece OpenBLAS jako implementację mnożenia macierzowego. Powoduje to niestety,
-    że kompilacja programu zaczyna wymagać by biblioteka OpenBLAS była zainstalowana i
-    dostępna podczas kompilacji, co jest trudne do uzyskania w środowisku które wykorzystuję
-    do kompilacji. W efekcie kompilacja dla wszystkich platform które ma wspierać
-    CSSFinder (Windows, Linux i MacOS) jest poza moim zasięgiem, natomiast byłem w
-    stanie przeprowadzić ją na komputerze który wykorzystuję do testów wydajności, więc została
+    Biblioteka Ndarray, która jest sercem implementacji w języku Rust, posiada
+    przełącznik funkcjonalności\footnote{ang. feature switch} który pozwala wykorzystać funkcje
+    zawarte w bibliotece OpenBLAS jako implementację mnożenia macierzowego. Powoduje to
+    niestety, że kompilacja programu zaczyna wymagać by biblioteka OpenBLAS była zainstalowana
+    i dostępna podczas kompilacji, co jest trudne do uzyskania w środowisku które
+    wykorzystuję do kompilacji. W efekcie kompilacja dla wszystkich platform które ma wspierać
+    CSSFinder (Windows, Linux i MacOS) jest poza moim zasięgiem, natomiast byłem w stanie
+    przeprowadzić ją na komputerze który wykorzystuję do testów wydajności, więc została
     ona wzięta pod uwagę w zestawieniu.
 
     \section{Metody}
@@ -408,34 +401,33 @@ Wiśniewski}
     % różni się i posiada problematyczne zależności (CUDA) co czyni adaptację kodu czasochłonną.}.
 
     \subsection{Modularyzacja}
-    Re-implementując program CSSFinder planowałem wypróbować liczne rozwiązania, które wymagały
-    zasadniczych zmian w kodzie algorytmu, w tym przepisania go w innym języku
-    programowania. Jednocześnie część programu odpowiadająca za interakcję z użytkownikiem
-    i ładowanie zasobów miała pozostawać taka sama. Zdecydowałem więc że tworzony przeze
-    mnie kod musi być modularny, aby uniknąć duplikacji wspólnych elementów. Tak też
-    program został podzielony na dwie części: główną (`core'), z interfejsem
-    użytkowników i narzędziami pomocniczymi oraz część implementującą algorytm (`backend').
-    Korpus jest w całości napisany w języku Python i wykorzystuje wbudowany w ten język mechanizm
-    importowania bibliotek w celu wykrywania i ładowania dostępnych implementacji algorytmu
-    (`backendów'). Dane macierzowe w obrębie korpusu przechowywane są jako obiekty
-    ndarray z biblioteki NumPy, ze względu na uniwersalność w świecie bibliotek do obliczeń
-    tensorowych (wiele bibliotek w innych językach programowania oferuje gotowe
-    narzędzia do transformacji obiektów ndarray na reprezentacje charakterystyczne dla
-    tych bibliotek).
+    Re-implementując program CSSFinder planowałem wypróbować liczne rozwiązania, które
+    wymagały zasadniczych zmian w kodzie algorytmu, w tym przepisania go w innym języku programowania.
+    Jednocześnie część programu odpowiadająca za interakcję z użytkownikiem i ładowanie
+    zasobów miała pozostawać taka sama. Zdecydowałem więc że tworzony przeze mnie kod musi
+    być modularny, aby uniknąć duplikacji wspólnych elementów. Tak też program został podzielony
+    na dwie części: główną (`core'), z interfejsem użytkowników i narzędziami pomocniczymi
+    oraz część implementującą algorytm (`backend'). Korpus jest w całości napisany w
+    języku Python i wykorzystuje wbudowany w ten język mechanizm importowania bibliotek
+    w celu wykrywania i ładowania dostępnych implementacji algorytmu (`backendów'). Dane
+    macierzowe w obrębie korpusu przechowywane są jako obiekty ndarray z biblioteki NumPy,
+    ze względu na uniwersalność w świecie bibliotek do obliczeń tensorowych (wiele bibliotek
+    w innych językach programowania oferuje gotowe narzędzia do transformacji obiektów ndarray
+    na reprezentacje charakterystyczne dla tych bibliotek).
 
-    Pozwala to na proste podmiany implementacji o dowolnie różnym pochodzeniu, w tym
-    implementacje w językach kompilowanych. Uprościło to znacznie proces weryfikacji zmian
-    w zachowaniu programu i przyspieszyło proces tworzenia kolejnych implementacji, jako
-    że kod interfejsu programistycznego jest mniej pracochłonny niż kod pozwalający na
-    interakcję z użytkownikiem. W przyszłości może to również pozwolić na łatwiejszy rozwój
-    nowych implementacji oraz dodawanie nowych funkcjonalności do programu, ponieważ
-    będą one mogły być implementowane stopniowo w różnych implementacjach.
+    Pozwala to na proste podmiany implementacji o dowolnie różnym pochodzeniu, w tym implementacje
+    w językach kompilowanych. Uprościło to znacznie proces weryfikacji zmian w
+    zachowaniu programu i przyspieszyło proces tworzenia kolejnych implementacji, jako że
+    kod interfejsu programistycznego jest mniej pracochłonny niż kod pozwalający na interakcję
+    z użytkownikiem. W przyszłości może to również pozwolić na łatwiejszy rozwój nowych
+    implementacji oraz dodawanie nowych funkcjonalności do programu, ponieważ będą one mogły
+    być implementowane stopniowo w różnych implementacjach.
 
     \subsection{Dane testowe}
     Podczas pomiarów konsekwentnie wykorzystywałem ten sam zestaw macierzy gęstości, aby
-    móc wygodnie porównywać wyniki wydajności poszczególnych implementacji. W dalszej
-    części pracy będę wielokrotnie odnosił się do tych macierzy posługując się symbolem
-    $\rho$ z liczbą w indeksie dolnym. Liczba ta będzie wskazywać na konkretną z wymienionych
+    móc wygodnie porównywać wyniki wydajności poszczególnych implementacji. W dalszej części
+    pracy będę wielokrotnie odnosił się do tych macierzy posługując się symbolem $\rho$ z
+    liczbą w indeksie dolnym. Liczba ta będzie wskazywać na konkretną z wymienionych
     poniżej macierzy.
 
     \FloatBarrier
@@ -449,16 +441,16 @@ Wiśniewski}
 
     \FloatBarrier
 
-    Pierwsza wymieniana macierz opisuje układ 5 kubitów i posiada wymiary $32\times32$.
-    Pomimo że nie zawiera ona wartości, podczas analizy zawsze będzie reprezentowana przez
-    macierze zawierające liczby zespolone, ponieważ szczególnie kosztowne obliczeniowo
-    części algorytmu wymagają aby części urojone były obecne, co znaczy że usuwanie ich w
+    Pierwsza wymieniana macierz opisuje układ 5 kubitów i posiada wymiary $32\times32$. Pomimo
+    że nie zawiera ona wartości, podczas analizy zawsze będzie reprezentowana przez
+    macierze zawierające liczby zespolone, ponieważ szczególnie kosztowne obliczeniowo części
+    algorytmu wymagają aby części urojone były obecne, co znaczy że usuwanie ich w
     wybranych miejscach nie niesie wymiernych zysków wydajnościowych.
 
-    Następnie w zbiorze macierzy wykorzystywanych jako dane wejściowe znajduje się pięć macierzy
-    reprezentujących układy od 2 do 6 kubitów, które przyjmują rozmiary od $4\times 4$
-    do $64\times64$. Są one wypełnione zerami poza pierwszym i ostatnim elementem w pierwszej
-    i ostatniej kolumnie - te przyjmują wartość $0.5$.
+    Następnie w zbiorze macierzy wykorzystywanych jako dane wejściowe znajduje się pięć
+    macierzy reprezentujących układy od 2 do 6 kubitów, które przyjmują rozmiary od $4\times
+    4$ do $64\times64$. Są one wypełnione zerami poza pierwszym i ostatnim elementem w
+    pierwszej i ostatniej kolumnie - te przyjmują wartość $0.5$.
 
     \FloatBarrier
     \begin{figure}[ht]
@@ -480,20 +472,20 @@ Wiśniewski}
 
     \FloatBarrier
 
-    W tekście macierze te będą oznaczane jako $\rho_{2}$ do $\rho_{6}$, w zależności od
-    reprezentowanej liczby kubitów\footnote{Tak więc macierz $\rho_{2}$ ma wymiary $4\times
-    4$ i reprezentuje 2 kubity, macierz $\rho_{3}$ ma wymiary $8\times8$ i reprezentuje
-    3 kubity, macierz $\rho_{4}$ ma wymiary $16\times16$ i reprezentuje 4 kubity, itd. aż
-    do $\rho_{6}$, $64\times64$ .}. Macierze te stanowią wygodny zestaw danych do
-    weryfikacji ogólnej charakterystyki zachowania alternatywnych implementacji
-    algorytmu, pomimo, że wyniki przy ich pomocy uzyskiwane tak bardzo odbiegają od tych
-    uzyskiwanych przy pomocy $\rho_{0}$.
+    W tekście macierze te będą oznaczane jako $\rho_{2}$ do $\rho_{6}$, w zależności od reprezentowanej
+    liczby kubitów\footnote{Tak więc macierz $\rho_{2}$ ma wymiary $4\times 4$ i
+    reprezentuje 2 kubity, macierz $\rho_{3}$ ma wymiary $8\times8$ i reprezentuje 3 kubity,
+    macierz $\rho_{4}$ ma wymiary $16\times16$ i reprezentuje 4 kubity, itd. aż do
+    $\rho_{6}$, $64\times64$ .}. Macierze te stanowią wygodny zestaw danych do weryfikacji
+    ogólnej charakterystyki zachowania alternatywnych implementacji algorytmu, pomimo, że
+    wyniki przy ich pomocy uzyskiwane tak bardzo odbiegają od tych uzyskiwanych przy pomocy
+    $\rho_{0}$.
 
     \subsection{Środowisko testowe}
-    Podczas pomiarów wydajności wykorzystywałem każdorazowo to samo środowisko testowe. Do
-    chłodzenia CPU wykorzystywane było chłodzenie wodne typu AIO, temperatura w pokoju
-    oscylowała w okolicy 25°C, procesor podczas testów wydajności nie doświadczał temperatur
-    powyżej 80°C.
+    Podczas pomiarów wydajności wykorzystywałem każdorazowo to samo środowisko testowe.
+    Do chłodzenia CPU wykorzystywane było chłodzenie wodne typu AIO, temperatura w pokoju
+    oscylowała w okolicy 25°C, procesor podczas testów wydajności nie doświadczał
+    temperatur powyżej 80°C.
 
     \FloatBarrier
     \begin{table}[ht]
@@ -505,11 +497,13 @@ Wiśniewski}
     \FloatBarrier
 
     \subsection{Profilowanie}
-    Podczas prac nad optymalizacją czasu pracy programu kluczowym było stałe zbieranie
-    informacji na temat tego które fragmenty kodu pochłaniają najwięcej czasu. Standardowo
-    proces zbierania takich danych określa się mianem profilowania i technologie po które
-    sięgałem podczas re-implementacji algorytmu posiadają gotowe narzędzia pozwalające na
-    skuteczne pozyskiwanie takich danych oraz ich wizualizację.
+    Podczas prac nad optymalizacją czasu pracy programu kluczowym było zbieranie informacji
+    na temat tego które fragmenty kodu są kluczowe dla wydajności całego programu.
+    Rzadko bowiem zdarza się by wszystkie operacje wykonywane przez program miały
+    równomierny wkład w czas wykonania. Standardowo proces zbierania takich danych określa
+    się mianem profilowania i technologie po które sięgałem podczas re-implementacji algorytmu
+    posiadają gotowe narzędzia pozwalające na skuteczne pozyskiwanie takich danych oraz ich
+    wizualizację.
 
     Dla kodu w języku Python, implementacja CPython tego języka posiada w bibliotece
     standardowej dwa dedykowane moduły oferujące funkcjonalność profilowania: `profile' i
@@ -524,7 +518,7 @@ Wiśniewski}
     wykorzystałem jedno z otwartoźródłowych narzędzi funkcjonujące pod nazwą hotspot\cite{HOTSPOT}.
 
     \subsection{Precyzja obliczeń}
-    Oryginalny program, jak i pierwsze stworzone przezemnie re-implementacje posługiwały
+    Oryginalny program, jak i pierwsze stworzone przeze mnie re-implementacje posługiwały
     się liczbami zespolonymi na bazie liczb zmiennoprzecinkowych podwójnej precyzji.
     Jedna taka liczba zajmuje 64 bity. Jednak w wielu przypadkach taka precyzja obliczeń
     nie jest konieczna do uzyskania poprawnych wyników. Podstawową zaletą wykorzystania
@@ -588,14 +582,15 @@ Wiśniewski}
 
     Pozwoliło mi to wstępnie przyjrzeć się charakterystyce pracy programu i ocenić czy powszechnie
     dostępne narzędzia mogą zostać wykorzystane w tym wypadku. Rysunek
-    \ref{pre-prof-perf} przedstawia diagram, typu Icicle, obrazujący udział czasu, pochłoniętego
-    przez wykonywanie poszczególnych funkcji, w całkowitym czasie pracy programu. Pierwszy
-    blok od góry (\code{~:0(<built-in method builtins.exec>)}) to wywołanie funkcji
-    wykonującej kod programu. Następne bloki, których opisy zaczynają się od `CSSFinder.py'
-    to wywołania w kodzie programu. Bloki umieszczone najniżej, w większości pozbawione
-    opisów, to wywołania do funkcji bibliotek, głównie NumPy, ale również modułów wbudowanych
-    Pythona. Snakeviz automatycznie podejmuje decyzję o nie adnotowaniu bloku gdy opis
-    nie ma szansy zmieścić się w obrębie bloku. Aby usunąć z diagramu zbędny szum informacyjny,
+    \ref{pre-prof-perf} przedstawia diagram typu Icicle obrazujący udział czasu
+    pochłoniętego przez wykonywanie poszczególnych funkcji, w całkowitym czasie pracy programu.
+    Pierwszy blok od góry (\code{~:0(<built-in method builtins.exec>)}) to wywołanie funkcji
+    wykonującej kod programu. Następne bloki idąc w dół wykresu, to kolejne warstwy wywołań
+    funkcji. Te których opisy zaczynają się od `CSSFinder.py' to wywołania w kodzie
+    programu. Bloki umieszczone najniżej, w większości pozbawione opisów, to wywołania do
+    funkcji bibliotek, głównie NumPy, ale również modułów wbudowanych Pythona. Snakeviz
+    automatycznie podejmuje decyzję o nie adnotowaniu bloku gdy opis nie ma szansy
+    zmieścić się w obrębie bloku. Aby usunąć z diagramu zbędny szum informacyjny,
     funkcje których wykonywanie zajęło mniej niż 1\% czasu programu były pomijane.
 
     \FloatBarrier
@@ -686,7 +681,7 @@ Wiśniewski}
 
     \subsection{Pomiary z podwójną precyzją}
     W dalszej części pracy prezentuje wyniki pomiarów czasu pracy re-implementacji algorytmu
-    QGA wykorzystujących liczby zmiennoprzecinkowe podwójnej precyzji.
+    CSSF wykorzystujących liczby zmiennoprzecinkowe podwójnej precyzji.
 
     \subsubsection{ Python i NumPy }
     Pomiary czasu pracy były wykonywane przy użyciu macierzy $\rho_{1}$ - $\rho_{6}$.
@@ -1076,7 +1071,8 @@ Wiśniewski}
     wywoływał implementację w języku Rust z OpenBLAS i pojedynczą precyzją bez
     konieczności angażowania interpretera. Było to rozwiązanie które zarówno pozwalało usunąć
     duże ilości zbędnych informacji z danych profilowania jak również obejść błędy które
-    otrzymywałem gdy próbowałem profilować zachowanie interpretera.
+    otrzymywałem gdy próbowałem profilować zachowanie interpretera. Do profilowania
+    wykorzystana została macierz $64\times 64$.
 
     \FloatBarrier
     \begin{figure}[ht]
@@ -1087,9 +1083,18 @@ Wiśniewski}
     \end{figure}
     \FloatBarrier
 
-    Wizualizacja typu flame graph wyników tego profilowania została umieszczona na
-    rysunku \ref{rust-flame-graph-prof}. Obraz został stworzony przy pomocy programu Hotspot\cite{HOTSPOT}
-    rozwijanego przez firmę KDAB.
+    Wizualizacja typu flame graph wyników tego profilowania została umieszczona na rysunku
+    \ref{rust-flame-graph-prof}. Wykres przedstawia dane analogicznie do wykresy Icircle
+    z rysunku \ref{pre-prof-perf}, natomiast robi to w przeciwnym kierunku - pierwsze wywołania
+    są na dole, a te najbardziej zagnieżdżone na górze. Obraz został stworzony przy pomocy
+    programu Hotspot\cite{HOTSPOT} rozwijanego przez firmę KDAB.
+
+    Na podstawie zaprezentowanego wykresu wywnioskować można, że większość czasu pracy programu
+    - około 95\% - pochłaniają mnożenia macierzowe wykonywane w obrębie funkcji \code{rotate()}.
+    Operacje te wykonywane są przy pomocy funkcji z biblioteki OpenBLAS. Korzysta ona z implementacji
+    napisanych w języku Asemblera, które są specjalnie optymalizowane by wykorzystywać
+    maksimum możliwości sprzętowych. Tym samym nie ma prostej możliwości by kontynuować proces
+    optymalizacji czasu wykonania programu.
 
     \subsection{Pomiary dla wielu zadań}
 
@@ -1097,21 +1102,20 @@ Wiśniewski}
     \section{Dyskusja}
 
 
-    \subsection{Skuteczność}
-
-
-    Praca ta miała na celu eksplorację dostępnych metod maksymalizacji wydajności
-    algorytmu QGA. Udało mi się w jej ramach zbadać skuteczność wykorzystania pięciu wariantów
-    programu, w tym implementacji w dwóch różnych językach programowania. Algorytm QGA został
-    z powodzeniem wielokrotnie zaimplementowany, a wszystkie stworzone implementacje
+    Praca ta miała na celu eksplorację dostępnych metod maksymalizacji wydajności algorytmu
+    CSSF. Udało mi się w jej ramach zbadać skuteczność wykorzystania pięciu wariantów
+    programu, w tym implementacji w dwóch różnych językach programowania. Algorytm CSSF
+    został z powodzeniem wielokrotnie zaimplementowany, a wszystkie stworzone implementacje
     pozwalały uzyskać oczekiwane wyniki liczbowe.
 
-    Przeprowadziłem również liczne testy wydajności dla różnych danych wejściowych dla
-    wszystkich wariantów programu, co pozwoliło mi ustalić które metody okazały się najbardziej
-    skuteczne. Ponadto każdy z wariantów był testowany zarówno podczas obliczeń
-    pojedynczej jak i podwójnej precyzji, co pozwoliło zbadać wpływ precyzji obliczeń na
-    wydajność kodu. W przypadku dwóch wariantów programu, udało się się uzyskać znaczącą
-    poprawę wydajności. Są nimi:
+    Przeprowadziłem również liczne testy wydajności dla różnych danych wejściowych dla wszystkich
+    wariantów programu, co pozwoliło mi ustalić które metody okazały się najbardziej
+    skuteczne. Ponadto każdy z wariantów był testowany zarówno podczas obliczeń pojedynczej
+    jak i podwójnej precyzji. Stworzyło to okazję do zbadania wpływu precyzji obliczeń
+    na wydajność kodu. W przypadku dwóch wariantów programu, udało się się uzyskać
+    znaczącą poprawę wydajności.
+
+    Po przeprowadzeniu analizy uzyskanych wyników udało mi się wskazać, że
     \begin{enumerate}
       \item Python i NumPy z JIT
 
@@ -1137,10 +1141,16 @@ Wiśniewski}
     wydajności pomiędzy nimi są bardzo znaczące, ponieważ znaczącą część czasu wykonywania
     kodu zajmowały inne operacje.
 
-    \subsection{Opublikowany kod}
+    Nie wyczerpuje możliwości - CUDA / CuPy / uzycie GPU Nie które metody nie przyniosły
+    znaczącego przyspieszenia - Cython Dlaczego nie PyPy, Tensorflow, etc.
+
+    Nieskuteczne zmiany algorytmiczne - redukcja mnożenia macierzowego (product)
+
+    \subsection{Wnioski}
 
 
-    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie GitHub:
+    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie
+    GitHub:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New},
 
@@ -1150,8 +1160,8 @@ Wiśniewski}
     \end{enumerate}
 
     Dla każdego z tych repozytorium istnieje odpowiadający pakiet menadżera pakietów pip
-    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem
-    języka Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
+    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem języka
+    Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
     instalację następujących pakietów:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New_PyPI},
@@ -1161,8 +1171,8 @@ Wiśniewski}
       \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust_PyPI},
     \end{enumerate}
 
-    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera języka
-    Python w wersji 3.8 lub nowszej.
+    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera
+    języka Python w wersji 3.8 lub nowszej.
   \end{sloppypar}
   \newpage
   \begin{sloppypar}
