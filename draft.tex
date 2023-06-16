@@ -152,9 +152,9 @@ Wiśniewski}
     maksymalna ilość iteracji do wykonania - ta z tych wartości która zostanie
     osiągnięta jako pierwsza decyduje o zatrzymaniu programu. Jeśli wyznaczona przez program
     odległość HSD jest odpowiednio niewielka (tj. mniejsza niż $1 \cdot 10^{-4}$)
-    oznacza to że stan jest praktycznie separowalny. W przeciwnym wypadku stan jest
-    splątany. Oznacza to, że części składowe układu nie mogą być opisane jako
-    oddzielne systemy, a informacje o jednej części mają wpływ na opis drugiej.
+    oznacza to że stan jest praktycznie separowalny. W przeciwnym wypadku stan jest splątany.
+    Oznacza to, że części składowe układu nie mogą być opisane jako oddzielne systemy, a
+    informacje o jednej części mają wpływ na opis drugiej.
 
     \subsection{Cel pracy}
     Celem tej pracy jest eksploracja dostępnych metod maksymalizacji wydajności programu
@@ -688,8 +688,9 @@ Wiśniewski}
     natomiast zablokowanie ilości wątków wymagało już jego modyfikacji.
 
     \subsection{Pomiary z podwójną precyzją}
-    W dalszej części pracy prezentuje wyniki pomiarów czasu pracy re-implementacji
-    algorytmu CSSF wykorzystujących liczby zmiennoprzecinkowe podwójnej precyzji.
+    \label{plots-double-precision} W dalszej części pracy prezentuje wyniki pomiarów
+    czasu pracy re-implementacji algorytmu CSSF wykorzystujących liczby
+    zmiennoprzecinkowe podwójnej precyzji.
 
     \subsubsection{ Python i NumPy }
     Pomiary czasu pracy były wykonywane przy użyciu macierzy $\rho_{1}$ - $\rho_{6}$. Dane
@@ -838,9 +839,9 @@ Wiśniewski}
     \FloatBarrier
 
     \subsection{Pomiary z pojedynczą precyzją}
-    Wszystkie testy wydajności z dla obliczeń wykorzystujących liczby zmiennoprzecinkowe
-    pojedynczej precyzji były przeprowadzane w taki sam sposób jak odpowiadające testy z
-    podwójną precyzją.
+    \label{plots-single-precision} Wszystkie testy wydajności z dla obliczeń
+    wykorzystujących liczby zmiennoprzecinkowe pojedynczej precyzji były przeprowadzane
+    w taki sam sposób jak odpowiadające testy z podwójną precyzją.
 
     \subsubsection{ Python i NumPy }
     \begin{figure}[ht]
@@ -956,8 +957,9 @@ Wiśniewski}
     \FloatBarrier
 
     \subsection{Zestawienia dla macierzy}
-    W tej sekcji prezentuję wyniki tych samych pomiarów co w sekcjach 4.3 i 4.4
-    zestawiając je ze sobą względem macierzy wykorzystanej do testów.
+    W tej sekcji prezentuję wyniki tych samych pomiarów co w sekcjach
+    \ref{plots-double-precision} i \ref{ \label{plots-single-precision}} zestawiając je
+    ze sobą względem macierzy wykorzystanej do testów.
 
     Oznaczenie `(F64)' przy nazwie implementacji oznacza obliczenia z podwójną precyzją,
     analogicznie `(F32)' oznacza obliczenia z pojedynczą precyzją. `Oryginał' to kod
@@ -1102,17 +1104,14 @@ Wiśniewski}
     by wykorzystywać maksimum możliwości sprzętowych. Tym samym nie ma prostej
     możliwości by kontynuować proces optymalizacji czasu wykonania programu.
 
-    \subsection{Pomiary dla wielu zadań}
-
-
     \section{Dyskusja}
 
 
     Praca ta miała na celu eksplorację dostępnych metod maksymalizacji wydajności
-    algorytmu CSSF. Udało mi się w jej ramach zbadać skuteczność wykorzystania pięciu wariantów
-    programu, w tym implementacji w dwóch różnych językach programowania. Algorytm CSSF został
-    z powodzeniem wielokrotnie zaimplementowany, a wszystkie stworzone implementacje
-    pozwalały uzyskać oczekiwane wyniki liczbowe.
+    algorytmu CSSF. Udało mi się zbadać skuteczność wykorzystania pięciu wariantów programu,
+    w tym implementacji w dwóch różnych językach programowania. Algorytm CSSF został z powodzeniem
+    wielokrotnie zaimplementowany, a wszystkie stworzone implementacje pozwalały uzyskać
+    oczekiwane wyniki liczbowe.
 
     Przeprowadziłem również liczne testy wydajności dla różnych danych wejściowych dla
     wszystkich wariantów programu, co pozwoliło mi ustalić które metody okazały się najbardziej
@@ -1121,39 +1120,124 @@ Wiśniewski}
     obliczeń na wydajność kodu. W przypadku dwóch wariantów programu, udało się się uzyskać
     znaczącą poprawę wydajności.
 
-    Po przeprowadzeniu analizy uzyskanych wyników udało mi się wskazać, że
+    Po przeprowadzeniu analizy uzyskanych wyników udało mi się wskazać, że warianty
     \begin{enumerate}
-      \item Python i NumPy z JIT
+      \item Python i NumPy z JIT niezależnie od precyzji,
 
-      \item Rust i Ndarray z OpenBLAS
+      \item Rust i Ndarray z OpenBLAS, dla obliczeń pojedynczej precyzji,
     \end{enumerate}
-    Z zastrzeżeniem, że w przypadku wariantu 1. dotyczy to zarówno obliczeń podwójnej jak
-    i pojedynczej precyzji, natomiast w przypadku 2. znacząca poprawa występowała dla
-    obliczeń pojedynczej precyzji.
 
-    Warto podkreślić, że wydajność obu wariantów jest zbliżona, natomiast nakład pracy
-    konieczny do stworzenia implementacji w języku Rust był nieporównywalnie większy niż
-    ten potrzebny do dodania kompilacji JIT do kodu w języku Python. Podobnych wyników można
-    spodziewać sie w przypadku wielu innych programów skupiających się na dużej ilości obliczeń
-    macierzowych - kompilacja JIT jest w stane dość skutecznie usunąć wady języka Python.
-    Wymaga to poświęcenia pewnej części swobody którą ten język daje, ale ciągle pozostawia
-    jej na tyle dużo, że proces pisania kodu jest mniej szybszy niż w przypadku języków
-    niskopoziomowych. Oczywiście, języki te dają większą kontrolę nad komputerem i
-    pozwalają na wiele błyskotliwych manualnych optymalizacji, tak jak ma się to w przypadku
-    biblioteki OpenBLAS.
+    Operują znaczące skrócenie czasu pracy względem oryginału. Dla macierzy $64\times64$,
+    a więc układów 6 kubitów, czas pracy pierwszego wariantu skrócił się względem
+    oryginału $4.3$ raza, natomiast w przypadku drugiego $7.4$ raza.
 
-    Kolejnym ważnym spostrzeżeniem jest, że 4 z 5 zaprezentowanych implementacji
-    wykorzystywały do wykonywania mnożenia macierzowego bibliotekę OpenBLAS. Pomimo tego
-    różnice w wydajności pomiędzy nimi są bardzo znaczące, ponieważ znaczącą część czasu
-    wykonywania kodu zajmowały inne operacje.
+    Warto podkreślić, że wydajność obu wariantów jest zbliżona, natomiast nakład pracy konieczny
+    do stworzenia implementacji w języku Rust był nieporównywalnie większy niż ten potrzebny
+    do dodania kompilacji JIT do kodu w języku Python. Podobnych wyników można
+    spodziewać sie w przypadku wielu innych programów skupiających się na dużej ilości
+    obliczeń macierzowych - kompilacja JIT jest w stane dość skutecznie usunąć wady
+    języka Python. Wymaga to poświęcenia pewnej części swobody którą ten język daje, ale
+    ciągle pozostawia jej na tyle dużo, że proces pisania kodu jest mniej szybszy niż w przypadku
+    języków niskopoziomowych. Oczywiście, języki te dają większą kontrolę nad komputerem
+    i pozwalają na wiele błyskotliwych manualnych optymalizacji, tak jak ma się to w
+    przypadku biblioteki OpenBLAS.
 
-    Nie wyczerpuje możliwości - CUDA / CuPy / uzycie GPU Nie które metody nie przyniosły
-    znaczącego przyspieszenia - Cython Dlaczego nie PyPy, Tensorflow, etc.
+    Kolejnym ważnym spostrzeżeniem jest, że cztery z pięciu zaprezentowanych implementacji
+    wykorzystywały do wykonywania mnożenia macierzowego bibliotekę OpenBLAS. Moduł
+    Pythona NumPy wykorzystuje ją zawsze, natomiast w pakiecie Rusta, Ndarray, możliwe jest
+    ręczne włączenie takiego zachowania. Pomimo tego różnice w wydajności pomiędzy nimi
+    są bardzo znaczące. Działo się tak ponieważ znaczącą część czasu wykonywania kodu zajmowały
+    inne operacje, których zaimplementowany w Asemblerze OpenBLAS przyspieszyć nie mógł.
 
-    Nieskuteczne zmiany algorytmiczne - redukcja mnożenia macierzowego (product)
+    \subsection{Kontynuacja}
+    Praca ta nie wyczerpuje całej puli narzędzi które można wykorzystać do implementacji
+    algorytmu CSSF. W przyszłości można sprawdzić jakie efekty dałoby wykorzystanie GPU\footnote{GPU
+    (Graphics Processing Unit) to wyspecjalizowany układ scalony przeznaczony do
+    szybkiego i efektywnego przetwarzania obrazów w celu wyświetlenia ich na urządzeniu
+    wyjściowym, takim jak monitor komputerowy. GPU jest zoptymalizowany do wykonywania
+    obliczeń równoległych, które są niezbędne do renderowania grafiki 3D i 2D, a także
+    jest często wykorzystywany w innych intensywnych obliczeniowo dziedzinach, takich jak
+    przetwarzanie danych, sztuczna inteligencja czy uczenie maszynowe, ze względu na swoją
+    zdolność do przetwarzania dużej ilości danych jednocześnie.} do przeprowadzania obliczeń
+    oraz jakie metody implementacji tych obliczeń dają najlepsze efekty. Dobrze byłoby w
+    takim wypadku rozważyć możliwość skorzystania z biblioteki CuPy, CUDA czy też funkcjonalności
+    Numby pozwalających na wykorzystanie GPU. Istnieje też możliwość skorzystania z
+    Vulkan API poprzez język Rust lub C++ i compute shaderów\footnote{shader - program wykonywany
+    na GPU.} napisanych w języku GLSL. Istnieje szansa że algorytm w całości wykonywany
+    na GPU, bez transferów na CPU byłby w stanie zaoferować interesujące wyniki i lepsze
+    skalowanie w przypadku większych macierzy stanu.
+
+    \subsection{Pominięte narzędzia}
+    W zestawieniu zawartym w tej pracy zawarty został ograniczony podzbiór możliwych metod
+    implementacji algorytmu CSSF. W przypadku wielu metod wynikało to z ograniczeń
+    czasowych, natomiast jest pewna grupa narzędzi które zostały świadomie wykluczone na
+    etapie planowania.
+
+    \subsubsection{PyTorch i TensorFlow}
+    Biblioteki TensorFlow i PyTorch zostały stworzone, aby ułatwić prace badaczy i
+    inżynierów pracujących nad uczeniem maszynowym i głębokim uczeniem. W obu znajdują się
+    implementacje tensorów oferujących pewien podzbiór funkcjonalności obiektów ndarray z
+    biblioteki NumPy. Prawdopodobnie zawierają one wystarczająco wiele elementów by
+    zaimplementować przy ich pomocy algorytm CSSF. Posiadają one również bardzo rozbudowany
+    bagaż innych elementów, które są bardzo pomocne gdy moduły te są używane do
+    tworzenia sieci neuronowych, ale są zupełnie zbędne dla programu CSSFinder.
+    Jednocześnie biblioteka NumPy jest rozwiązaniem bardziej powszechnym w podobnych
+    scenariuszach i prawdopodobnie oferującym najlepszą możliwą przepustowość
+    obliczeniową, możliwą do uzyskania na CPU, biorąc pod uwagę że wewnętrznie używa ona
+    OpenBLAS. Uznałem, że czas konieczny do zaimplementowania algorytmu CSSF przy pomocy
+    PyTorch czy TensorFlow będzie niewspółmierny do spodziewanych zysków wydajnościowych,
+    więc lepiej czas ten poświęcić na rozważenie rozwiązań które rokują lepiej.
+
+    \subsubsection{PyPy}
+    PyPy jest alternatywną do CPythona implementacją języka Python. Oferuje ona
+    wbudowany, automatyczny tracing JIT compiler. Jednocześnie w dokumentacji tego
+    interpretera zaznaczane jest że najlepiej sprawuje się on z kodem który jest
+    napisany w większości w języku Python, a pakiety takie jak NumPy, napisane m. in. w
+    C będą oferowały słabą wydajność\cite{PyPyPerformance}. Ponadto w obecnym momencie
+    wymaga on dedykowanych pakietów wheel podczas instalacji pakietów z PyPI, co stwarza
+    dodatkowy problem podczas instalacji zależności które wykorzystują modły rozszerzeń skompilowane
+    do kodu maszynowego. Ponownie uderza to w NumPy. Biorąc pod uwagę że biblioteka Numba,
+    która również oferuje kompilację JIT została stworzona do współpracy z NumPy i w
+    takich scenariuszach radzi sobie najlepiej, zdecydowałem o porzuceniu prób wykorzystania
+    PyPy.
+
+    \subsubsection{C/C++}
+    Języki C i C++ nie zostały ujęte w zestawieniu, zamiast nich ujęty został język Rust.
+    Wszystkie trzy języki są kompilowane do kodu maszynowego. W przypadku środowiska
+    którym posługiwałem się podczas prac programistycznych wszystkie trzy byłyby
+    kompilowane przy pomocy LLVM, więc można oczekiwać że wykazywałyby one zbliżoną wydajność.
+    Rust posiada szereg zalet, które skłoniły mnie by go wykorzystać. Oferuje on wygodny
+    i standaryzowany ekosystem który pozwala w szybki sposób rozpocząć prace
+    programistyczne, a potem prowadzić je bez problemów związanych z kompilacją i obsługą
+    zależności. Dodatkowo posiada on system bezpiecznego zarządzania pamięcią który
+    Uniemożliwia programiście popełnienie błędów z nią związanych, jak wielokrotne dealokacje
+    czy dostęp do pamięci niezainicjowanej. Powoduje to że kod napisany w języku Rust
+    jest bardziej niezawodny, co w przypadku projektu realizowanego w ramach pracy dyplomowej
+    jest ważnym elementem. Języki C i C++ podobnego ekosystemu nie posiadają, więc wymagałyby
+    ręcznego stworzenia konfiguracji systemu budowania, prawdopodobnie w oparciu o CMake,
+    zebrania bibliotek i odkrycia w jaki sposób połączyć je z konfiguracją systemu budowania
+    oraz odpowiedniego spreparowania środowiska. Wszystko to byłoby znacznie bardziej
+    pracochłonne niż w przypadku języka Rust. Uznałem więc że za ilość czasu koniecznego
+    do stworzenia implementacji w oparciu o te języki nie idą żadne istotne korzyści.
+
+    \subsection{Nieskuteczne zmiany}
+    ...
 
     \subsection{Wnioski}
+    \subsection{Podsumowanie}
+    Dwa z pośród pięciu stworzonych przeze mnie wariantów kodu wykazały się znaczącą
+    poprawą wydajności względem oryginału. Najlepszą wydajność reprezentowały warianty:
+    \begin{itemize}
+      \item napisany w języku Python, wykorzystujący bibliotekę NumPy i bibliotekę Numba
+        pozwalającą na wykonywanie kompilacji JIT kodu Pythona, niezależnie od precyzji obliczeń
+        (do $4.3\times$ szybszy dla układów 6 kubitów),
 
+      \item napisany w języku Rust, wykorzystujący biblioteki Ndarray i OpenBLAS, tylko w
+        przypadku obliczeń pojedynczej precyzji. (do $7.4\times$ szybszy dla układów 6 kubitów)
+    \end{itemize}
+    W kontekście otrzymanych wyników warto podkreślić że zaimplementowane wariantu
+    pierwszego było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a
+    wariant drugi oferuje tylko około 30\% krótszy czas pracy.
 
     Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie GitHub:
     \begin{enumerate}
