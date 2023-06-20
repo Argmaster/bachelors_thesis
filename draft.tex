@@ -684,11 +684,17 @@ Wiśniewski}
     Jeśli przy pomocy zmiennych środowiskowych ustawimy ilość wątków wykorzystywanych do
     obliczeń na 1 uzyskujemy znaczące skrócenie czasu obliczeń dla macierzy $64\times64$.
     Wyniki testów w takich warunkach zostały przedstawione na rysunku \ref{pre-perf-locked}.
-    Dla macierzy w mniejszych rozmiarach nie odnotowałem różnicy w wydajności pomiędzy
-    konfiguracją domyślną, a manualnie dostosowywaną. Warto dodać że ilość iteracji
-    wykonywanych przez program nie zmienia się, różnica wynika wyłącznie z czasu trwania
-    operacji arytmetycznych. Taki stan rzeczy najprawdopodobniej jest wynikiem
-    dodatkowego obciążenia ze strony komunikacji i/lub synchronizacji między wątkami.
+
+    Aby ułatwić porównywanie czasu pracy różnych wariantów programu, na tym i następnych
+    wykresach w sekcjach \ref{plots-double-precision} i \ref{plots-single-precision}
+    pozostawiam taką samą skalę na osi Y.
+
+    Dla macierzy o mniejszych rozmiarach niż $64\times64$ nie odnotowałem różnicy w
+    wydajności pomiędzy konfiguracją domyślną, a manualnie dostosowywaną. Warto dodać że
+    ilość iteracji wykonywanych przez program nie zmienia się, różnica wynika wyłącznie z
+    czasu trwania operacji arytmetycznych. Taki stan rzeczy najprawdopodobniej jest
+    wynikiem dodatkowego obciążenia ze strony komunikacji i/lub synchronizacji między
+    wątkami.
 
     Chciałbym uściślić, że w dalszej części pracy, mówiąc o wynikach oryginalnego kodu, będę
     miał na myśli wersję bez zablokowanej ilości wątków, a więc tę której wyniki
@@ -1227,13 +1233,10 @@ Wiśniewski}
     pracochłonne niż w przypadku języka Rust. Uznałem więc że za ilość czasu koniecznego
     do stworzenia implementacji w oparciu o te języki nie idą żadne istotne korzyści.
 
-    \subsection{Nieskuteczne zmiany}
-    ...
-
     \section{Wnioski}
     \subsection{Podsumowanie}
-    Dwa z pośród pięciu stworzonych przeze mnie wariantów kodu wykazały się znaczącą
-    poprawą wydajności względem oryginału. Najlepszą wydajność reprezentowały warianty:
+    Dwa z pośród pięciu stworzonych przeze mnie wariantów kodu wykazały się znaczącą poprawą
+    wydajności względem oryginału. Najlepszą wydajność reprezentowały warianty:
     \begin{itemize}
       \item napisany w języku Python, wykorzystujący bibliotekę NumPy i bibliotekę Numba
         pozwalającą na wykonywanie kompilacji JIT kodu Pythona, niezależnie od precyzji obliczeń
@@ -1242,18 +1245,20 @@ Wiśniewski}
       \item napisany w języku Rust, wykorzystujący biblioteki Ndarray i OpenBLAS, tylko w
         przypadku obliczeń pojedynczej precyzji. (do $7.4\times$ szybszy dla układów 6 kubitów)
     \end{itemize}
-    W kontekście otrzymanych wyników warto podkreślić że zaimplementowane wariantu
-    pierwszego było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a
-    wariant drugi oferuje tylko około 30\% krótszy czas pracy.
+    W kontekście otrzymanych wyników warto podkreślić że zaimplementowane wariantu pierwszego
+    było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a wariant drugi oferuje
+    tylko około 30\% krótszy czas pracy.
 
-    Na podstawie informacji uzyskanych podczas profilowania wariantu Rust z OpenBLAS uznałem
-    że większość potencjału optymalizacyjnego została wykorzystana i prawdopodobnie nie jest
-    możliwe by z użyciem posiadanego przeze mnie sprzętu i oprogramowania uzyskać znaczący
-    spadek czasu pracy. Wynika to z faktu że około 95\% czasu pracy pochłaniają wysoce zoptymalizowane
-    mnożenia macierzowe wykonywane przez OpenBLAS.
+    Na podstawie informacji uzyskanych podczas profilowania wariantu Rust z OpenBLAS
+    uznałem że większość potencjału optymalizacyjnego została wykorzystana i
+    prawdopodobnie nie jest możliwe by z użyciem posiadanego przeze mnie sprzętu i
+    oprogramowania uzyskać znaczący spadek czasu pracy. Wynika to z faktu że około 95\%
+    czasu pracy pochłaniają wysoce zoptymalizowane mnożenia macierzowe wykonywane przez
+    OpenBLAS.
 
     \subsection{Kod}
-    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie GitHub:
+    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie
+    GitHub:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New},
 
@@ -1263,8 +1268,8 @@ Wiśniewski}
     \end{enumerate}
 
     Dla każdego z tych repozytorium istnieje odpowiadający pakiet menadżera pakietów pip
-    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem
-    języka Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
+    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem języka
+    Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
     instalację następujących pakietów:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New_PyPI},
@@ -1274,8 +1279,8 @@ Wiśniewski}
       \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust_PyPI},
     \end{enumerate}
 
-    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera języka
-    Python w wersji 3.8 lub nowszej.
+    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera
+    języka Python w wersji 3.8 lub nowszej.
   \end{sloppypar}
   \newpage
   \begin{sloppypar}
