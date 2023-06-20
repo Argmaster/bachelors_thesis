@@ -405,13 +405,13 @@ Wiśniewski}
     wymagały zasadniczych zmian w kodzie algorytmu, w tym przepisania go w innym języku programowania.
     Jednocześnie część programu odpowiadająca za interakcję z użytkownikiem i ładowanie
     zasobów miała pozostawać taka sama. Zdecydowałem więc że tworzony przeze mnie kod musi
-    być modularny, aby uniknąć duplikacji wspólnych elementów. Tak też program został podzielony
+    być modularny, aby uniknąć duplikacji wspólnych elementów. Tak też program podzieliłem
     na dwie części: główną (`core'), z interfejsem użytkowników i narzędziami pomocniczymi
-    oraz część implementującą algorytm (`backend'). Korpus jest w całości napisany w
-    języku Python i wykorzystuje wbudowany w ten język mechanizm importowania bibliotek
-    w celu wykrywania i ładowania dostępnych implementacji algorytmu (`backendów'). Dane
-    macierzowe w obrębie korpusu przechowywane są jako obiekty ndarray z biblioteki NumPy,
-    ze względu na uniwersalność w świecie bibliotek do obliczeń tensorowych (wiele bibliotek
+    oraz część implementującą algorytm (`backend'). Korpus w całości napisałem w języku
+    Python i wykorzystałem wbudowany w ten język mechanizm importowania bibliotek w celu
+    wykrywania i ładowania dostępnych implementacji algorytmu (`backendów'). Dane macierzowe
+    w obrębie korpusu przechowywane są jako obiekty ndarray z biblioteki NumPy, ze
+    względu na uniwersalność w świecie bibliotek do obliczeń tensorowych (wiele bibliotek
     w innych językach programowania oferuje gotowe narzędzia do transformacji obiektów ndarray
     na reprezentacje charakterystyczne dla tych bibliotek).
 
