@@ -131,28 +131,27 @@ Wiśniewski}
     Dla macierzy wejściowej dobierana jest macierz $\rho_{1}$ opisująca stan separowalny.
 
     Stan separowalny, zwany jest także stanem niesplątanym. W przypadku stanów czystych jest
-    on stanem kwantowym systemu złożonego, który można opisać jako produkt stanów
-    poszczególnych podukładów. Innymi słowy, jeżeli mamy dwa podukłady A i B, stan $|\psi
-    \rangle$ jest stanem separowalnym, jeżeli można go zapisać jako
-    $|\psi\rangle = |\phi\rangle \otimes |\chi\rangle$, gdzie $| \phi\rangle$ to stan podsystemu
-    A i $|\chi\rangle$ to stan podsystemu B.
+    on stanem kwantowym systemu złożonego, który można opisać jako produkt tensorowy
+    stanów poszczególnych podukładów. Innymi słowy, jeżeli mamy dwa podukłady A i B, stan
+    $|\psi \rangle$ jest stanem separowalnym, jeżeli można go zapisać jako
+    $|\psi\rangle = |\phi\rangle \otimes |\chi\rangle$, gdzie $| \phi\rangle$ to stan podukładu
+    A i $|\chi\rangle$ to stan podukładu B.
 
     Stan splątany to specyficzny stan w mechanice kwantowej, w którym dwa lub więcej
     systemów kwantowych (na przykład cząstki) są tak ze sobą powiązane, że stan jednego systemu
     jest ściśle zależny od stanu drugiego.
 
-    W przypadku stanów czystych, stan splątany to taki, który nie jest produktem tensorowym
-    stanów poszczególnych składowych. Czyli, jeśli mamy dwa systemy A i B, to stan
-    $|\psi\rangle$ jest stanem splątanym, jeżeli nie istnieją stany $|\phi\rangle$ i $|x\rangle$
-    takie, że $|\psi\rangle = |\phi\rangle \otimes |x\rangle$ (przeciwnie do stanu separowalnego).
+    Stan splątany to taki, którego nie da się zapisać w sposób przedstawiony powyżej, na
+    przykład $|\psi\rangle = |\phi_{0}\rangle \otimes |\chi_{0}\rangle + |\phi_{1}\rangle
+    \otimes |\chi_{1}\rangle$ (z pominięciem normalizacji).
 
-    W przypadku stanów mieszanych, wyrażanych poprzez macierze gęstości, definicje te
-    należy zmodyfikować. Gdy mówimy o stanie splątanym, mamy na myśli taki którego nie
-    da się wyrazić jako mieszaninę statystyczną czystych stanów produktowych, natomiast stan
+    W przypadku stanów mieszanych, wyrażanych poprzez macierze gęstości, definicje te należy
+    zmodyfikować. Gdy mówimy o stanie splątanym, mamy na myśli taki którego nie da się wyrazić
+    jako mieszaninę statystyczną czystych stanów produktowych, natomiast stan
     separowalny, daje się wyrazić w ten sposób.
 
-    Po wczytaniu $\rho_{0}$ i stworzeniu $\rho_{1}$ program postępuje zgodnie z
-    następującymi krokami:
+    Po wczytaniu $\rho_{0}$ i stworzeniu $\rho_{1}$ program postępuje zgodnie z następującymi
+    krokami:
 
     \begin{enumerate}
       \item Zwiększ licznik prób $c_{t}$ o 1. Wylosuj czysty stan produktowy $\rho_{2}$,
@@ -173,13 +172,12 @@ Wiśniewski}
       \item Przejdź do kroku 1, aż spełnione zostanie wybrane kryterium zatrzymania.
     \end{enumerate}
 
-    Jako dane wyjściowe program zapisuje historię poprawek i stan $\rho_{1}$ do plików.
-    Dostępnymi kryteriami zatrzymania jest maksymalna ilość korelacji do uzyskania oraz
-    maksymalna ilość iteracji do wykonania - ta z tych wartości która zostanie
-    osiągnięta jako pierwsza decyduje o zatrzymaniu programu. Jeśli wyznaczona przez program
-    odległość HSD jest odpowiednio niewielka (tj. mniejsza niż $1 \cdot 10^{-4}$)
-    oznacza to że stan jest praktycznie separowalny. W przeciwnym wypadku stan można uznać
-    za splątany.
+    Jako dane wyjściowe program zapisuje historię poprawek i stan $\rho_{1}$ do plików. Dostępnymi
+    kryteriami zatrzymania jest maksymalna ilość korelacji do uzyskania oraz maksymalna ilość
+    iteracji do wykonania - ta z tych wartości która zostanie osiągnięta jako pierwsza decyduje
+    o zatrzymaniu programu. Jeśli wyznaczona przez program odległość HSD jest
+    odpowiednio niewielka (tj. mniejsza niż $1 \cdot 10^{-4}$) oznacza to że stan jest praktycznie
+    separowalny. W przeciwnym wypadku stan można uznać za splątany.
 
     \subsection{Cel pracy}
     Celem tej pracy jest eksploracja dostępnych metod maksymalizacji wydajności programu
@@ -204,38 +202,39 @@ Wiśniewski}
 
     \subsection{Przyczyny przystąpienia do optymalizacji}
     Podczas analizy przestrzeni stanów kwantowych często konieczne jest przeanalizowanie
-    wielu stanów. Wymaga to wielokrotnego wywoływania programu CSSFinder dla wielu różnych
-    macierzy wejściowych. Dlatego też preferowanym jest aby obliczenia dla jednego stanu
-    trwały jak najkrócej.
+    wielu stanów. Wymaga to wielokrotnego wywoływania programu CSSFinder dla wielu
+    różnych macierzy wejściowych. Dlatego też preferowanym jest aby obliczenia dla jednego
+    stanu trwały jak najkrócej.
 
-    Niestety, język Python wykorzystany do stworzenia oryginalnej implementacji jest powszechnie
-    znany z problemów z wydajnością\cite{srinath2017python}. Są one pokłosiem faktu że jest
-    to interpretowany język programowania, a więc konieczne jest by specjalny program (tak
-    zwany interpreter) wykonywał instrukcje zawarte w kodzie programu. Dodatkowo jest to
-    język dynamicznie typowany z bardzo rozbudowanymi możliwościami introspekcji.
-    Uniemożliwia to zastosowanie wielu z optymalizacji powszechnie wykorzystywanych w
-    innych językach programowania. Warto jednak mieć na uwadze że cechy te są jednocześnie
-    jednymi z największych zalet Pythona, więc nie bez powodu pozostają częścią języka.
+    Niestety, język Python wykorzystany do stworzenia oryginalnej implementacji jest
+    powszechnie znany z problemów z wydajnością\cite{srinath2017python}. Są one
+    pokłosiem faktu że jest to interpretowany język programowania, a więc konieczne jest
+    by specjalny program (tak zwany interpreter) wykonywał instrukcje zawarte w kodzie programu.
+    Dodatkowo jest to język dynamicznie typowany z bardzo rozbudowanymi możliwościami
+    introspekcji. Uniemożliwia to zastosowanie wielu z optymalizacji powszechnie wykorzystywanych
+    w innych językach programowania. Warto jednak mieć na uwadze że cechy te są
+    jednocześnie jednymi z największych zalet Pythona, więc nie bez powodu pozostają częścią
+    języka.
 
-    Aby zwiększyć wydajność, koniecznym jest więc poczynić pewne kompromisy i zrezygnować
-    z rozwiązań wygodnych na rzecz rozwiązań bardziej optymalnych dla wydajności.
-    Jednocześnie niekorzystnym byłoby zacząć od podejmowania zbyt radykalnych kroków, na
-    przykład od razu sięgać po język asemblera, który wymaga stworzenia dużej ilości
-    skompilowanego kodu, jeśli języki wyższego poziomu mogą zaoferować podobne osiągi. Z
-    tego względu w dalszej części pracy rozważę kilka rozwiązań które czynią mniej
-    radykalne kompromisy i wymagają różnej ilości dodatkowego wysiłku aby uzyskać
-    sprawny program.
+    Aby zwiększyć wydajność, koniecznym jest więc poczynić pewne kompromisy i
+    zrezygnować z rozwiązań wygodnych na rzecz rozwiązań bardziej optymalnych dla
+    wydajności. Jednocześnie niekorzystnym byłoby zacząć od podejmowania zbyt radykalnych
+    kroków, na przykład od razu sięgać po język asemblera, który wymaga stworzenia dużej
+    ilości skompilowanego kodu, jeśli języki wyższego poziomu mogą zaoferować podobne
+    osiągi. Z tego względu w dalszej części pracy rozważę kilka rozwiązań które czynią mniej
+    radykalne kompromisy i wymagają różnej ilości dodatkowego wysiłku aby uzyskać sprawny
+    program.
 
     \section{Narzędzia}
     \subsection{Kompilacja AOT}
     Kompilacja AOT (Ahead Of Time) to proces tłumaczenia jednej reprezentacji programu (na
-    przykład w języku programowania wysokiego poziomu) na inną (na przykład kod maszynowy)
-    przed rozpoczęciem pracy kompilowanego programu.
+    przykład w języku programowania wysokiego poziomu) na inną (na przykład kod
+    maszynowy) przed rozpoczęciem pracy kompilowanego programu.
 
-    Obecnie najpowszechniej używana implementacja języka Python, CPython, posiada
-    możliwość korzystania z bibliotek współdzielonych (.so - Linux, .dll/.pyd - Windows)
-    które powstały w skutek kompilacji kodu wysokiego poziomu. Dostęp do funkcji zawartych
-    w takich bibliotekach można uzyskać na kilka sposobów:
+    Obecnie najpowszechniej używana implementacja języka Python, CPython, posiada możliwość
+    korzystania z bibliotek współdzielonych (.so - Linux, .dll/.pyd - Windows) które powstały
+    w skutek kompilacji kodu wysokiego poziomu. Dostęp do funkcji zawartych w takich
+    bibliotekach można uzyskać na kilka sposobów:
 
     \begin{enumerate}
       \item Przy pomocy API modułu ctypes\cite{Python_ctypes}. Pozwala ono opisać interfejs
@@ -265,30 +264,30 @@ Wiśniewski}
         Python, również opartej na adnotacjach typów\cite{mypy}.
     \end{enumerate}
 
-    Ponieważ w każdym z wymienionych przypadków, kod niższego poziomu jest kompilowany przed
-    dostarczeniem do użytkownika, pozwala to na wykorzystanie zaawansowanych możliwości
+    Ponieważ w każdym z wymienionych przypadków, kod niższego poziomu jest kompilowany
+    przed dostarczeniem do użytkownika, pozwala to na wykorzystanie zaawansowanych możliwości
     automatycznej optymalizacji dostarczanych przez współczesne kompilatory, na przykład
-    LLVM, które jest sercem implementacji clang\cite{ClangHomePage} (język C++) oraz rustc
-    (język Rust).
+    LLVM, które jest sercem implementacji clang\cite{ClangHomePage} (język C++) oraz
+    rustc (język Rust).
 
     \subsection{Kompilacja JIT}
-    Kompilacja JIT to proces tłumaczenia jednej reprezentacji programu (na przykład w
-    języku programowania wysokiego poziomu) na inną (na przykład kod maszynowy) po rozpoczęciu
-    pracy programu. Zazwyczaj wymaga to aby program rozpoczynał pracę w trybie
-    interpretowanym, a następne kompilował sam siebie i przechodził w tryb wykonywania skompilowanego
+    Kompilacja JIT to proces tłumaczenia jednej reprezentacji programu (na przykład w języku
+    programowania wysokiego poziomu) na inną (na przykład kod maszynowy) po rozpoczęciu
+    pracy programu. Zazwyczaj wymaga to aby program rozpoczynał pracę w trybie interpretowanym,
+    a następne kompilował sam siebie i przechodził w tryb wykonywania skompilowanego
     kodu.
 
-    W momencie pisania tej pracy istnieją dwa szeroko dostępne i aktywnie utrzymywane narzędzia
-    oferujące kompilację JIT dla języka Python.
+    W momencie pisania tej pracy istnieją dwa szeroko dostępne i aktywnie utrzymywane
+    narzędzia oferujące kompilację JIT dla języka Python.
 
     Pierwszym z nich jest pełna alternatywna implementacja języka Python - PyPy\cite{PyPy_Home_Page}.
-    Wykonywana przez nią kompilacja JIT działa on na podobnej zasadzie do uprzednio wymienionych
-    - śledzi cały kod który wykonuje i automatycznie decyduje które fragmenty skompilować
-    do kodu maszynowego\cite{PyPy_JIT}.
+    Wykonywana przez nią kompilacja JIT działa on na podobnej zasadzie do uprzednio
+    wymienionych - śledzi cały kod który wykonuje i automatycznie decyduje które
+    fragmenty skompilować do kodu maszynowego\cite{PyPy_JIT}.
 
-    Drugim narzędziem jest biblioteka Numba\cite{Numba_Article}\cite{Numba_Doc}. Ona, w
-    przeciwieństwie do PyPy, wymaga aby fragmenty kodu, które mają być skompilowane, miały
-    postać funkcji oznaczonych dedykowanymi dekoratorami.
+    Drugim narzędziem jest biblioteka Numba\cite{Numba_Article}\cite{Numba_Doc}. Ona, w przeciwieństwie
+    do PyPy, wymaga aby fragmenty kodu, które mają być skompilowane, miały postać
+    funkcji oznaczonych dedykowanymi dekoratorami.
 
     \subsection{Selekcja narzędzi}
     \FloatBarrier
@@ -304,67 +303,67 @@ Wiśniewski}
     bibliotek użytych do wykonania re-implementacji algorytmu CSSF.
 
     \subsubsection{Python i NumPy}
-    Pierwsza wykonana przeze mnie re-implementacja algorytmu, została napisana w języku Python,
-    a do realizowania obliczeń na macierzach liczb zespolonych wykorzystywała bibliotekę
-    NumPy. Był to dokładnie taki same zestaw, jak wykorzystany do oryginalnej
-    implementacji. Podczas przepisywania podjąłem jednak dodatkowe wysiłki aby zastępować
-    kod Pythona wywołaniami do funkcji zawartych w bibliotece NumPy. Ponieważ kluczowe
-    dla wydajności fragmenty kodu tego pakietu są zaimplementowane w języku niższego
-    poziomu, a następnie skompilowane kompilatorem optymalizującym, oferują znacznie
-    wyższą wydajność niż analogiczny kod napisany w języku Python. Proces ten pozwolił mi
-    również zapoznać się lepiej z charakterystyką programu i udoskonalić interfejs służący
-    do komunikacji pomiędzy częścią główną, a samą implementacją (backend'em).
+    Pierwsza wykonana przeze mnie re-implementacja algorytmu, została napisana w języku
+    Python, a do realizowania obliczeń na macierzach liczb zespolonych wykorzystywała bibliotekę
+    NumPy. Był to dokładnie taki same zestaw, jak wykorzystany do oryginalnej implementacji.
+    Podczas przepisywania podjąłem jednak dodatkowe wysiłki aby zastępować kod Pythona
+    wywołaniami do funkcji zawartych w bibliotece NumPy. Ponieważ kluczowe dla wydajności
+    fragmenty kodu tego pakietu są zaimplementowane w języku niższego poziomu, a
+    następnie skompilowane kompilatorem optymalizującym, oferują znacznie wyższą wydajność
+    niż analogiczny kod napisany w języku Python. Proces ten pozwolił mi również
+    zapoznać się lepiej z charakterystyką programu i udoskonalić interfejs służący do
+    komunikacji pomiędzy częścią główną, a samą implementacją (backend'em).
 
     \subsubsection{Python i NumPy z AOT}
-    Następnym wykonanym przeze mnie krokiem było skompilowanie mojej implementacji
-    korzystającej z NumPy do kodu maszynowego przy pomocy biblioteki Cython. Kod przeznaczony
-    do takiej kompilacji nie musi być adnotowany dedykowanymi informacjami o typach.
-    Zostanie on w tedy przetłumaczony na odpowiednie operacje w języku C/C++, a potem skompilowany
-    do kodu maszynowego. Brak adnotacji powoduje niestety, że program zachowuje swoją dynamiczną
-    naturę, charakterystyczną dla języka Python. Kompilacja pozwala jednak usunąć dodatkowy
-    narzut na procesor ze strony interpretera. W takim scenariuszu spodziewać należy się,
-    że zyski z kompilacji będą niewielkie, ale mogą wystąpić.
+    Następnym wykonanym przeze mnie krokiem było skompilowanie mojej implementacji korzystającej
+    z NumPy do kodu maszynowego przy pomocy biblioteki Cython. Kod przeznaczony do
+    takiej kompilacji nie musi być adnotowany dedykowanymi informacjami o typach. Zostanie
+    on w tedy przetłumaczony na odpowiednie operacje w języku C/C++, a potem
+    skompilowany do kodu maszynowego. Brak adnotacji powoduje niestety, że program
+    zachowuje swoją dynamiczną naturę, charakterystyczną dla języka Python. Kompilacja
+    pozwala jednak usunąć dodatkowy narzut na procesor ze strony interpretera. W takim scenariuszu
+    spodziewać należy się, że zyski z kompilacji będą niewielkie, ale mogą wystąpić.
 
     \subsubsection{Python i NumPy z JIT}
-    Ostatnia stworzona przeze mnie re-implementacja w języku Python bazująca na
-    bibliotece NumPy dodatkowo korzysta z kompilacji JIT. Pakiet Numba, który został
-    wykorzystany do zrealizowania kompilacji JIT, posiada dwa tryby pracy. Pierwszy
-    wykonuje kompilację na podstawie specjalnie dostarczonych przez programistę
-    deklaracji typów dla funkcji podlegających kompilacji i jest wykonywany zaraz po
-    rozpoczęciu pracy programu\footnote{ang. eager (compilation) - niecierpliwa (kompilacja).}.
-    Drugi polega na śledzeniu typów wejściowych i wyjściowych funkcji i automatycznie kompiluje
-    funkcję dla tych typów danych które są odpowiednio często używane używane\footnote{ang.
-    lazy (compilation) - leniwa (kompilacja).}.
+    Ostatnia stworzona przeze mnie re-implementacja w języku Python bazująca na bibliotece
+    NumPy dodatkowo korzysta z kompilacji JIT. Pakiet Numba, który został wykorzystany do
+    zrealizowania kompilacji JIT, posiada dwa tryby pracy. Pierwszy wykonuje kompilację na
+    podstawie specjalnie dostarczonych przez programistę deklaracji typów dla funkcji podlegających
+    kompilacji i jest wykonywany zaraz po rozpoczęciu pracy programu\footnote{ang. eager
+    (compilation) - niecierpliwa (kompilacja).}. Drugi polega na śledzeniu typów
+    wejściowych i wyjściowych funkcji i automatycznie kompiluje funkcję dla tych typów
+    danych które są odpowiednio często używane używane\footnote{ang. lazy (compilation)
+    - leniwa (kompilacja).}.
 
-    Ponadto, Numba posiada dodatkowe parametry kompilacji, które można przekazać do funkcji
-    \code{numba.jit}. Jednym z nich, posiadającym szczególnie duży wpływ na wydajność, flaga
-    \code{nopython}. Tryb \code{nopython=True} oferuje znacznie większe możliwości
-    optymalizacji i potencjalnie lepszą wydajność. Niestety nie wszystkie funkcje dostępne
-    w bibliotece NumPy są akceptowane przez kompilator JIT pakietu Numba w trybie \code{nopython=True}.
-    Do niekompatybilnych należy między innymi funkcja tensordot która implementuje mnożenie
-    tensorowe. Jest ona używana w kodzie programu podczas procesu tworzenia losowych
-    macierzy unitarnych w funkcji \code{kronecker()} (Patrz rysunek \ref{pre-prof-perf},
-    pierwsza kolumna od lewej, drugi i trzeci wiersz od dołu). Funkcja ta może zostać
-    skompilowana tylko w trybie obiektowym (\code{nopython=False}), który po kompilacji
-    zachowuje dynamiczną naturę Pythona. Niestety, brak możliwości skompilowania funkcji
-    używającej tensordot powoduje również brak możliwości skompilowania funkcji wyżej w
-    drzewie wywołań. W efekcie znacząca część implementacji używającej JIT musi używać trybu
-    obiektowego.
+    Ponadto, Numba posiada dodatkowe parametry kompilacji, które można przekazać do
+    funkcji \code{numba.jit}. Jednym z nich, posiadającym szczególnie duży wpływ na wydajność,
+    flaga \code{nopython}. Tryb \code{nopython=True} oferuje znacznie większe możliwości
+    optymalizacji i potencjalnie lepszą wydajność. Niestety nie wszystkie funkcje
+    dostępne w bibliotece NumPy są akceptowane przez kompilator JIT pakietu Numba w
+    trybie \code{nopython=True}. Do niekompatybilnych należy między innymi funkcja
+    tensordot która implementuje mnożenie tensorowe. Jest ona używana w kodzie programu podczas
+    procesu tworzenia losowych macierzy unitarnych w funkcji \code{kronecker()} (Patrz rysunek
+    \ref{pre-prof-perf}, pierwsza kolumna od lewej, drugi i trzeci wiersz od dołu). Funkcja
+    ta może zostać skompilowana tylko w trybie obiektowym (\code{nopython=False}), który
+    po kompilacji zachowuje dynamiczną naturę Pythona. Niestety, brak możliwości skompilowania
+    funkcji używającej tensordot powoduje również brak możliwości skompilowania funkcji wyżej
+    w drzewie wywołań. W efekcie znacząca część implementacji używającej JIT musi używać
+    trybu obiektowego.
 
     \subsubsection{Rust i Ndarray}
-    Aby uczynić to porównanie jak najpełniejszym, podjąłem również wysiłek
-    zaimplementowania części obliczeniowej programu w języku Rust.
+    Aby uczynić to porównanie jak najpełniejszym, podjąłem również wysiłek zaimplementowania
+    części obliczeniowej programu w języku Rust.
 
     Język ten wybrałem z kilku względów. Przede wszystkim posiada on gotową, rozbudowaną
-    infrastrukturę narzędzi pomocniczych. Do tych narzędzi zaliczyć należy menadżera pakietów
-    cargo, który zarówno pozwala w łatwy sposób kompilować bardziej rozbudowane projekty
-    i tworzyć z nich łatwe do obsługi pakiety, ale również daje możliwość korzystania z pakietów
-    udostępnionych przez innych programistów.
+    infrastrukturę narzędzi pomocniczych. Do tych narzędzi zaliczyć należy menadżera
+    pakietów cargo, który zarówno pozwala w łatwy sposób kompilować bardziej rozbudowane
+    projekty i tworzyć z nich łatwe do obsługi pakiety, ale również daje możliwość
+    korzystania z pakietów udostępnionych przez innych programistów.
 
-    Pozwoliło to w łatwy i szybki sposób skompletować zestaw bibliotek umożliwiających wydajne
-    i wygodne tworzenie kodu implementacji algorytmu CSSF. Ponadto istnienie biblioteki
-    PyO3 znacząco uprościło proces tworzenia interfejsu pozwalającemu interpreterowi
-    języka Python na interakcję z tą implementacją.
+    Pozwoliło to w łatwy i szybki sposób skompletować zestaw bibliotek umożliwiających
+    wydajne i wygodne tworzenie kodu implementacji algorytmu CSSF. Ponadto istnienie biblioteki
+    PyO3 znacząco uprościło proces tworzenia interfejsu pozwalającemu interpreterowi języka
+    Python na interakcję z tą implementacją.
 
     Jednocześnie język Rust jest językiem:
     \begin{enumerate}
@@ -380,25 +379,25 @@ Wiśniewski}
         dedykowanego automatycznego `odśmiecacza' (ang. garbage collector).
     \end{enumerate}
 
-    Cechy te pozwalają oczekiwać, że skompilowany kod będzie osiągał wydajność zbliżoną do
-    kodu C/C++, skompilowanych przy pomocy kompilatora clang, który również wykorzystuje
-    LLVM do optymalizacji kodu.
+    Cechy te pozwalają oczekiwać, że skompilowany kod będzie osiągał wydajność zbliżoną
+    do kodu C/C++, skompilowanych przy pomocy kompilatora clang, który również
+    wykorzystuje LLVM do optymalizacji kodu.
 
-    Cały proces wstępnej konfiguracji sprowadził się do około godziny, co stanowi
-    wyśmienity wynik, a cały proces implementacji zajął niewiele więcej czasu niż implementacja
-    w języku Python. Jednocześnie język Rust posiada system typów który jest w stanie
-    pomieścić bardzo dużo informacji o zamiarach programisty. W efekcie kompilator ma możliwość
+    Cały proces wstępnej konfiguracji sprowadził się do około godziny, co stanowi wyśmienity
+    wynik, a cały proces implementacji zajął niewiele więcej czasu niż implementacja w
+    języku Python. Jednocześnie język Rust posiada system typów który jest w stanie pomieścić
+    bardzo dużo informacji o zamiarach programisty. W efekcie kompilator ma możliwość
     wychwycić wiele błędów, których nie może zauważyć kompilator języka C++.
 
     \subsubsection{Rust i Ndarray z OpenBLAS}
-    Biblioteka Ndarray, która jest sercem implementacji w języku Rust, posiada
-    przełącznik funkcjonalności\footnote{ang. feature switch} który pozwala wykorzystać funkcje
-    zawarte w bibliotece OpenBLAS jako implementację mnożenia macierzowego. Powoduje to
-    niestety, że kompilacja programu zaczyna wymagać by biblioteka OpenBLAS była zainstalowana
-    i dostępna podczas kompilacji, co jest trudne do uzyskania w środowisku które
-    wykorzystuję do kompilacji. W efekcie kompilacja dla wszystkich platform które ma wspierać
-    CSSFinder (Windows, Linux i MacOS) jest poza moim zasięgiem, natomiast byłem w stanie
-    przeprowadzić ją na komputerze który wykorzystuję do testów wydajności, więc została
+    Biblioteka Ndarray, która jest sercem implementacji w języku Rust, posiada przełącznik
+    funkcjonalności\footnote{ang. feature switch} który pozwala wykorzystać funkcje
+    zawarte w bibliotece OpenBLAS jako implementację mnożenia macierzowego. Powoduje to niestety,
+    że kompilacja programu zaczyna wymagać by biblioteka OpenBLAS była zainstalowana i
+    dostępna podczas kompilacji, co jest trudne do uzyskania w środowisku które wykorzystuję
+    do kompilacji. W efekcie kompilacja dla wszystkich platform które ma wspierać
+    CSSFinder (Windows, Linux i MacOS) jest poza moim zasięgiem, natomiast byłem w
+    stanie przeprowadzić ją na komputerze który wykorzystuję do testów wydajności, więc została
     ona wzięta pod uwagę w zestawieniu.
 
     \section{Metody}
@@ -416,33 +415,34 @@ Wiśniewski}
     % różni się i posiada problematyczne zależności (CUDA) co czyni adaptację kodu czasochłonną.}.
 
     \subsection{Modularyzacja}
-    Re-implementując program CSSFinder planowałem wypróbować liczne rozwiązania, które
-    wymagały zasadniczych zmian w kodzie algorytmu, w tym przepisania go w innym języku programowania.
-    Jednocześnie część programu odpowiadająca za interakcję z użytkownikiem i ładowanie
-    zasobów miała pozostawać taka sama. Zdecydowałem więc że tworzony przeze mnie kod musi
-    być modularny, aby uniknąć duplikacji wspólnych elementów. Tak też program został podzielony
-    na dwie części: główną (`core'), z interfejsem użytkowników i narzędziami pomocniczymi
-    oraz część implementującą algorytm (`backend'). Korpus jest w całości napisany w
-    języku Python i wykorzystuje wbudowany w ten język mechanizm importowania bibliotek
-    w celu wykrywania i ładowania dostępnych implementacji algorytmu (`backendów'). Dane
-    macierzowe w obrębie korpusu przechowywane są jako obiekty ndarray z biblioteki NumPy,
-    ze względu na uniwersalność w świecie bibliotek do obliczeń tensorowych (wiele bibliotek
-    w innych językach programowania oferuje gotowe narzędzia do transformacji obiektów ndarray
-    na reprezentacje charakterystyczne dla tych bibliotek).
+    Re-implementując program CSSFinder planowałem wypróbować liczne rozwiązania, które wymagały
+    zasadniczych zmian w kodzie algorytmu, w tym przepisania go w innym języku
+    programowania. Jednocześnie część programu odpowiadająca za interakcję z użytkownikiem
+    i ładowanie zasobów miała pozostawać taka sama. Zdecydowałem więc że tworzony przeze
+    mnie kod musi być modularny, aby uniknąć duplikacji wspólnych elementów. Tak też
+    program został podzielony na dwie części: główną (`core'), z interfejsem
+    użytkowników i narzędziami pomocniczymi oraz część implementującą algorytm (`backend').
+    Korpus jest w całości napisany w języku Python i wykorzystuje wbudowany w ten język mechanizm
+    importowania bibliotek w celu wykrywania i ładowania dostępnych implementacji algorytmu
+    (`backendów'). Dane macierzowe w obrębie korpusu przechowywane są jako obiekty
+    ndarray z biblioteki NumPy, ze względu na uniwersalność w świecie bibliotek do obliczeń
+    tensorowych (wiele bibliotek w innych językach programowania oferuje gotowe
+    narzędzia do transformacji obiektów ndarray na reprezentacje charakterystyczne dla
+    tych bibliotek).
 
-    Pozwala to na proste podmiany implementacji o dowolnie różnym pochodzeniu, w tym implementacje
-    w językach kompilowanych. Uprościło to znacznie proces weryfikacji zmian w
-    zachowaniu programu i przyspieszyło proces tworzenia kolejnych implementacji, jako że
-    kod interfejsu programistycznego jest mniej pracochłonny niż kod pozwalający na interakcję
-    z użytkownikiem. W przyszłości może to również pozwolić na łatwiejszy rozwój nowych
-    implementacji oraz dodawanie nowych funkcjonalności do programu, ponieważ będą one mogły
-    być implementowane stopniowo w różnych implementacjach.
+    Pozwala to na proste podmiany implementacji o dowolnie różnym pochodzeniu, w tym
+    implementacje w językach kompilowanych. Uprościło to znacznie proces weryfikacji zmian
+    w zachowaniu programu i przyspieszyło proces tworzenia kolejnych implementacji, jako
+    że kod interfejsu programistycznego jest mniej pracochłonny niż kod pozwalający na
+    interakcję z użytkownikiem. W przyszłości może to również pozwolić na łatwiejszy rozwój
+    nowych implementacji oraz dodawanie nowych funkcjonalności do programu, ponieważ
+    będą one mogły być implementowane stopniowo w różnych implementacjach.
 
     \subsection{Dane testowe}
     Podczas pomiarów konsekwentnie wykorzystywałem ten sam zestaw macierzy gęstości, aby
-    móc wygodnie porównywać wyniki wydajności poszczególnych implementacji. W dalszej części
-    pracy będę wielokrotnie odnosił się do tych macierzy posługując się symbolem $\rho$ z
-    liczbą w indeksie dolnym. Liczba ta będzie wskazywać na konkretną z wymienionych
+    móc wygodnie porównywać wyniki wydajności poszczególnych implementacji. W dalszej
+    części pracy będę wielokrotnie odnosił się do tych macierzy posługując się symbolem
+    $\rho$ z liczbą w indeksie dolnym. Liczba ta będzie wskazywać na konkretną z wymienionych
     poniżej macierzy.
 
     \FloatBarrier
@@ -456,16 +456,16 @@ Wiśniewski}
 
     \FloatBarrier
 
-    Pierwsza wymieniana macierz opisuje układ 5 kubitów i posiada wymiary $32\times32$. Pomimo
-    że nie zawiera ona wartości, podczas analizy zawsze będzie reprezentowana przez
-    macierze zawierające liczby zespolone, ponieważ szczególnie kosztowne obliczeniowo części
-    algorytmu wymagają aby części urojone były obecne, co znaczy że usuwanie ich w
+    Pierwsza wymieniana macierz opisuje układ 5 kubitów i posiada wymiary $32\times32$.
+    Pomimo że nie zawiera ona wartości, podczas analizy zawsze będzie reprezentowana przez
+    macierze zawierające liczby zespolone, ponieważ szczególnie kosztowne obliczeniowo
+    części algorytmu wymagają aby części urojone były obecne, co znaczy że usuwanie ich w
     wybranych miejscach nie niesie wymiernych zysków wydajnościowych.
 
-    Następnie w zbiorze macierzy wykorzystywanych jako dane wejściowe znajduje się pięć
-    macierzy reprezentujących układy od 2 do 6 kubitów, które przyjmują rozmiary od $4\times
-    4$ do $64\times64$. Są one wypełnione zerami poza pierwszym i ostatnim elementem w
-    pierwszej i ostatniej kolumnie - te przyjmują wartość $0.5$.
+    Następnie w zbiorze macierzy wykorzystywanych jako dane wejściowe znajduje się pięć macierzy
+    reprezentujących układy od 2 do 6 kubitów, które przyjmują rozmiary od $4\times 4$
+    do $64\times64$. Są one wypełnione zerami poza pierwszym i ostatnim elementem w pierwszej
+    i ostatniej kolumnie - te przyjmują wartość $0.5$.
 
     \FloatBarrier
     \begin{figure}[ht]
@@ -487,20 +487,20 @@ Wiśniewski}
 
     \FloatBarrier
 
-    W tekście macierze te będą oznaczane jako $\rho_{2}$ do $\rho_{6}$, w zależności od reprezentowanej
-    liczby kubitów\footnote{Tak więc macierz $\rho_{2}$ ma wymiary $4\times 4$ i
-    reprezentuje 2 kubity, macierz $\rho_{3}$ ma wymiary $8\times8$ i reprezentuje 3 kubity,
-    macierz $\rho_{4}$ ma wymiary $16\times16$ i reprezentuje 4 kubity, itd. aż do
-    $\rho_{6}$, $64\times64$ .}. Macierze te stanowią wygodny zestaw danych do weryfikacji
-    ogólnej charakterystyki zachowania alternatywnych implementacji algorytmu, pomimo, że
-    wyniki przy ich pomocy uzyskiwane tak bardzo odbiegają od tych uzyskiwanych przy pomocy
-    $\rho_{0}$.
+    W tekście macierze te będą oznaczane jako $\rho_{2}$ do $\rho_{6}$, w zależności od
+    reprezentowanej liczby kubitów\footnote{Tak więc macierz $\rho_{2}$ ma wymiary $4\times
+    4$ i reprezentuje 2 kubity, macierz $\rho_{3}$ ma wymiary $8\times8$ i reprezentuje
+    3 kubity, macierz $\rho_{4}$ ma wymiary $16\times16$ i reprezentuje 4 kubity, itd. aż
+    do $\rho_{6}$, $64\times64$ .}. Macierze te stanowią wygodny zestaw danych do
+    weryfikacji ogólnej charakterystyki zachowania alternatywnych implementacji
+    algorytmu, pomimo, że wyniki przy ich pomocy uzyskiwane tak bardzo odbiegają od tych
+    uzyskiwanych przy pomocy $\rho_{0}$.
 
     \subsection{Środowisko testowe}
-    Podczas pomiarów wydajności wykorzystywałem każdorazowo to samo środowisko testowe.
-    Do chłodzenia CPU wykorzystywane było chłodzenie wodne typu AIO, temperatura w pokoju
-    oscylowała w okolicy 25°C, procesor podczas testów wydajności nie doświadczał
-    temperatur powyżej 80°C.
+    Podczas pomiarów wydajności wykorzystywałem każdorazowo to samo środowisko testowe. Do
+    chłodzenia CPU wykorzystywane było chłodzenie wodne typu AIO, temperatura w pokoju
+    oscylowała w okolicy 25°C, procesor podczas testów wydajności nie doświadczał temperatur
+    powyżej 80°C.
 
     \FloatBarrier
     \begin{table}[ht]
@@ -512,77 +512,76 @@ Wiśniewski}
     \FloatBarrier
 
     \subsection{Profilowanie}
-    Podczas prac nad optymalizacją czasu pracy programu kluczowym było zbieranie informacji
-    na temat tego które fragmenty kodu są kluczowe dla wydajności całego programu.
-    Rzadko bowiem zdarza się by wszystkie operacje wykonywane przez program miały
-    równomierny wkład w czas wykonania. Standardowo proces zbierania takich danych określa
-    się mianem profilowania i technologie po które sięgałem podczas re-implementacji algorytmu
-    posiadają gotowe narzędzia pozwalające na skuteczne pozyskiwanie takich danych oraz ich
-    wizualizację.
+    Podczas prac nad optymalizacją czasu pracy programu kluczowym było zbieranie
+    informacji na temat tego które fragmenty kodu są kluczowe dla wydajności całego
+    programu. Rzadko bowiem zdarza się by wszystkie operacje wykonywane przez program miały
+    równomierny wkład w czas wykonania. Standardowo proces zbierania takich danych
+    określa się mianem profilowania i technologie po które sięgałem podczas re-implementacji
+    algorytmu posiadają gotowe narzędzia pozwalające na skuteczne pozyskiwanie takich
+    danych oraz ich wizualizację.
 
-    Dla kodu w języku Python, implementacja CPython tego języka posiada w bibliotece
-    standardowej dwa dedykowane moduły oferujące funkcjonalność profilowania: `profile' i
-    `cProfile'. Pierwszy jest zaimplementowany w języku Python, drugi w C. Ponieważ
-    drugi z nich posiada mniejszy dodatkowy narzut na procesor, zdecydowałem żeby to na nim
-    oprzeć moje analizy. W celu wizualizacji uzyskanych wyników posłużyłem się
-    otwartoźródłowym programem Snakeviz\cite{Snakeviz_PyPI}.
+    Dla kodu w języku Python, implementacja CPython tego języka posiada w bibliotece standardowej
+    dwa dedykowane moduły oferujące funkcjonalność profilowania: `profile' i `cProfile'.
+    Pierwszy jest zaimplementowany w języku Python, drugi w C. Ponieważ drugi z nich posiada
+    mniejszy dodatkowy narzut na procesor, zdecydowałem żeby to na nim oprzeć moje
+    analizy. W celu wizualizacji uzyskanych wyników posłużyłem się otwartoźródłowym programem
+    Snakeviz\cite{Snakeviz_PyPI}.
 
     Do zbierania informacji na temat charakterystyki pracy kodu napisanego w języku Rust
-    wykorzystałem narzędzie perf pochodzące z pakiety linux-tools-5.19.0-42-generic
-    pobranego przy pomocy menadżera pakietów apt-get. Do wizualizacji uzyskanych wyników
+    wykorzystałem narzędzie perf pochodzące z pakiety linux-tools-5.19.0-42-generic pobranego
+    przy pomocy menadżera pakietów apt-get. Do wizualizacji uzyskanych wyników
     wykorzystałem jedno z otwartoźródłowych narzędzi funkcjonujące pod nazwą hotspot\cite{HOTSPOT}.
 
     \subsection{Precyzja obliczeń}
-    Oryginalny program, jak i pierwsze stworzone przeze mnie re-implementacje posługiwały
-    się liczbami zespolonymi na bazie liczb zmiennoprzecinkowych podwójnej precyzji.
-    Jedna taka liczba zajmuje 64 bity. Jednak w wielu przypadkach taka precyzja obliczeń
-    nie jest konieczna do uzyskania poprawnych wyników. Podstawową zaletą wykorzystania
-    liczb zmiennoprzecinkowych pojedynczej precyzji, czyli 32 bitowych, jest
-    zmniejszenie rozmiaru macierzy. Pozwala na umieszczenie większej części macierzy w pamięci
-    podręcznej procesora. Dodatkowo zwiększa to przepustowość obliczeń wykorzystujących
-    instrukcje SIMD, ponieważ wykorzystują one rejestry o stałych rozmiarach (128, 256,
-    512 bitów) które mogą na ogół pomieścić dwukrotnie więcej liczb 32 bitowych niż 64 bitowych.
-    Pozwala to oczekiwać że obliczenia wykorzystujące liczby zmiennoprzecinkowe
+    Oryginalny program, jak i pierwsze stworzone przeze mnie re-implementacje
+    posługiwały się liczbami zespolonymi na bazie liczb zmiennoprzecinkowych podwójnej
+    precyzji. Jedna taka liczba zajmuje 64 bity. Jednak w wielu przypadkach taka
+    precyzja obliczeń nie jest konieczna do uzyskania poprawnych wyników. Podstawową zaletą
+    wykorzystania liczb zmiennoprzecinkowych pojedynczej precyzji, czyli 32 bitowych, jest
+    zmniejszenie rozmiaru macierzy. Pozwala na umieszczenie większej części macierzy w
+    pamięci podręcznej procesora. Dodatkowo zwiększa to przepustowość obliczeń wykorzystujących
+    instrukcje SIMD, ponieważ wykorzystują one rejestry o stałych rozmiarach (128, 256, 512
+    bitów) które mogą na ogół pomieścić dwukrotnie więcej liczb 32 bitowych niż 64
+    bitowych. Pozwala to oczekiwać że obliczenia wykorzystujące liczby zmiennoprzecinkowe
     pojedynczej precyzji będą trwały krócej.
 
     Tworzony przeze mnie kod od początku powstawał z zamysłem umożliwienia wykorzystania
-    liczb zmiennoprzecinkowych o różnych precyzjach, dlatego transformacja ta była dość prosta.
-    W języku Python, wykorzystując bibliotekę NumPy przejście na liczby pojedynczej precyzji
-    wymagało prawie każdorazowego deklarowania że wynik operacji ma posiadać typ complex64
-    (cały czas mówimy o liczbach zespolonych które składają się z dwóch wartości
-    zmiennoprzecinkowych). Nie wszystkie operacje które przyjmują parametr określający
-    typ wejściowy są akceptowane przez kompilator JIT biblioteki Numba gdy jest on
-    przekazywany. To ograniczenie można obejść wykonując zmianę typu jako osobną operację
-    przy pomocy metody \code{astype()}.
+    liczb zmiennoprzecinkowych o różnych precyzjach, dlatego transformacja ta była dość
+    prosta. W języku Python, wykorzystując bibliotekę NumPy przejście na liczby
+    pojedynczej precyzji wymagało prawie każdorazowego deklarowania że wynik operacji ma
+    posiadać typ complex64 (cały czas mówimy o liczbach zespolonych które składają się z
+    dwóch wartości zmiennoprzecinkowych). Nie wszystkie operacje które przyjmują parametr
+    określający typ wejściowy są akceptowane przez kompilator JIT biblioteki Numba gdy jest
+    on przekazywany. To ograniczenie można obejść wykonując zmianę typu jako osobną
+    operację przy pomocy metody \code{astype()}.
 
-    Warto tutaj zaznaczyć że wszystkie implementacje w języku Python powstają ze
-    wspólnego szablony który był ewaluowany przez bibliotekę Jinja2 do różnych wariantów
-    kodu, w zależności od tego jakie parametry były do niego przekazywane. Pozwoliło to
-    uniknąć wielokrotnego pisania wspólnych fragmentów kodu, a elementy unikalne są dodawane
-    warunkowo. Zastosowanie introspekcji do konstruowania odpowiedniego kodu w trakcie
-    wykonywania programu mogłoby w znaczący sposób obniżyć wydajność, dlatego zdecydowałem
-    się sięgnąć po system bardziej statyczny, który na pewno nie wpływał na czas pracy
-    programu.
+    Warto tutaj zaznaczyć że wszystkie implementacje w języku Python powstają ze wspólnego
+    szablony który był ewaluowany przez bibliotekę Jinja2 do różnych wariantów kodu, w
+    zależności od tego jakie parametry były do niego przekazywane. Pozwoliło to uniknąć wielokrotnego
+    pisania wspólnych fragmentów kodu, a elementy unikalne są dodawane warunkowo. Zastosowanie
+    introspekcji do konstruowania odpowiedniego kodu w trakcie wykonywania programu mogłoby
+    w znaczący sposób obniżyć wydajność, dlatego zdecydowałem się sięgnąć po system
+    bardziej statyczny, który na pewno nie wpływał na czas pracy programu.
 
-    W przypadku języka Rust, posiada on dedykowany konstrukt składniowy pozwalający na deklarowanie
-    funkcji w oparciu o symbole zastępcze wobec których stawia się zbiór wymagań dotyczących
-    wspieranych interfejsów. W efekcie funkcja może zostać wyspecjalizowana żeby
-    akceptować zarówno liczby zespolone skonstruowane z liczb zmiennoprzecinkowych
-    pojedynczej jak i podwójnej precyzji. Pozwoliło to uniknąć sięgania po zewnętrzne mechanizmy
-    do tworzenia szablonów, tak jak było to konieczne w języku Python.
+    W przypadku języka Rust, posiada on dedykowany konstrukt składniowy pozwalający na
+    deklarowanie funkcji w oparciu o symbole zastępcze wobec których stawia się zbiór
+    wymagań dotyczących wspieranych interfejsów. W efekcie funkcja może zostać wyspecjalizowana
+    żeby akceptować zarówno liczby zespolone skonstruowane z liczb zmiennoprzecinkowych pojedynczej
+    jak i podwójnej precyzji. Pozwoliło to uniknąć sięgania po zewnętrzne mechanizmy do
+    tworzenia szablonów, tak jak było to konieczne w języku Python.
 
     \subsection{Wykresy}
-    Wszystkie wykresy zamieszczone w tej pracy zostały utworzone przy pomocy skryptów w
-    języku Python z wykorzystaniem biblioteki matplotlib\cite{Hunter:2007}.
+    Wszystkie wykresy zamieszczone w tej pracy zostały utworzone przy pomocy skryptów w języku
+    Python z wykorzystaniem biblioteki matplotlib\cite{Hunter:2007}.
 
     \section{Wyniki}
     \subsection{Wstępne profilowanie}
-    Prace nad optymalizacją kodu rozpocząłem od wstępnego profilowania pracy programu w trybie
-    1 (ang. full separability of an n-quDit state) przekazując do obliczeń układ 5
+    Prace nad optymalizacją kodu rozpocząłem od wstępnego profilowania pracy programu w
+    trybie 1 (ang. full separability of an n-quDit state) przekazując do obliczeń układ 5
     kubitów opisany macierzą $\rho_{1}$ (Rysunek \ref{rho-1}).
 
-    Program wykonywał proces analizy stanu aż do uzyskania 1000 korekcji. Przekazany limit
-    liczby iteracji wynosił 2.000.000 i nie został osiągnięty. Podczas pomiarów, program
+    Program wykonywał proces analizy stanu aż do uzyskania 1000 korekcji. Przekazany
+    limit liczby iteracji wynosił 2.000.000 i nie został osiągnięty. Podczas pomiarów, program
     wykorzystywał domyślny globalny generator liczb losowych biblioteki NumPy (PCG64\cite{NumpyDefaultGenerator})
     z ziarnem ustawionym na wartość 0.
 
@@ -595,18 +594,18 @@ Wiśniewski}
     \end{figure}
     \FloatBarrier
 
-    Pozwoliło mi to wstępnie przyjrzeć się charakterystyce pracy programu i ocenić czy powszechnie
-    dostępne narzędzia mogą zostać wykorzystane w tym wypadku. Rysunek
-    \ref{pre-prof-perf} przedstawia diagram typu Icicle obrazujący udział czasu
-    pochłoniętego przez wykonywanie poszczególnych funkcji, w całkowitym czasie pracy programu.
-    Pierwszy blok od góry (\code{~:0(<built-in method builtins.exec>)}) to wywołanie funkcji
-    wykonującej kod programu. Następne bloki idąc w dół wykresu, to kolejne warstwy wywołań
-    funkcji. Te których opisy zaczynają się od `CSSFinder.py' to wywołania w kodzie
-    programu. Bloki umieszczone najniżej, w większości pozbawione opisów, to wywołania do
-    funkcji bibliotek, głównie NumPy, ale również modułów wbudowanych Pythona. Snakeviz
-    automatycznie podejmuje decyzję o nie adnotowaniu bloku gdy opis nie ma szansy
-    zmieścić się w obrębie bloku. Aby usunąć z diagramu zbędny szum informacyjny,
-    funkcje których wykonywanie zajęło mniej niż 1\% czasu programu były pomijane.
+    Pozwoliło mi to wstępnie przyjrzeć się charakterystyce pracy programu i ocenić czy
+    powszechnie dostępne narzędzia mogą zostać wykorzystane w tym wypadku. Rysunek \ref{pre-prof-perf}
+    przedstawia diagram typu Icicle obrazujący udział czasu pochłoniętego przez wykonywanie
+    poszczególnych funkcji, w całkowitym czasie pracy programu. Pierwszy blok od góry (\code{~:0(<built-in method builtins.exec>)})
+    to wywołanie funkcji wykonującej kod programu. Następne bloki idąc w dół wykresu, to
+    kolejne warstwy wywołań funkcji. Te których opisy zaczynają się od `CSSFinder.py' to
+    wywołania w kodzie programu. Bloki umieszczone najniżej, w większości pozbawione opisów,
+    to wywołania do funkcji bibliotek, głównie NumPy, ale również modułów wbudowanych
+    Pythona. Snakeviz automatycznie podejmuje decyzję o nie adnotowaniu bloku gdy opis nie
+    ma szansy zmieścić się w obrębie bloku. Aby usunąć z diagramu zbędny szum
+    informacyjny, funkcje których wykonywanie zajęło mniej niż 1\% czasu programu były
+    pomijane.
 
     \FloatBarrier
     \begin{table}[ht]
@@ -617,40 +616,42 @@ Wiśniewski}
     \end{table}
     \FloatBarrier
 
-    Z uzyskanych danych wynika że znakomitą większość (77\%\footnote{Wartość 77\% jak i
-    wartości procentowe dalszej części tego akapitu zostały zaokrąglone do jedności, ze względu
+    Z uzyskanych danych wynika że znakomitą większość (77\%\footnote{Wartość 77\% jak i wartości
+    procentowe dalszej części tego akapitu zostały zaokrąglone do jedności, ze względu
     na małe znaczenie rzeczowe części ułamkowych.}) czasu pracy programu zajmuje funkcja
     \code{OptimizedFS()}. W jej wnętrzu 38\% czasu pochłania proces generowania losowych
-    macierzy unitarnych, który w dużej mierze wykorzystuje mnożenia tensorowe (26\%).
-    Poza funkcją \code{OptimizedFS()}, znaczący wpływ na czas wykonywania ma też funkcja
-    `rotate()`, która pochłania około 21\% czasu działania programu. Kolejne 20\% czasu
-    zajmuje funkcja \code{product()}, obliczająca odległość Hilberta-Schmidta pomiędzy
-    dwoma stanami. Pozostałe wywołania mają stosunkowo marginalny wpływ na czas pracy i ich
-    analiza na tym etapie nie niesie za sobą znaczących korzyści.
+    macierzy unitarnych, który w dużej mierze wykorzystuje mnożenia tensorowe (26\%). Poza
+    funkcją \code{OptimizedFS()}, znaczący wpływ na czas wykonywania ma też funkcja `rotate()`,
+    która pochłania około 21\% czasu działania programu. Kolejne 20\% czasu zajmuje funkcja
+    \code{product()}, obliczająca odległość Hilberta-Schmidta pomiędzy dwoma stanami.
+    Pozostałe wywołania mają stosunkowo marginalny wpływ na czas pracy i ich analiza na
+    tym etapie nie niesie za sobą znaczących korzyści.
 
-    Takie wyniki wskazują jednoznacznie że kluczowa dla czasu pracy programu jest tu maksymalizacja
-    wydajności pętli optymalizacyjnej, w tym zawartych w niej operacji macierzowych. Najprostszym
-    sposobem na na uzyskanie takich efektów jest zastąpienie dynamicznego systemu typów i
-    kodu bajtowego algorytmu wykonywanego przez interpreter pythona na statyczny system typów
-    i kod maszynowy. Dodatkowo, niezastąpione są biblioteki zawierające wyspecjalizowane
-    implementacje operacji macierzowych, takie jak OpenBLAS. Profilowanie pozwoliło również
-    wykluczyć problemy z operacjami zapisu/odczytu plików oraz inne niespodziewane zjawiska.
+    Takie wyniki wskazują jednoznacznie że kluczowa dla czasu pracy programu jest tu
+    maksymalizacja wydajności pętli optymalizacyjnej, w tym zawartych w niej operacji macierzowych.
+    Najprostszym sposobem na na uzyskanie takich efektów jest zastąpienie dynamicznego
+    systemu typów i kodu bajtowego algorytmu wykonywanego przez interpreter pythona na
+    statyczny system typów i kod maszynowy. Dodatkowo, niezastąpione są biblioteki
+    zawierające wyspecjalizowane implementacje operacji macierzowych, takie jak OpenBLAS.
+    Profilowanie pozwoliło również wykluczyć problemy z operacjami zapisu/odczytu plików
+    oraz inne niespodziewane zjawiska.
 
     \subsection{Wstępne pomiary wydajności}
     Aby uzyskać dobrą bazę porównawczą, wykonałem serię pomiarów czasu pracy programu na
-    macierzach $\rho_{1}$, $\rho_{2}$ - $\rho_{6}$, przedstawionych na rysunkach
-    \ref{rho-1} i \ref{rho-2-6}.
+    macierzach $\rho_{1}$, $\rho_{2}$ - $\rho_{6}$, przedstawionych na rysunkach \ref{rho-1}
+    i \ref{rho-2-6}.
 
-    Dane przekazywałem kolejno do programu z poleceniem działania w trybie 1 (full separability
-    of an n-quDit state) do osiągnięcia 1000 korekcji lub do 2.000.000 iteracji algorytmu,
-    w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy algorytm uzyskał 1000
-    korekcji i w żadnym przypadku nie osiągnął maksymalnej liczby iteracji. Dla każdej
-    macierzy pomiar był powtarzany pięciokrotnie, a wyniki z pomiarów zostały uśrednione.
-    Podczas obliczeń ziarno globalnego generatora liczb losowych biblioteki NumPy było
-    ustawione na 0. Pomiary czasu pracy dotyczyły wyłącznie samego algorytmu\footnote{tj.
-    funkcji `Gilbert()', nie biorą więc pod uwagę czasu pochłoniętego przez importowanie
-    modułów, ładowanie danych itp. natomiast operacje pisania do plików które były wykonywane
-    w obrębie tej funkcji są wliczane w czas pracy.}.
+    Dane przekazywałem kolejno do programu z poleceniem działania w trybie 1 (full
+    separability of an n-quDit state) do osiągnięcia 1000 korekcji lub do 2.000.000
+    iteracji algorytmu, w zależności od tego co nastąpi szybciej. Dla wszystkich
+    macierzy algorytm uzyskał 1000 korekcji i w żadnym przypadku nie osiągnął
+    maksymalnej liczby iteracji. Dla każdej macierzy pomiar był powtarzany pięciokrotnie,
+    a wyniki z pomiarów zostały uśrednione. Podczas obliczeń ziarno globalnego generatora
+    liczb losowych biblioteki NumPy było ustawione na 0. Pomiary czasu pracy dotyczyły wyłącznie
+    samego algorytmu\footnote{tj. funkcji `Gilbert()', nie biorą więc pod uwagę czasu
+    pochłoniętego przez importowanie modułów, ładowanie danych itp. natomiast operacje
+    pisania do plików które były wykonywane w obrębie tej funkcji są wliczane w czas
+    pracy.}.
 
     \FloatBarrier
     \begin{figure}[ht]
@@ -662,12 +663,12 @@ Wiśniewski}
     \end{figure}
     \FloatBarrier
 
-    Podczas testów zaobserwowałem interesujące zjawisko dotyczące wydajności dla
-    macierzy $64\times64$. W przypadku takich rozmiarów danych biblioteka NumPy automatycznie
+    Podczas testów zaobserwowałem interesujące zjawisko dotyczące wydajności dla macierzy
+    $64\times64$. W przypadku takich rozmiarów danych biblioteka NumPy automatycznie
     decyduje o wykorzystaniu wielowątkowej implementacji mnożenia macierzowego. Niestety,
-    daje to efekt odwrotny do zamierzonego - obliczenia zamiast przyspieszać zwalniają.
-    Na rysunku \ref{pre-perf} zostały przedstawione czasy obliczeń dla macierzy
-    $\rho_{1}$ - $\rho_{6}$ z domyślnym zachowaniem biblioteki.
+    daje to efekt odwrotny do zamierzonego - obliczenia zamiast przyspieszać zwalniają. Na
+    rysunku \ref{pre-perf} zostały przedstawione czasy obliczeń dla macierzy $\rho_{1}$ -
+    $\rho_{6}$ z domyślnym zachowaniem biblioteki.
 
     \FloatBarrier
     \begin{figure}[ht]
@@ -682,37 +683,37 @@ Wiśniewski}
 
     Jeśli przy pomocy zmiennych środowiskowych ustawimy ilość wątków wykorzystywanych do
     obliczeń na 1 uzyskujemy znaczące skrócenie czasu obliczeń dla macierzy $64\times64$.
-    Wyniki testów w takich warunkach zostały przedstawione na rysunku
-    \ref{pre-perf-locked}. Dla macierzy w mniejszych rozmiarach nie odnotowałem różnicy w
-    wydajności pomiędzy konfiguracją domyślną, a manualnie dostosowywaną. Warto dodać że
-    ilość iteracji wykonywanych przez program nie zmienia się, różnica wynika wyłącznie
-    z czasu trwania operacji arytmetycznych. Taki stan rzeczy najprawdopodobniej jest wynikiem
+    Wyniki testów w takich warunkach zostały przedstawione na rysunku \ref{pre-perf-locked}.
+    Dla macierzy w mniejszych rozmiarach nie odnotowałem różnicy w wydajności pomiędzy
+    konfiguracją domyślną, a manualnie dostosowywaną. Warto dodać że ilość iteracji
+    wykonywanych przez program nie zmienia się, różnica wynika wyłącznie z czasu trwania
+    operacji arytmetycznych. Taki stan rzeczy najprawdopodobniej jest wynikiem
     dodatkowego obciążenia ze strony komunikacji i/lub synchronizacji między wątkami.
 
-    Chciałbym uściślić, że w dalszej części pracy, mówiąc o wynikach oryginalnego kodu,
-    będę miał na myśli wersję bez zablokowanej ilości wątków, a więc tę której wyniki umieszczone
-    są na rysunku \ref{pre-perf}, jako że to była pierwotna postać kodu, natomiast zablokowanie
-    ilości wątków wymagało już jego modyfikacji.
+    Chciałbym uściślić, że w dalszej części pracy, mówiąc o wynikach oryginalnego kodu, będę
+    miał na myśli wersję bez zablokowanej ilości wątków, a więc tę której wyniki
+    umieszczone są na rysunku \ref{pre-perf}, jako że to była pierwotna postać kodu,
+    natomiast zablokowanie ilości wątków wymagało już jego modyfikacji.
 
     \subsection{Pomiary z podwójną precyzją}
-    \label{plots-double-precision} W dalszej części pracy prezentuje wyniki pomiarów czasu
-    pracy re-implementacji algorytmu CSSF wykorzystujących liczby zmiennoprzecinkowe podwójnej
-    precyzji.
+    \label{plots-double-precision} W dalszej części pracy prezentuje wyniki pomiarów
+    czasu pracy re-implementacji algorytmu CSSF wykorzystujących liczby
+    zmiennoprzecinkowe podwójnej precyzji.
 
     \subsubsection{ Python i NumPy }
-    Pomiary czasu pracy były wykonywane przy użyciu macierzy $\rho_{1}$ - $\rho_{6}$.
-    Dane przekazywałem kolejno do programu z poleceniem działania w trybie FSnQd\footnote{Tryb
-    FSnQd jest odpowiednikiem trybu 1 (full separability of an n-quDit state) z oryginalnego
-    kodu.} do osiągnięcia co najmniej 1000 korekcji lub do 2.000.000 iteracji algorytmu,
-    w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy algorytm uzyskał
-    co najmniej 1000 korekcji i w żadnym przypadku nie osiągnął maksymalnej liczby
-    iteracji. Dla każdej macierzy pomiar był powtarzany pięciokrotnie a wyniki zostały uśrednione.
-    Podczas obliczeń ziarno domyślnego globalnego generatora liczb losowych biblioteki
-    NumPy było ustawione na 0. Program działał z zablokowaną liczbą wątków
-    obliczeniowych. Pomiary czasu pracy dotyczyły przede wszystkim samego algorytmu\footnote{Pomiary
-    nie biorą więc pod uwagę czasu pochłoniętego przez importowanie modułów itp.,
-    natomiast operacje wczytywania danych i pisania do plików są wliczane w czas pracy, ponieważ
-    wbudowany w program mechanizm pomiaru czasu pracy rozpoczyna pomiar zanim dane zostaną
+    Pomiary czasu pracy były wykonywane przy użyciu macierzy $\rho_{1}$ - $\rho_{6}$. Dane
+    przekazywałem kolejno do programu z poleceniem działania w trybie FSnQd\footnote{Tryb
+    FSnQd jest odpowiednikiem trybu 1 (full separability of an n-quDit state) z
+    oryginalnego kodu.} do osiągnięcia co najmniej 1000 korekcji lub do 2.000.000 iteracji
+    algorytmu, w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy algorytm
+    uzyskał co najmniej 1000 korekcji i w żadnym przypadku nie osiągnął maksymalnej liczby
+    iteracji. Dla każdej macierzy pomiar był powtarzany pięciokrotnie a wyniki zostały
+    uśrednione. Podczas obliczeń ziarno domyślnego globalnego generatora liczb losowych biblioteki
+    NumPy było ustawione na 0. Program działał z zablokowaną liczbą wątków obliczeniowych.
+    Pomiary czasu pracy dotyczyły przede wszystkim samego algorytmu\footnote{Pomiary nie
+    biorą więc pod uwagę czasu pochłoniętego przez importowanie modułów itp., natomiast operacje
+    wczytywania danych i pisania do plików są wliczane w czas pracy, ponieważ wbudowany
+    w program mechanizm pomiaru czasu pracy rozpoczyna pomiar zanim dane zostaną
     załadowane.}.
 
     \begin{figure}[ht]
@@ -725,10 +726,10 @@ Wiśniewski}
     \end{figure}
 
     Uzyskane wyniki zostały przedstawione na rysunku \ref{python-numpy-double-precision}.
-    W przypadku małych macierzy wyniki są bardzo zbliżone, natomiast w przypadku
-    macierzy $32\times32$ i $64\times64$ występuje znacząca poprawa wydajności, odpowiednio
-    $7.9s$ ($\approx 21\%$) dla $\rho_{1}$, $12.7s$ ($\approx 27\%$) dla $\rho_{5}$ i
-    $20 5.2s$ ($\approx 50\%$) dla $\rho_{6}$.
+    W przypadku małych macierzy wyniki są bardzo zbliżone, natomiast w przypadku macierzy
+    $32\times32$ i $64\times64$ występuje znacząca poprawa wydajności, odpowiednio
+    $7.9s$ ($\approx 21\%$) dla $\rho_{1}$, $12.7s$ ($\approx 27\%$) dla $\rho_{5}$ i $20
+    5.2s$ ($\approx 50\%$) dla $\rho_{6}$.
 
     \FloatBarrier
 
@@ -744,14 +745,13 @@ Wiśniewski}
       \label{python-numpy-aot-double-precision}
     \end{figure}
 
-    Na rysunku \ref{python-numpy-aot-double-precision} przedstawione zostały wyniki
-    pomiarów czasu pracy skompilowanej wersji w języku Python bazującej na bibliotece
-    NumPy wykorzystujące macierze $\rho_{1}$ - $\rho_{6}$. kompilacja nie poskutkowała istotnym
-    skróceniem czasu pracy programu względem wariantu bez AOT, różnice wynoszą koło 1\%.
-    Uzysk ten może być spowodowany usunięciem szczątkowego obciążenia ze strony
-    interpretera, które nie jest mierzalne podczas krótszych testów z mniejszymi macierzami.
-    Możliwe jest również że ta różnica wynika z korzystniejszych warunków losowo
-    zapewnionych przez system operacyjny.
+    Na rysunku \ref{python-numpy-aot-double-precision} przedstawione zostały wyniki pomiarów
+    czasu pracy skompilowanej wersji w języku Python bazującej na bibliotece NumPy wykorzystujące
+    macierze $\rho_{1}$ - $\rho_{6}$. kompilacja nie poskutkowała istotnym skróceniem
+    czasu pracy programu względem wariantu bez AOT, różnice wynoszą koło 1\%. Uzysk ten może
+    być spowodowany usunięciem szczątkowego obciążenia ze strony interpretera, które nie
+    jest mierzalne podczas krótszych testów z mniejszymi macierzami. Możliwe jest również
+    że ta różnica wynika z korzystniejszych warunków losowo zapewnionych przez system operacyjny.
 
     \FloatBarrier
 
@@ -767,22 +767,22 @@ Wiśniewski}
       \label{python-numpy-jit-double-precision}
     \end{figure}
 
-    Na rysunku \ref{python-numpy-jit-double-precision} przedstawione zostały wyniki
-    uzyskane podczas pomiarów czasu pracy implementacji z kompilacją JIT wykonywaną przy
-    pomocy biblioteki Numba, wykorzystując macierze $\rho_{1}$ - $\rho_{6}$.
-    Implementacja ta oferowała podczas testów blisko dwukrotnie krótszy czas obliczeń, względem
-    oryginału, w przypadku macierzy mniejszych niż $32\times32$. Dla macierzy większych uzysk
-    wynosił odpowiednio $13.8s$ ($\approx 38\%$) dla $\rho_{1}$, $28s$ ($\approx 60\%$)
-    dla $\rho_{5}$ i $310 .9s$ ($\approx 77\%$) dla $\rho_{6}$.
+    Na rysunku \ref{python-numpy-jit-double-precision} przedstawione zostały wyniki uzyskane
+    podczas pomiarów czasu pracy implementacji z kompilacją JIT wykonywaną przy pomocy biblioteki
+    Numba, wykorzystując macierze $\rho_{1}$ - $\rho_{6}$. Implementacja ta oferowała podczas
+    testów blisko dwukrotnie krótszy czas obliczeń, względem oryginału, w przypadku macierzy
+    mniejszych niż $32\times32$. Dla macierzy większych uzysk wynosił odpowiednio
+    $13.8s$ ($\approx 38\%$) dla $\rho_{1}$, $28s$ ($\approx 60\%$) dla $\rho_{5}$ i $310
+    .9s$ ($\approx 77\%$) dla $\rho_{6}$.
 
     Tak znaczącą poprawę implementacja zawdzięcza prawdopodobnie temu, że kompilator JIT
-    całkowicie pozbywa się obciążenia ze strony dynamicznego systemu typów, generując
-    wyspecjalizowany statycznie typowany kod maszynowy. Ponadto może on specjalizować kod
-    dla dokładnie jednej platformy, korzystając z całego spektrum jej możliwości. Dotyczy
-    to na przykład instrukcji SIMD, takich jak AVX2 i FMA, które są dostępne w procesorze
+    całkowicie pozbywa się obciążenia ze strony dynamicznego systemu typów, generując wyspecjalizowany
+    statycznie typowany kod maszynowy. Ponadto może on specjalizować kod dla dokładnie
+    jednej platformy, korzystając z całego spektrum jej możliwości. Dotyczy to na
+    przykład instrukcji SIMD, takich jak AVX2 i FMA, które są dostępne w procesorze
     użytym do testów, ale wiele wciąż popularnych procesorów ich nie posiada. Wymusza to,
-    przy kompilacji AOT, zastąpienie tych instrukcji innymi szerzej dostępnymi, aby
-    zmaksymalizować przenośność kodu. Dodatkowo kompilator może brać pod uwagę inne charakterystyczne
+    przy kompilacji AOT, zastąpienie tych instrukcji innymi szerzej dostępnymi, aby zmaksymalizować
+    przenośność kodu. Dodatkowo kompilator może brać pod uwagę inne charakterystyczne
     cechy konkretnych architektur.
 
     \FloatBarrier
@@ -791,14 +791,14 @@ Wiśniewski}
 
 
     Pomiary czasu pracy implementacji w języku Rust były wykonywane przy użyciu macierzy
-    $\rho_{2}$ - $\rho_{6}$. Dane przekazywałem kolejno do programu z poleceniem działania
-    w trybie FSnQd do osiągnięcia co najmniej 1000 korekcji lub do 2.000.000 iteracji
-    algorytmu, w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy
-    algorytm uzyskał co najmniej 1000 korekcji i w żadnym przypadku nie osiągnął
-    maksymalnej liczby iteracji. Dla każdej macierzy pomiar był powtarzany pięciokrotnie
-    a wyniki zostały uśrednione. Pomiary czasu pracy dotyczyły przede wszystkim samego
-    algorytmu\footnote{Nie biorą więc pod uwagę czasu pochłoniętego przez importowanie modułów
-    itp., natomiast operacje wczytywania danych i pisania do plików są wliczane w czas pracy.}.
+    $\rho_{2}$ - $\rho_{6}$. Dane przekazywałem kolejno do programu z poleceniem
+    działania w trybie FSnQd do osiągnięcia co najmniej 1000 korekcji lub do 2.000.000 iteracji
+    algorytmu, w zależności od tego co nastąpi szybciej. Dla wszystkich macierzy algorytm
+    uzyskał co najmniej 1000 korekcji i w żadnym przypadku nie osiągnął maksymalnej liczby
+    iteracji. Dla każdej macierzy pomiar był powtarzany pięciokrotnie a wyniki zostały
+    uśrednione. Pomiary czasu pracy dotyczyły przede wszystkim samego algorytmu\footnote{Nie
+    biorą więc pod uwagę czasu pochłoniętego przez importowanie modułów itp., natomiast
+    operacje wczytywania danych i pisania do plików są wliczane w czas pracy.}.
 
     \begin{figure}[ht]
       \centering
@@ -808,22 +808,23 @@ Wiśniewski}
       \label{rust-double-precision}
     \end{figure}
 
-    Na rysunku \ref{rust-double-precision} zaprezentowane zostały wyniki pomiarów czasu
-    pracy implementacja w języku Rust. Względem oryginału czas pracy dla małych macierzy
-    skrócił się około pięciokrotnie, dotyczy to rozmiarów $4\times4$ i $8\times8$. W przypadku
-    macierzy $16\times16$ uzysk jest już tylko dwukrotny, natomiast dla większych
+    Na rysunku \ref{rust-double-precision} zaprezentowane zostały wyniki pomiarów czasu pracy
+    implementacja w języku Rust. Względem oryginału czas pracy dla małych macierzy
+    skrócił się około pięciokrotnie, dotyczy to rozmiarów $4\times4$ i $8\times8$. W
+    przypadku macierzy $16\times16$ uzysk jest już tylko dwukrotny, natomiast dla większych
     macierzy uzyskuje ona wyniki gorsze niż oryginał.
 
-    Jest to prawdopodobnie spowodowane tym, że sama implementacja mnożenia macierzowego korzysta
-    z ograniczonego zasobu instrukcji SIMD, aby zachować jak najszerszą kompatybilność w
-    przeciwieństwie do biblioteki NumPy, która wewnętrznie wykorzystuje bibliotekę OpenBLAS\cite{NumPy_Doc}.
+    Jest to prawdopodobnie spowodowane tym, że sama implementacja mnożenia macierzowego
+    korzysta z ograniczonego zasobu instrukcji SIMD, aby zachować jak najszerszą kompatybilność
+    w przeciwieństwie do biblioteki NumPy, która wewnętrznie wykorzystuje bibliotekę
+    OpenBLAS\cite{NumPy_Doc}.
 
     \FloatBarrier
 
     \subsubsection{ Rust i Ndaray z OpenBLAS }
-    Pomiary czasu pracy implementacji w języku Rust wykorzystującej OpenBLAS do wykonywania
-    mnożenia macierzowego były wykonywane w taki sam sposób jak dla implementacji która nie
-    korzystała z tej biblioteki.
+    Pomiary czasu pracy implementacji w języku Rust wykorzystującej OpenBLAS do
+    wykonywania mnożenia macierzowego były wykonywane w taki sam sposób jak dla
+    implementacji która nie korzystała z tej biblioteki.
 
     \begin{figure}[ht]
       \centering
@@ -833,23 +834,22 @@ Wiśniewski}
       \label{rust-openblas-double-precision}
     \end{figure}
 
-    Wyniki testów przeprowadzanych na implementacji korzystającej z biblioteki OpenBLAS
-    poskutkowało znaczącym skróceniem czasu pracy względem oryginału. Wyniki te zaprezentowane
-    zostały na rysunku \ref{rust-openblas-double-precision}. Największa różnica
-    występuje dla małych macierzy, gdzie podobnie do wariantu nie korzystającego z OpenBLAS,
-    przyspieszenie jest około pięciokrotne dla $\rho_{2}$, $\rho_{3}$ i ponad trzykrotne
-    dla $\rho_{2}$. Dla macierzy $32\times32$ i $64\times64$ obliczenia zajęły około
-    dwukrotnie mniej czasu. Pokazuje to jak znaczący wzrost wydajności można uzyskać przy
-    pomocy wyspecjalizowanego kodu w języku Asemblera, który został wykorzystany w
-    bibliotece OpenBLAS do stworzenia wyspecjalizowanych implementacji mnożenia
-    macierzowego.
+    Wyniki testów przeprowadzanych na implementacji korzystającej z biblioteki OpenBLAS poskutkowało
+    znaczącym skróceniem czasu pracy względem oryginału. Wyniki te zaprezentowane
+    zostały na rysunku \ref{rust-openblas-double-precision}. Największa różnica występuje
+    dla małych macierzy, gdzie podobnie do wariantu nie korzystającego z OpenBLAS, przyspieszenie
+    jest około pięciokrotne dla $\rho_{2}$, $\rho_{3}$ i ponad trzykrotne dla $\rho_{2}$.
+    Dla macierzy $32\times32$ i $64\times64$ obliczenia zajęły około dwukrotnie mniej czasu.
+    Pokazuje to jak znaczący wzrost wydajności można uzyskać przy pomocy
+    wyspecjalizowanego kodu w języku Asemblera, który został wykorzystany w bibliotece OpenBLAS
+    do stworzenia wyspecjalizowanych implementacji mnożenia macierzowego.
 
     \FloatBarrier
 
     \subsection{Pomiary z pojedynczą precyzją}
-    \label{plots-single-precision} Wszystkie testy wydajności z dla obliczeń wykorzystujących
-    liczby zmiennoprzecinkowe pojedynczej precyzji były przeprowadzane w taki sam sposób
-    jak odpowiadające testy z podwójną precyzją.
+    \label{plots-single-precision} Wszystkie testy wydajności z dla obliczeń
+    wykorzystujących liczby zmiennoprzecinkowe pojedynczej precyzji były przeprowadzane
+    w taki sam sposób jak odpowiadające testy z podwójną precyzją.
 
     \subsubsection{ Python i NumPy }
     \begin{figure}[ht]
@@ -861,26 +861,25 @@ Wiśniewski}
       \label{sp-numpy-perf}
     \end{figure}
 
-    Na wykresie \ref{sp-numpy-perf} przedstawiłem wyniki wydajności dla implementacji
-    napisanej w języku Python wykorzystującej bibliotekę NumPy do przeprowadzania
-    obliczeń na macierzach liczb zespolonych pojedynczej precyzji. W przypadku mniejszych
-    macierzy ($4\times4$, $8\times8$, $16\times16$) różnice w czasie pracy, względem
-    wariantu opartego na liczbach podwójnej precyzji, są minimalne. Dzieje się tak
-    prawdopodobnie dlatego, że macierze te są na tyle niewielkie (do 4KB) że mieszczą się
-    w pamięci cache L1 procesora\footnote{Wykorzystywany tutaj Ryzen 9 7950X posiada
-    $32\times16$KB cache L1}, więc wymnażanie ich jest procesem bardzo szybkim. W
-    momencie kiedy docieramy do macierzy $32\times32$ wzrost wydajności staje się
-    zauważalny, co również można wytłumaczyć odwołując się do pojemności pamięci cache procesora.
-    Macierze podwójnej precyzji zajmują dokładnie 16KB ($32\times 32\times2\times 8$), natomiast
-    dostęp do tej pamięci nie jest ekskluzywny dla jednego procesu, nie może on więc
-    korzystać z całych 16KB. W efekcie część danych przebywa poza pamięcią cache.
-    Natomiast macierze wykorzystujące liczby pojedynczej precyzji zajmują tylko 8KB. Można
-    się więc spodziewać że większość czasu spędzają one w pamięciach L1 i L2, co pozwala
-    przyspieszyć obliczenia. Dodatkowo mniejszy rozmiar liczb pojedynczej precyzji pozwala
-    dwukrotnie zwiększyć przepustowość instrukcji SIMD, co prawdopodobnie odgrywa
-    również bardzo istotną rolę, szczególnie w przypadku macierzy $64\times64$, dla
-    których obliczenia przyspieszają znacznie bardziej niż w przypadku mniejszych
-    macierzy.
+    Na wykresie \ref{sp-numpy-perf} przedstawiłem wyniki wydajności dla implementacji napisanej
+    w języku Python wykorzystującej bibliotekę NumPy do przeprowadzania obliczeń na macierzach
+    liczb zespolonych pojedynczej precyzji. W przypadku mniejszych macierzy ($4\times4$,
+    $8\times8$, $16\times16$) różnice w czasie pracy, względem wariantu opartego na liczbach
+    podwójnej precyzji, są minimalne. Dzieje się tak prawdopodobnie dlatego, że macierze
+    te są na tyle niewielkie (do 4KB) że mieszczą się w pamięci cache L1 procesora\footnote{Wykorzystywany
+    tutaj Ryzen 9 7950X posiada $32\times16$KB cache L1}, więc wymnażanie ich jest
+    procesem bardzo szybkim. W momencie kiedy docieramy do macierzy $32\times32$ wzrost wydajności
+    staje się zauważalny, co również można wytłumaczyć odwołując się do pojemności
+    pamięci cache procesora. Macierze podwójnej precyzji zajmują dokładnie 16KB ($32\times
+    32\times2\times 8$), natomiast dostęp do tej pamięci nie jest ekskluzywny dla
+    jednego procesu, nie może on więc korzystać z całych 16KB. W efekcie część danych
+    przebywa poza pamięcią cache. Natomiast macierze wykorzystujące liczby pojedynczej precyzji
+    zajmują tylko 8KB. Można się więc spodziewać że większość czasu spędzają one w
+    pamięciach L1 i L2, co pozwala przyspieszyć obliczenia. Dodatkowo mniejszy rozmiar
+    liczb pojedynczej precyzji pozwala dwukrotnie zwiększyć przepustowość instrukcji
+    SIMD, co prawdopodobnie odgrywa również bardzo istotną rolę, szczególnie w przypadku
+    macierzy $64\times64$, dla których obliczenia przyspieszają znacznie bardziej niż w przypadku
+    mniejszych macierzy.
 
     \FloatBarrier
 
@@ -894,11 +893,11 @@ Wiśniewski}
       \label{python-numpy-cython-single-precision}
     \end{figure}
 
-    Wyniki dla wariantu pre-kompilowanego przy pomocy biblioteki Cython nie różnią się
-    znacząco od wariantu nie pre-kompilowanego, podobnie jak w przypadku obliczeń podwójnej
-    precyzji, zostały one zaprezentowane na rysunku
-    \ref{python-numpy-cython-single-precision}. Podobnie jak w przypadku wyników dla obliczeń
-    podwójnej precyzji, pre-kompilacja nie przynosi istotnych zysków wydajnościowych.
+    Wyniki dla wariantu pre-kompilowanego przy pomocy biblioteki Cython nie różnią się znacząco
+    od wariantu nie pre-kompilowanego, podobnie jak w przypadku obliczeń podwójnej
+    precyzji, zostały one zaprezentowane na rysunku \ref{python-numpy-cython-single-precision}.
+    Podobnie jak w przypadku wyników dla obliczeń podwójnej precyzji, pre-kompilacja nie
+    przynosi istotnych zysków wydajnościowych.
 
     \FloatBarrier
 
@@ -912,10 +911,10 @@ Wiśniewski}
       \label{sp-numpy-jit-perf}
     \end{figure}
 
-    W przypadku wariantu wykorzystującego kompilację JIT, zysk czasowy wynikający z redukcji
-    precyzji obliczeń jest minimalny lub wręcz nie występuje. Wyjątkiem są tutaj wyniki
-    dla macierzy $\rho_{1}$ w przypadku której czas pracy skrócił się o $4.7s$ (
-    $\approx 21\%$).
+    W przypadku wariantu wykorzystującego kompilację JIT, zysk czasowy wynikający z
+    redukcji precyzji obliczeń jest minimalny lub wręcz nie występuje. Wyjątkiem są tutaj
+    wyniki dla macierzy $\rho_{1}$ w przypadku której czas pracy skrócił się o $4.7s$ ( $\approx
+    21\%$).
 
     \FloatBarrier
 
@@ -928,11 +927,11 @@ Wiśniewski}
       \label{sp-rust-perf}
     \end{figure}
 
-    Implementacja w języku Rust wykorzystująca bibliotekę Ndarray prezentuje znaczną poprawę
-    wydajności dla wszystkich wymiarów macierzy. Podczas obliczeń na małych macierzach, do
-    $16\times16$ włącznie, uzyskuje ona najlepsze wyniki w zestawieniu, natomiast dla większych
-    macierzy poprawa występuje, ale ciągle implementacja w języku Python z JIT daje
-    lepsze efekty.
+    Implementacja w języku Rust wykorzystująca bibliotekę Ndarray prezentuje znaczną
+    poprawę wydajności dla wszystkich wymiarów macierzy. Podczas obliczeń na małych macierzach,
+    do $16\times16$ włącznie, uzyskuje ona najlepsze wyniki w zestawieniu, natomiast dla
+    większych macierzy poprawa występuje, ale ciągle implementacja w języku Python z JIT
+    daje lepsze efekty.
 
     \FloatBarrier
 
@@ -945,13 +944,12 @@ Wiśniewski}
       \label{sp-rust-blas-perf}
     \end{figure}
 
-    Zestawienie języka Rust i biblioteki Ndaray z pakietem OpenBLAS i liczbami
-    zmiennoprzecinkowymi pojedynczej precyzji poskutkowało uzyskaniem znaczącej poprawy
-    wyników wydajności, które zostały przedstawione na rysunku \ref{sp-rust-blas-perf}.
-    W przypadku macierzy $4\times4$ i $8\times8$ wydajność jest bardzo zbliżona do
-    wariantu nie korzystającego z OpenBLAS, natomiast wraz ze wzrostem rozmiaru macierzy,
-    skrócenie czasu pracy staje się coraz bardziej widoczne. Względem oryginału,
-    obliczenia dla macierzy:
+    Zestawienie języka Rust i biblioteki Ndaray z pakietem OpenBLAS i liczbami zmiennoprzecinkowymi
+    pojedynczej precyzji poskutkowało uzyskaniem znaczącej poprawy wyników wydajności,
+    które zostały przedstawione na rysunku \ref{sp-rust-blas-perf}. W przypadku macierzy
+    $4\times4$ i $8\times8$ wydajność jest bardzo zbliżona do wariantu nie korzystającego
+    z OpenBLAS, natomiast wraz ze wzrostem rozmiaru macierzy, skrócenie czasu pracy staje
+    się coraz bardziej widoczne. Względem oryginału, obliczenia dla macierzy:
     \begin{itemize}
       \item $\rho_{1}$ trwają $\approx 5.8\times$ krócej,
 
@@ -959,22 +957,23 @@ Wiśniewski}
 
       \item $\rho_{6}$ trwają $\approx 7.4\times$ krócej,
     \end{itemize}
-    Biorąc pod zyski wydajności, wynikające z obniżenia precyzji obliczeń, dla pozostałych
-    implementacji, tak istotne skrócenie czasu pracy jest zaskakujące. Z tego względu powtórnie
-    upewniłem się, że praca programu kończy się uzyskaniem odpowiednich wyników
-    liczbowych i nie wykryłem żadnych nieprawidłowości.
+    Biorąc pod zyski wydajności, wynikające z obniżenia precyzji obliczeń, dla
+    pozostałych implementacji, tak istotne skrócenie czasu pracy jest zaskakujące. Z
+    tego względu powtórnie upewniłem się, że praca programu kończy się uzyskaniem odpowiednich
+    wyników liczbowych i nie wykryłem żadnych nieprawidłowości.
 
     \FloatBarrier
 
     \subsection{Zestawienia dla macierzy}
-    W tej sekcji prezentuję wyniki tych samych pomiarów co w sekcjach \ref{plots-double-precision}
-    i \ref{plots-single-precision} zestawiając je ze sobą względem macierzy wykorzystanej
-    do testów.
+    W tej sekcji prezentuję wyniki tych samych pomiarów co w sekcjach
+    \ref{plots-double-precision} i \ref{plots-single-precision} zestawiając je ze sobą
+    względem macierzy wykorzystanej do testów.
 
     Oznaczenie `(F64)' przy nazwie implementacji oznacza obliczenia z podwójną precyzją,
-    analogicznie `(F32)' oznacza obliczenia z pojedynczą precyzją. `Oryginał' to kod implementacji
-    autorstwa dr hab. Marcin Wieśniak, prof. UG, natomiast pozycja podpisana `Oryginał (zablokowany)'
-    to ten sam kod ale z zablokowaną ilością wątków obliczeniowych.
+    analogicznie `(F32)' oznacza obliczenia z pojedynczą precyzją. `Oryginał' to kod
+    implementacji autorstwa dr hab. Marcin Wieśniak, prof. UG, natomiast pozycja
+    podpisana `Oryginał (zablokowany)' to ten sam kod ale z zablokowaną ilością wątków
+    obliczeniowych.
 
     \subsubsection{Macierz \texorpdfstring{$\rho_{1}$ $(32\times32)$}{rho1 32x32}}
     \begin{figure}[ht]
@@ -985,12 +984,12 @@ Wiśniewski}
       \label{matrix-comparison-rho-1-plot}
     \end{figure}
 
-    Na rysunku \ref{matrix-comparison-rho-1-plot} przedstawione zostało zestawienie
-    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{1}$. Najkrótszy
+    Na rysunku \ref{matrix-comparison-rho-1-plot} przedstawione zostało zestawienie wyników
+    wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{1}$. Najkrótszy
     czas pracy w zestawieniu, $17.9s$, uzyskała implementacja napisana w języku Python z
     użyciem biblioteki NumPy z kompilacją JIT wykonująca obliczenia pojedynczej precyzji.
-    Niewiele ustępuje jej wariant pracujący na liczbach podwójnej precyzji z wynikiem
-    $22 .6s$.
+    Niewiele ustępuje jej wariant pracujący na liczbach podwójnej precyzji z wynikiem $22
+    .6s$.
 
     \FloatBarrier
 
@@ -1003,14 +1002,14 @@ Wiśniewski}
       \label{matrix-comparison-rho-2-plot}
     \end{figure}
 
-    Na rysunku \ref{matrix-comparison-rho-2-plot} przedstawione zostało zestawienie
-    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{2}$. Najkrótszy
-    czas pracy w zestawieniu, $0.5s$, uzyskała implementacja napisana w języku Rust wykonująca
-    obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant korzystający
+    Na rysunku \ref{matrix-comparison-rho-2-plot} przedstawione zostało zestawienie wyników
+    wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{2}$. Najkrótszy
+    czas pracy w zestawieniu, $0.5s$, uzyskała implementacja napisana w języku Rust
+    wykonująca obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant korzystający
     z biblioteki OpenBLAS$0.6s$.
 
-    Z pośród implementacji w języku Python najlepiej sprawował się wariant z JIT (F64),
-    natomiast jego czas pracy był około $7.6\times$ dłuższy.
+    Z pośród implementacji w języku Python najlepiej sprawował się wariant z JIT (F64), natomiast
+    jego czas pracy był około $7.6\times$ dłuższy.
 
     \FloatBarrier
 
@@ -1022,10 +1021,10 @@ Wiśniewski}
       _{3}$.}
       \label{matrix-comparison-rho-3-plot}
     \end{figure}
-    Na rysunku \ref{matrix-comparison-rho-3-plot} przedstawione zostało zestawienie wyników
-    wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{3}$. Najkrótszy
-    czas pracy w zestawieniu, $0.6s$, uzyskała implementacja napisana w języku Rust z
-    OpenBLAS wykonująca obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant
+    Na rysunku \ref{matrix-comparison-rho-3-plot} przedstawione zostało zestawienie
+    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{3}$. Najkrótszy
+    czas pracy w zestawieniu, $0.6s$, uzyskała implementacja napisana w języku Rust z OpenBLAS
+    wykonująca obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant
     który nie korzystał z OpenBLAS ($0.9s$).
 
     \FloatBarrier
@@ -1038,10 +1037,10 @@ Wiśniewski}
       _{4}$.}
       \label{matrix-comparison-rho-4-plot}
     \end{figure}
-    Na rysunku \ref{matrix-comparison-rho-4-plot} przedstawione zostało zestawienie
-    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{4}$. Najkrótszy
-    czas pracy w zestawieniu, $1.5s$, uzyskała implementacja napisana w języku Rust z OpenBLAS
-    wykonująca obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant
+    Na rysunku \ref{matrix-comparison-rho-4-plot} przedstawione zostało zestawienie wyników
+    wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{4}$. Najkrótszy
+    czas pracy w zestawieniu, $1.5s$, uzyskała implementacja napisana w języku Rust z
+    OpenBLAS wykonująca obliczenia pojedynczej precyzji. Bardzo zbliżony wynik uzyskał wariant
     który nie korzystał z OpenBLAS ($4s$).
 
     \FloatBarrier
@@ -1054,12 +1053,12 @@ Wiśniewski}
       _{5}$.}
       \label{matrix-comparison-rho-5-plot}
     \end{figure}
-    Na rysunku \ref{matrix-comparison-rho-5-plot} przedstawione zostało zestawienie wyników
-    wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{5}$. Najkrótszy
-    czas pracy w zestawieniu, $7.2s$, uzyskała implementacja napisana w języku Rust z
-    OpenBLAS wykonująca obliczenia pojedynczej precyzji. Następny najniższy wynik wynosił
-    $18.2s$ i był osiągany przez wariant w języku Python korzystający z JIT, niezależnie
-    od precyzji obliczeń.
+    Na rysunku \ref{matrix-comparison-rho-5-plot} przedstawione zostało zestawienie
+    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{5}$. Najkrótszy
+    czas pracy w zestawieniu, $7.2s$, uzyskała implementacja napisana w języku Rust z OpenBLAS
+    wykonująca obliczenia pojedynczej precyzji. Następny najniższy wynik wynosił $18.2s$
+    i był osiągany przez wariant w języku Python korzystający z JIT, niezależnie od precyzji
+    obliczeń.
 
     \subsubsection{Macierz \texorpdfstring{$\rho_{6}$ $(64\times64)$}{rho6 64x64}}
     \begin{figure}[ht]
@@ -1069,27 +1068,27 @@ Wiśniewski}
       _{6}$.}
       \label{matrix-comparison-rho-6-plot}
     \end{figure}
-    Na rysunku \ref{matrix-comparison-rho-6-plot} przedstawione zostało zestawienie
-    wyników wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{6}$. Najkrótszy
-    czas pracy w zestawieniu, $54.8s$, uzyskała implementacja napisana w języku Rust z OpenBLAS
-    wykonująca obliczenia pojedynczej precyzji. Następny najniższy wynik wynosił $93.1s$
-    i był osiągany przez wariant w języku Python korzystający z JIT przy obliczeniach
-    podwójnej precyzji. Kod wykonujący obliczenia pojedynczej precyzji wypadł nieznacznie
-    gorzej.
+    Na rysunku \ref{matrix-comparison-rho-6-plot} przedstawione zostało zestawienie wyników
+    wydajności dla testów przeprowadzanych przy pomocy macierzy $\rho_{6}$. Najkrótszy
+    czas pracy w zestawieniu, $54.8s$, uzyskała implementacja napisana w języku Rust z
+    OpenBLAS wykonująca obliczenia pojedynczej precyzji. Następny najniższy wynik wynosił
+    $93.1s$ i był osiągany przez wariant w języku Python korzystający z JIT przy obliczeniach
+    podwójnej precyzji. Kod wykonujący obliczenia pojedynczej precyzji wypadł
+    nieznacznie gorzej.
 
     \FloatBarrier
 
     \subsection{Profilowanie Rust z OpenBLAS}
 
 
-    Po przeprowadzeniu testów wydajności uznałem że konieczne jest wykonanie
-    profilowania na najwydajniejszej implementacji, aby sprawdzić czy i gdzie istnieje jeszcze
-    szansa na poprawę. Dlatego też przygotowałem odpowiedni program pomocniczy który
-    wywoływał implementację w języku Rust z OpenBLAS i pojedynczą precyzją bez
-    konieczności angażowania interpretera. Było to rozwiązanie które zarówno pozwalało usunąć
-    duże ilości zbędnych informacji z danych profilowania jak również obejść błędy które
-    otrzymywałem gdy próbowałem profilować zachowanie interpretera. Do profilowania
-    wykorzystana została macierz $64\times 64$.
+    Po przeprowadzeniu testów wydajności uznałem że konieczne jest wykonanie profilowania
+    na najwydajniejszej implementacji, aby sprawdzić czy i gdzie istnieje jeszcze szansa
+    na poprawę. Dlatego też przygotowałem odpowiedni program pomocniczy który wywoływał implementację
+    w języku Rust z OpenBLAS i pojedynczą precyzją bez konieczności angażowania interpretera.
+    Było to rozwiązanie które zarówno pozwalało usunąć duże ilości zbędnych informacji z
+    danych profilowania jak również obejść błędy które otrzymywałem gdy próbowałem
+    profilować zachowanie interpretera. Do profilowania wykorzystana została macierz $64\times
+    64$.
 
     \FloatBarrier
     \begin{figure}[ht]
@@ -1100,32 +1099,32 @@ Wiśniewski}
     \end{figure}
     \FloatBarrier
 
-    Wizualizacja typu flame graph wyników tego profilowania została umieszczona na rysunku
-    \ref{rust-flame-graph-prof}. Wykres przedstawia dane analogicznie do wykresy Icircle
-    z rysunku \ref{pre-prof-perf}, natomiast robi to w przeciwnym kierunku - pierwsze wywołania
-    są na dole, a te najbardziej zagnieżdżone na górze. Obraz został stworzony przy pomocy
-    programu Hotspot\cite{HOTSPOT} rozwijanego przez firmę KDAB.
+    Wizualizacja typu flame graph wyników tego profilowania została umieszczona na
+    rysunku \ref{rust-flame-graph-prof}. Wykres przedstawia dane analogicznie do wykresy
+    Icircle z rysunku \ref{pre-prof-perf}, natomiast robi to w przeciwnym kierunku -
+    pierwsze wywołania są na dole, a te najbardziej zagnieżdżone na górze. Obraz został
+    stworzony przy pomocy programu Hotspot\cite{HOTSPOT} rozwijanego przez firmę KDAB.
 
-    Na podstawie zaprezentowanego wykresu wywnioskować można, że większość czasu pracy programu
-    - około 95\% - pochłaniają mnożenia macierzowe wykonywane w obrębie funkcji \code{rotate()}.
-    Operacje te wykonywane są przy pomocy funkcji z biblioteki OpenBLAS. Korzysta ona z implementacji
-    napisanych w języku Asemblera, które są specjalnie optymalizowane by wykorzystywać
-    maksimum możliwości sprzętowych. Tym samym nie ma prostej możliwości by kontynuować proces
-    optymalizacji czasu wykonania programu.
+    Na podstawie zaprezentowanego wykresu wywnioskować można, że większość czasu pracy
+    programu - około 95\% - pochłaniają mnożenia macierzowe wykonywane w obrębie funkcji
+    \code{rotate()}. Operacje te wykonywane są przy pomocy funkcji z biblioteki OpenBLAS.
+    Korzysta ona z implementacji napisanych w języku Asemblera, które są specjalnie optymalizowane
+    by wykorzystywać maksimum możliwości sprzętowych. Tym samym nie ma prostej
+    możliwości by kontynuować proces optymalizacji czasu wykonania programu.
 
     \section{Dyskusja}
     \subsection{Podsumowanie}
-    Praca ta miała na celu eksplorację dostępnych metod maksymalizacji wydajności algorytmu
-    CSSF. Udało mi się zbadać skuteczność wykorzystania pięciu wariantów programu, w tym
-    implementacji w dwóch różnych językach programowania. Algorytm CSSF został z
-    powodzeniem wielokrotnie zaimplementowany, a wszystkie stworzone implementacje pozwalały
-    uzyskać oczekiwane wyniki liczbowe.
+    Praca ta miała na celu eksplorację dostępnych metod maksymalizacji wydajności
+    algorytmu CSSF. Udało mi się zbadać skuteczność wykorzystania pięciu wariantów programu,
+    w tym implementacji w dwóch różnych językach programowania. Algorytm CSSF został z powodzeniem
+    wielokrotnie zaimplementowany, a wszystkie stworzone implementacje pozwalały uzyskać
+    oczekiwane wyniki liczbowe.
 
-    Przeprowadziłem również liczne testy wydajności dla różnych danych wejściowych dla wszystkich
-    wariantów programu, co pozwoliło mi ustalić które metody okazały się najbardziej
-    skuteczne. Ponadto każdy z wariantów był testowany zarówno podczas obliczeń pojedynczej
-    jak i podwójnej precyzji. Stworzyło to okazję do zbadania wpływu precyzji obliczeń
-    na wydajność kodu. W przypadku dwóch wariantów programu, udało się się uzyskać
+    Przeprowadziłem również liczne testy wydajności dla różnych danych wejściowych dla
+    wszystkich wariantów programu, co pozwoliło mi ustalić które metody okazały się najbardziej
+    skuteczne. Ponadto każdy z wariantów był testowany zarówno podczas obliczeń
+    pojedynczej jak i podwójnej precyzji. Stworzyło to okazję do zbadania wpływu precyzji
+    obliczeń na wydajność kodu. W przypadku dwóch wariantów programu, udało się się uzyskać
     znaczącą poprawę wydajności.
 
     Po przeprowadzeniu analizy uzyskanych wyników udało mi się wskazać, że warianty
@@ -1136,95 +1135,95 @@ Wiśniewski}
     \end{enumerate}
 
     Operują znaczące skrócenie czasu pracy względem oryginału. Dla macierzy $64\times64$,
-    a więc układów 6 kubitów, czas pracy pierwszego wariantu skrócił się względem oryginału
-    $4.3$ raza, natomiast w przypadku drugiego $7.4$ raza.
+    a więc układów 6 kubitów, czas pracy pierwszego wariantu skrócił się względem
+    oryginału $4.3$ raza, natomiast w przypadku drugiego $7.4$ raza.
 
-    Warto podkreślić, że wydajność obu wariantów jest zbliżona, natomiast nakład pracy
-    konieczny do stworzenia implementacji w języku Rust był nieporównywalnie większy niż
-    ten potrzebny do dodania kompilacji JIT do kodu w języku Python. Podobnych wyników można
-    spodziewać sie w przypadku wielu innych programów skupiających się na dużej ilości obliczeń
-    macierzowych - kompilacja JIT jest w stane dość skutecznie usunąć wady języka Python.
-    Wymaga to poświęcenia pewnej części swobody którą ten język daje, ale ciągle pozostawia
-    jej na tyle dużo, że proces pisania kodu jest mniej szybszy niż w przypadku języków
-    niskopoziomowych. Oczywiście, języki te dają większą kontrolę nad komputerem i
-    pozwalają na wiele błyskotliwych manualnych optymalizacji, tak jak ma się to w przypadku
-    biblioteki OpenBLAS.
+    Warto podkreślić, że wydajność obu wariantów jest zbliżona, natomiast nakład pracy konieczny
+    do stworzenia implementacji w języku Rust był nieporównywalnie większy niż ten potrzebny
+    do dodania kompilacji JIT do kodu w języku Python. Podobnych wyników można
+    spodziewać sie w przypadku wielu innych programów skupiających się na dużej ilości
+    obliczeń macierzowych - kompilacja JIT jest w stane dość skutecznie usunąć wady
+    języka Python. Wymaga to poświęcenia pewnej części swobody którą ten język daje, ale
+    ciągle pozostawia jej na tyle dużo, że proces pisania kodu jest mniej szybszy niż w przypadku
+    języków niskopoziomowych. Oczywiście, języki te dają większą kontrolę nad komputerem
+    i pozwalają na wiele błyskotliwych manualnych optymalizacji, tak jak ma się to w
+    przypadku biblioteki OpenBLAS.
 
-    Kolejnym ważnym spostrzeżeniem jest, że cztery z pięciu zaprezentowanych
-    implementacji wykorzystywały do wykonywania mnożenia macierzowego bibliotekę
-    OpenBLAS. Moduł Pythona NumPy wykorzystuje ją zawsze, natomiast w pakiecie Rusta, Ndarray,
-    możliwe jest ręczne włączenie takiego zachowania. Pomimo tego różnice w wydajności pomiędzy
-    nimi są bardzo znaczące. Działo się tak ponieważ znaczącą część czasu wykonywania
-    kodu zajmowały inne operacje, których zaimplementowany w Asemblerze OpenBLAS przyspieszyć
-    nie mógł.
+    Kolejnym ważnym spostrzeżeniem jest, że cztery z pięciu zaprezentowanych implementacji
+    wykorzystywały do wykonywania mnożenia macierzowego bibliotekę OpenBLAS. Moduł
+    Pythona NumPy wykorzystuje ją zawsze, natomiast w pakiecie Rusta, Ndarray, możliwe jest
+    ręczne włączenie takiego zachowania. Pomimo tego różnice w wydajności pomiędzy nimi
+    są bardzo znaczące. Działo się tak ponieważ znaczącą część czasu wykonywania kodu zajmowały
+    inne operacje, których zaimplementowany w Asemblerze OpenBLAS przyspieszyć nie mógł.
 
     \subsection{Kontynuacja}
     Praca ta nie wyczerpuje całej puli narzędzi które można wykorzystać do implementacji
     algorytmu CSSF. W przyszłości można sprawdzić jakie efekty dałoby wykorzystanie GPU\footnote{GPU
-    (Graphics Processing Unit) to wyspecjalizowany układ scalony przeznaczony do szybkiego
-    i efektywnego przetwarzania obrazów w celu wyświetlenia ich na urządzeniu wyjściowym,
-    takim jak monitor komputerowy. GPU jest zoptymalizowany do wykonywania obliczeń równoległych,
-    które są niezbędne do renderowania grafiki 3D i 2D, a także jest często wykorzystywany
-    w innych intensywnych obliczeniowo dziedzinach, takich jak przetwarzanie danych, sztuczna
-    inteligencja czy uczenie maszynowe, ze względu na swoją zdolność do przetwarzania
-    dużej ilości danych jednocześnie.} do przeprowadzania obliczeń oraz jakie metody
-    implementacji tych obliczeń dają najlepsze efekty. Dobrze byłoby w takim wypadku rozważyć
-    możliwość skorzystania z biblioteki CuPy, CUDA czy też funkcjonalności Numby
-    pozwalających na wykorzystanie GPU. Istnieje też możliwość skorzystania z Vulkan API
-    poprzez język Rust lub C++ i compute shaderów\footnote{shader - program wykonywany
-    na GPU.} napisanych w języku GLSL. Istnieje szansa że algorytm w całości wykonywany na
-    GPU, bez transferów na CPU byłby w stanie zaoferować interesujące wyniki i lepsze
+    (Graphics Processing Unit) to wyspecjalizowany układ scalony przeznaczony do
+    szybkiego i efektywnego przetwarzania obrazów w celu wyświetlenia ich na urządzeniu
+    wyjściowym, takim jak monitor komputerowy. GPU jest zoptymalizowany do wykonywania
+    obliczeń równoległych, które są niezbędne do renderowania grafiki 3D i 2D, a także
+    jest często wykorzystywany w innych intensywnych obliczeniowo dziedzinach, takich jak
+    przetwarzanie danych, sztuczna inteligencja czy uczenie maszynowe, ze względu na swoją
+    zdolność do przetwarzania dużej ilości danych jednocześnie.} do przeprowadzania obliczeń
+    oraz jakie metody implementacji tych obliczeń dają najlepsze efekty. Dobrze byłoby w
+    takim wypadku rozważyć możliwość skorzystania z biblioteki CuPy, CUDA czy też funkcjonalności
+    Numby pozwalających na wykorzystanie GPU. Istnieje też możliwość skorzystania z
+    Vulkan API poprzez język Rust lub C++ i compute shaderów\footnote{shader - program wykonywany
+    na GPU.} napisanych w języku GLSL. Istnieje szansa że algorytm w całości wykonywany
+    na GPU, bez transferów na CPU byłby w stanie zaoferować interesujące wyniki i lepsze
     skalowanie w przypadku większych macierzy stanu.
 
     \subsection{Pominięte narzędzia}
-    W zestawieniu zawartym w tej pracy zawarty został ograniczony podzbiór możliwych
-    metod implementacji algorytmu CSSF. W przypadku wielu metod wynikało to z ograniczeń
+    W zestawieniu zawartym w tej pracy zawarty został ograniczony podzbiór możliwych metod
+    implementacji algorytmu CSSF. W przypadku wielu metod wynikało to z ograniczeń
     czasowych, natomiast jest pewna grupa narzędzi które zostały świadomie wykluczone na
     etapie planowania.
 
     \subsubsection{PyTorch i TensorFlow}
-    Biblioteki TensorFlow i PyTorch zostały stworzone, aby ułatwić prace badaczy i inżynierów
-    pracujących nad uczeniem maszynowym i głębokim uczeniem. W obu znajdują się
-    implementacje tensorów oferujących pewien podzbiór funkcjonalności obiektów ndarray
-    z biblioteki NumPy. Prawdopodobnie zawierają one wystarczająco wiele elementów by zaimplementować
-    przy ich pomocy algorytm CSSF. Posiadają one również bardzo rozbudowany bagaż innych
-    elementów, które są bardzo pomocne gdy moduły te są używane do tworzenia sieci neuronowych,
-    ale są zupełnie zbędne dla programu CSSFinder. Jednocześnie biblioteka NumPy jest rozwiązaniem
-    bardziej powszechnym w podobnych scenariuszach i prawdopodobnie oferującym najlepszą
-    możliwą przepustowość obliczeniową, możliwą do uzyskania na CPU, biorąc pod uwagę że
-    wewnętrznie używa ona OpenBLAS. Uznałem, że czas konieczny do zaimplementowania algorytmu
-    CSSF przy pomocy PyTorch czy TensorFlow będzie niewspółmierny do spodziewanych zysków
-    wydajnościowych, więc lepiej czas ten poświęcić na rozważenie rozwiązań które rokują
-    lepiej.
+    Biblioteki TensorFlow i PyTorch zostały stworzone, aby ułatwić prace badaczy i
+    inżynierów pracujących nad uczeniem maszynowym i głębokim uczeniem. W obu znajdują się
+    implementacje tensorów oferujących pewien podzbiór funkcjonalności obiektów ndarray z
+    biblioteki NumPy. Prawdopodobnie zawierają one wystarczająco wiele elementów by
+    zaimplementować przy ich pomocy algorytm CSSF. Posiadają one również bardzo rozbudowany
+    bagaż innych elementów, które są bardzo pomocne gdy moduły te są używane do
+    tworzenia sieci neuronowych, ale są zupełnie zbędne dla programu CSSFinder.
+    Jednocześnie biblioteka NumPy jest rozwiązaniem bardziej powszechnym w podobnych
+    scenariuszach i prawdopodobnie oferującym najlepszą możliwą przepustowość
+    obliczeniową, możliwą do uzyskania na CPU, biorąc pod uwagę że wewnętrznie używa ona
+    OpenBLAS. Uznałem, że czas konieczny do zaimplementowania algorytmu CSSF przy pomocy
+    PyTorch czy TensorFlow będzie niewspółmierny do spodziewanych zysków wydajnościowych,
+    więc lepiej czas ten poświęcić na rozważenie rozwiązań które rokują lepiej.
 
     \subsubsection{PyPy}
-    PyPy jest alternatywną do CPythona implementacją języka Python. Oferuje ona wbudowany,
-    automatyczny tracing JIT compiler. Jednocześnie w dokumentacji tego interpretera zaznaczane
-    jest że najlepiej sprawuje się on z kodem który jest napisany w większości w języku Python,
-    a pakiety takie jak NumPy, napisane m. in. w C będą oferowały słabą wydajność\cite{PyPyPerformance}.
-    Ponadto w obecnym momencie wymaga on dedykowanych pakietów wheel podczas instalacji pakietów
-    z PyPI, co stwarza dodatkowy problem podczas instalacji zależności które
-    wykorzystują modły rozszerzeń skompilowane do kodu maszynowego. Ponownie uderza to w
-    NumPy. Biorąc pod uwagę że biblioteka Numba, która również oferuje kompilację JIT została
-    stworzona do współpracy z NumPy i w takich scenariuszach radzi sobie najlepiej,
-    zdecydowałem o porzuceniu prób wykorzystania PyPy.
+    PyPy jest alternatywną do CPythona implementacją języka Python. Oferuje ona
+    wbudowany, automatyczny tracing JIT compiler. Jednocześnie w dokumentacji tego
+    interpretera zaznaczane jest że najlepiej sprawuje się on z kodem który jest
+    napisany w większości w języku Python, a pakiety takie jak NumPy, napisane m. in. w
+    C będą oferowały słabą wydajność\cite{PyPyPerformance}. Ponadto w obecnym momencie
+    wymaga on dedykowanych pakietów wheel podczas instalacji pakietów z PyPI, co stwarza
+    dodatkowy problem podczas instalacji zależności które wykorzystują modły rozszerzeń skompilowane
+    do kodu maszynowego. Ponownie uderza to w NumPy. Biorąc pod uwagę że biblioteka Numba,
+    która również oferuje kompilację JIT została stworzona do współpracy z NumPy i w
+    takich scenariuszach radzi sobie najlepiej, zdecydowałem o porzuceniu prób wykorzystania
+    PyPy.
 
     \subsubsection{C/C++}
     Języki C i C++ nie zostały ujęte w zestawieniu, zamiast nich ujęty został język Rust.
-    Wszystkie trzy języki są kompilowane do kodu maszynowego. W przypadku środowiska którym
-    posługiwałem się podczas prac programistycznych wszystkie trzy byłyby kompilowane przy
-    pomocy LLVM, więc można oczekiwać że wykazywałyby one zbliżoną wydajność. Rust posiada
-    szereg zalet, które skłoniły mnie by go wykorzystać. Oferuje on wygodny i standaryzowany
-    ekosystem który pozwala w szybki sposób rozpocząć prace programistyczne, a potem
-    prowadzić je bez problemów związanych z kompilacją i obsługą zależności. Dodatkowo posiada
-    on system bezpiecznego zarządzania pamięcią który Uniemożliwia programiście popełnienie
-    błędów z nią związanych, jak wielokrotne dealokacje czy dostęp do pamięci
-    niezainicjowanej. Powoduje to że kod napisany w języku Rust jest bardziej niezawodny,
-    co w przypadku projektu realizowanego w ramach pracy dyplomowej jest ważnym
-    elementem. Języki C i C++ podobnego ekosystemu nie posiadają, więc wymagałyby
+    Wszystkie trzy języki są kompilowane do kodu maszynowego. W przypadku środowiska
+    którym posługiwałem się podczas prac programistycznych wszystkie trzy byłyby
+    kompilowane przy pomocy LLVM, więc można oczekiwać że wykazywałyby one zbliżoną wydajność.
+    Rust posiada szereg zalet, które skłoniły mnie by go wykorzystać. Oferuje on wygodny
+    i standaryzowany ekosystem który pozwala w szybki sposób rozpocząć prace
+    programistyczne, a potem prowadzić je bez problemów związanych z kompilacją i obsługą
+    zależności. Dodatkowo posiada on system bezpiecznego zarządzania pamięcią który
+    Uniemożliwia programiście popełnienie błędów z nią związanych, jak wielokrotne dealokacje
+    czy dostęp do pamięci niezainicjowanej. Powoduje to że kod napisany w języku Rust
+    jest bardziej niezawodny, co w przypadku projektu realizowanego w ramach pracy dyplomowej
+    jest ważnym elementem. Języki C i C++ podobnego ekosystemu nie posiadają, więc wymagałyby
     ręcznego stworzenia konfiguracji systemu budowania, prawdopodobnie w oparciu o CMake,
-    zebrania bibliotek i odkrycia w jaki sposób połączyć je z konfiguracją systemu
-    budowania oraz odpowiedniego spreparowania środowiska. Wszystko to byłoby znacznie bardziej
+    zebrania bibliotek i odkrycia w jaki sposób połączyć je z konfiguracją systemu budowania
+    oraz odpowiedniego spreparowania środowiska. Wszystko to byłoby znacznie bardziej
     pracochłonne niż w przypadku języka Rust. Uznałem więc że za ilość czasu koniecznego
     do stworzenia implementacji w oparciu o te języki nie idą żadne istotne korzyści.
 
@@ -1233,8 +1232,8 @@ Wiśniewski}
 
     \section{Wnioski}
     \subsection{Podsumowanie}
-    Dwa z pośród pięciu stworzonych przeze mnie wariantów kodu wykazały się znaczącą poprawą
-    wydajności względem oryginału. Najlepszą wydajność reprezentowały warianty:
+    Dwa z pośród pięciu stworzonych przeze mnie wariantów kodu wykazały się znaczącą
+    poprawą wydajności względem oryginału. Najlepszą wydajność reprezentowały warianty:
     \begin{itemize}
       \item napisany w języku Python, wykorzystujący bibliotekę NumPy i bibliotekę Numba
         pozwalającą na wykonywanie kompilacji JIT kodu Pythona, niezależnie od precyzji obliczeń
@@ -1243,20 +1242,18 @@ Wiśniewski}
       \item napisany w języku Rust, wykorzystujący biblioteki Ndarray i OpenBLAS, tylko w
         przypadku obliczeń pojedynczej precyzji. (do $7.4\times$ szybszy dla układów 6 kubitów)
     \end{itemize}
-    W kontekście otrzymanych wyników warto podkreślić że zaimplementowane wariantu pierwszego
-    było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a wariant drugi oferuje
-    tylko około 30\% krótszy czas pracy.
+    W kontekście otrzymanych wyników warto podkreślić że zaimplementowane wariantu
+    pierwszego było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a
+    wariant drugi oferuje tylko około 30\% krótszy czas pracy.
 
-    Na podstawie informacji uzyskanych podczas profilowania wariantu Rust z OpenBLAS
-    uznałem że większość potencjału optymalizacyjnego została wykorzystana i
-    prawdopodobnie nie jest możliwe by z użyciem posiadanego przeze mnie sprzętu i
-    oprogramowania uzyskać znaczący spadek czasu pracy. Wynika to z faktu że około 95\%
-    czasu pracy pochłaniają wysoce zoptymalizowane mnożenia macierzowe wykonywane przez
-    OpenBLAS.
+    Na podstawie informacji uzyskanych podczas profilowania wariantu Rust z OpenBLAS uznałem
+    że większość potencjału optymalizacyjnego została wykorzystana i prawdopodobnie nie jest
+    możliwe by z użyciem posiadanego przeze mnie sprzętu i oprogramowania uzyskać znaczący
+    spadek czasu pracy. Wynika to z faktu że około 95\% czasu pracy pochłaniają wysoce zoptymalizowane
+    mnożenia macierzowe wykonywane przez OpenBLAS.
 
     \subsection{Kod}
-    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie
-    GitHub:
+    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie GitHub:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New},
 
@@ -1266,8 +1263,8 @@ Wiśniewski}
     \end{enumerate}
 
     Dla każdego z tych repozytorium istnieje odpowiadający pakiet menadżera pakietów pip
-    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem języka
-    Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
+    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem
+    języka Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
     instalację następujących pakietów:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New_PyPI},
@@ -1277,8 +1274,8 @@ Wiśniewski}
       \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust_PyPI},
     \end{enumerate}
 
-    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera
-    języka Python w wersji 3.8 lub nowszej.
+    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera języka
+    Python w wersji 3.8 lub nowszej.
   \end{sloppypar}
   \newpage
   \begin{sloppypar}
