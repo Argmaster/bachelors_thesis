@@ -89,7 +89,7 @@ Wiśniewski}
   \begin{sloppypar}
     \section{Wstęp}
     Closest Separable State Finder (CSSFinder) jest programem pozwalającym na detekcję splątania
-    kwantowego układu oraz określenie jak silnie owe splątanie jest. Bazuje on na
+    kwantowego układu oraz określenie jak silnie owe splątanie jest. Opiera się on na
     dostosowanym algorytmie Elmera G. Gilberta\cite{Lindemann_Gilbert}, pozwalającym na wyliczenie
     przybliżonej wartości odległości Hilberta-Schmidta (ang. Hilberta-Schmidta distance,
     HSD) pomiędzy stanem kwantowym a zbiorem stanów separowanych. Działanie tego
@@ -519,7 +519,7 @@ Wiśniewski}
 
     \subsection{Precyzja obliczeń}
     Oryginalny program, jak i pierwsze stworzone przeze mnie re-implementacje posługiwały
-    się liczbami zespolonymi na bazie liczb zmiennoprzecinkowych podwójnej precyzji.
+    się liczbami zespolonymi na składającymi się z liczb zmiennoprzecinkowych podwójnej precyzji.
     Jedna taka liczba zajmuje 64 bity. Jednak w wielu przypadkach taka precyzja obliczeń
     nie jest konieczna do uzyskania poprawnych wyników. Podstawową zaletą wykorzystania
     liczb zmiennoprzecinkowych pojedynczej precyzji, czyli 32 bitowych, jest
@@ -1175,55 +1175,56 @@ Wiśniewski}
     wykluczone na etapie planowania, ponieważ istniały dla nich lepsze alternatywy.
 
     \subsubsection{PyTorch i TensorFlow}
-    Biblioteki TensorFlow i PyTorch zostały stworzone, aby ułatwić prace badaczy i inżynierów
-    pracujących nad uczeniem maszynowym i głębokim uczeniem. W obu znajdują się
-    implementacje tensorów oferujących pewien podzbiór funkcjonalności obiektów ndarray
-    z biblioteki NumPy. Prawdopodobnie zawierają one wystarczająco wiele elementów by zaimplementować
-    przy ich pomocy algorytm CSSF. Posiadają one również bardzo rozbudowany bagaż innych
-    elementów, które są bardzo pomocne gdy moduły te są używane do tworzenia sieci neuronowych,
-    ale są zupełnie zbędne dla programu CSSFinder. Jednocześnie biblioteka NumPy jest rozwiązaniem
-    bardziej powszechnym w podobnych scenariuszach i prawdopodobnie oferującym najlepszą
-    możliwą przepustowość obliczeniową, możliwą do uzyskania na CPU, biorąc pod uwagę że
-    wewnętrznie używa ona OpenBLAS. Uznałem, że czas konieczny do zaimplementowania algorytmu
-    CSSF przy pomocy PyTorch czy TensorFlow będzie niewspółmierny do spodziewanych zysków
-    wydajnościowych, więc lepiej czas ten poświęcić na rozważenie rozwiązań które rokują
-    lepiej.
+    Biblioteki TensorFlow i PyTorch zostały stworzone, aby ułatwić prace badaczy i
+    inżynierów pracujących nad uczeniem maszynowym i głębokim uczeniem. W obu znajdują się
+    implementacje tensorów oferujących pewien podzbiór funkcjonalności obiektów ndarray z
+    biblioteki NumPy. Prawdopodobnie zawierają one wystarczająco wiele elementów by
+    zaimplementować przy ich pomocy algorytm CSSF. Posiadają one również bardzo rozbudowany
+    bagaż innych elementów, które są bardzo pomocne gdy moduły te są używane do
+    tworzenia sieci neuronowych, ale są zupełnie zbędne dla programu CSSFinder.
+    Jednocześnie biblioteka NumPy jest rozwiązaniem bardziej powszechnym w podobnych
+    scenariuszach i prawdopodobnie oferującym najlepszą możliwą przepustowość
+    obliczeniową, możliwą do uzyskania na CPU, biorąc pod uwagę że wewnętrznie używa ona
+    OpenBLAS. Uznałem, że czas konieczny do zaimplementowania algorytmu CSSF przy pomocy
+    PyTorch czy TensorFlow będzie niewspółmierny do spodziewanych zysków wydajnościowych,
+    więc lepiej czas ten poświęcić na rozważenie rozwiązań które rokują lepiej.
 
     \subsubsection{PyPy}
-    PyPy jest alternatywną do CPythona implementacją języka Python. Oferuje ona wbudowany,
-    automatyczny tracing JIT compiler. Jednocześnie w dokumentacji tego interpretera zaznaczane
-    jest że najlepiej sprawuje się on z kodem który jest napisany w większości w języku Python,
-    a pakiety takie jak NumPy, napisane m. in. w C będą oferowały słabą wydajność\cite{PyPyPerformance}.
-    Ponadto w obecnym momencie wymaga on dedykowanych pakietów wheel podczas instalacji pakietów
-    z PyPI, co stwarza dodatkowy problem podczas instalacji zależności które
-    wykorzystują modły rozszerzeń skompilowane do kodu maszynowego. Ponownie uderza to w
-    NumPy. Biorąc pod uwagę że biblioteka Numba, która również oferuje kompilację JIT została
-    stworzona do współpracy z NumPy i w takich scenariuszach radzi sobie najlepiej,
-    zdecydowałem o porzuceniu prób wykorzystania PyPy.
+    PyPy jest alternatywną do CPythona implementacją języka Python. Oferuje ona
+    wbudowany, automatyczny tracing JIT compiler. Jednocześnie w dokumentacji tego
+    interpretera zaznaczane jest że najlepiej sprawuje się on z kodem który jest
+    napisany w większości w języku Python, a pakiety takie jak NumPy, napisane m. in. w
+    C będą oferowały słabą wydajność\cite{PyPyPerformance}. Ponadto w obecnym momencie
+    wymaga on dedykowanych pakietów wheel podczas instalacji pakietów z PyPI, co stwarza
+    dodatkowy problem podczas instalacji zależności które wykorzystują modły rozszerzeń skompilowane
+    do kodu maszynowego. Ponownie uderza to w NumPy. Biorąc pod uwagę że biblioteka Numba,
+    która również oferuje kompilację JIT została stworzona do współpracy z NumPy i w
+    takich scenariuszach radzi sobie najlepiej, zdecydowałem o porzuceniu prób wykorzystania
+    PyPy.
 
     \subsubsection{C/C++}
     Języki C i C++ nie zostały ujęte w zestawieniu, zamiast nich ujęty został język Rust.
-    Wszystkie trzy języki są kompilowane do kodu maszynowego. W przypadku środowiska którym
-    posługiwałem się podczas prac programistycznych wszystkie trzy byłyby kompilowane przy
-    pomocy LLVM, więc można oczekiwać że wykazywałyby one zbliżoną wydajność. Rust posiada
-    szereg zalet, które skłoniły mnie by go wykorzystać. Oferuje on wygodny i standaryzowany
-    ekosystem który pozwala w szybki sposób rozpocząć prace programistyczne, a potem
-    prowadzić je bez problemów związanych z kompilacją i obsługą zależności. Dodatkowo posiada
-    on system bezpiecznego zarządzania pamięcią który Uniemożliwia programiście popełnienie
-    błędów z nią związanych, jak wielokrotne dealokacje czy dostęp do pamięci
-    niezainicjowanej. Powoduje to że kod napisany w języku Rust jest bardziej niezawodny,
-    co w przypadku projektu realizowanego w ramach pracy dyplomowej jest ważnym
-    elementem. Języki C i C++ podobnego ekosystemu nie posiadają, więc wymagałyby
+    Wszystkie trzy języki są kompilowane do kodu maszynowego. W przypadku środowiska
+    którym posługiwałem się podczas prac programistycznych wszystkie trzy byłyby
+    kompilowane przy pomocy LLVM, więc można oczekiwać że wykazywałyby one zbliżoną wydajność.
+    Rust posiada szereg zalet, które skłoniły mnie by go wykorzystać. Oferuje on wygodny
+    i standaryzowany ekosystem który pozwala w szybki sposób rozpocząć prace
+    programistyczne, a potem prowadzić je bez problemów związanych z kompilacją i obsługą
+    zależności. Dodatkowo posiada on system bezpiecznego zarządzania pamięcią który
+    Uniemożliwia programiście popełnienie błędów z nią związanych, jak wielokrotne dealokacje
+    czy dostęp do pamięci niezainicjowanej. Powoduje to że kod napisany w języku Rust
+    jest bardziej niezawodny, co w przypadku projektu realizowanego w ramach pracy dyplomowej
+    jest ważnym elementem. Języki C i C++ podobnego ekosystemu nie posiadają, więc wymagałyby
     ręcznego stworzenia konfiguracji systemu budowania, prawdopodobnie w oparciu o CMake,
-    zebrania bibliotek i odkrycia w jaki sposób połączyć je z konfiguracją systemu
-    budowania oraz odpowiedniego spreparowania środowiska. Wszystko to byłoby znacznie bardziej
+    zebrania bibliotek i odkrycia w jaki sposób połączyć je z konfiguracją systemu budowania
+    oraz odpowiedniego spreparowania środowiska. Wszystko to byłoby znacznie bardziej
     pracochłonne niż w przypadku języka Rust. Uznałem więc że za ilość czasu koniecznego
     do stworzenia implementacji w oparciu o te języki nie idą żadne istotne korzyści.
 
     \section{Wnioski}
     \subsection{Podsumowanie}
-    Dwa z pośród pięciu stworzonych przeze mnie wariantów kodu wykazały się znaczącą
-    poprawą wydajności względem oryginału. Najlepszą wydajność reprezentowały warianty:
+    Dwa z pośród pięciu stworzonych przeze mnie wariantów kodu wykazały się znaczącą poprawą
+    wydajności względem oryginału. Najlepszą wydajność reprezentowały warianty:
     \begin{itemize}
       \item napisany w języku Python, wykorzystujący bibliotekę NumPy i bibliotekę Numba
         pozwalającą na wykonywanie kompilacji JIT kodu Pythona, niezależnie od precyzji obliczeń
@@ -1232,19 +1233,18 @@ Wiśniewski}
       \item napisany w języku Rust, wykorzystujący biblioteki Ndarray i OpenBLAS, tylko w
         przypadku obliczeń pojedynczej precyzji. (do $7.4\times$ szybszy dla układów 6 kubitów)
     \end{itemize}
-    W kontekście otrzymanych wyników warto podkreślić że zaimplementowane wariantu
-    pierwszego było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a
-    wariant drugi oferuje tylko około 30\% krótszy czas pracy.
+    W kontekście otrzymanych wyników warto podkreślić że zaimplementowane wariantu pierwszego
+    było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a wariant drugi oferuje
+    tylko około 30\% krótszy czas pracy.
 
-    Z informacji uzyskanych podczas profilowania wariantu Rust z OpenBLAS wynika, że
-    około 95\% czasu pracy pochłaniają wysoce zoptymalizowane mnożenia macierzowe wykonywane
-    przez OpenBLAS. Uznaję więc że wykorzystałem większość potencjału optymalizacyjnego
-    i prawdopodobnie nie jestem w stanie, z użyciem posiadanego przeze mnie sprzętu i oprogramowania,
-    uzyskać dalszego znaczącego skrócenia czasu pracy.
+    Z informacji uzyskanych podczas profilowania wariantu Rust z OpenBLAS wynika, że około
+    95\% czasu pracy pochłaniają wysoce zoptymalizowane mnożenia macierzowe wykonywane
+    przez OpenBLAS. Uznaję więc że wykorzystałem większość potencjału optymalizacyjnego i
+    prawdopodobnie nie jestem w stanie, z użyciem posiadanego przeze mnie sprzętu i
+    oprogramowania, uzyskać dalszego znaczącego skrócenia czasu pracy.
 
     \subsection{Kod}
-    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie
-    GitHub:
+    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie GitHub:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New},
 
@@ -1254,8 +1254,8 @@ Wiśniewski}
     \end{enumerate}
 
     Dla każdego z tych repozytorium istnieje odpowiadający pakiet menadżera pakietów pip
-    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem języka
-    Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
+    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem
+    języka Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
     instalację następujących pakietów:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New_PyPI},
@@ -1265,8 +1265,8 @@ Wiśniewski}
       \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust_PyPI},
     \end{enumerate}
 
-    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera
-    języka Python w wersji 3.8 lub nowszej.
+    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera języka
+    Python w wersji 3.8 lub nowszej.
   \end{sloppypar}
   \newpage
   \begin{sloppypar}
