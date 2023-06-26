@@ -1211,19 +1211,18 @@ Wiśniewski}
       \item napisany w języku Rust, wykorzystujący biblioteki Ndarray i OpenBLAS, tylko w
         przypadku obliczeń pojedynczej precyzji. (do $7.4\times$ szybszy dla układów 6 kubitów)
     \end{itemize}
-    W kontekście otrzymanych wyników warto podkreślić, że zaimplementowanie wariantu pierwszego
-    było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a wariant drugi oferuje
-    tylko około 30\% krótszy czas pracy.
+    W kontekście otrzymanych wyników warto podkreślić, że zaimplementowanie wariantu
+    pierwszego było procesem znacznie szybszym, niż stworzenie wariantu drugiego, a
+    wariant drugi oferuje tylko około 30\% krótszy czas pracy.
 
-    Z informacji uzyskanych podczas profilowania wariantu Rust z OpenBLAS wynika, że około
-    95\% czasu pracy pochłaniają wysoce zoptymalizowane mnożenia macierzowe wykonywane
+    Z informacji uzyskanych podczas profilowania wariantu Rust z OpenBLAS wynika, że
+    około 95\% czasu pracy pochłaniają wysoce zoptymalizowane mnożenia macierzowe wykonywane
     przez OpenBLAS. Uznaję więc, że wykorzystałem większość potencjału optymalizacyjnego
-    i prawdopodobnie nie jestem w stanie, z użyciem posiadanego przeze mnie sprzętu i oprogramowania,
-    uzyskać dalszego znaczącego skrócenia czasu pracy.
+    i prawdopodobnie nie jestem w stanie, z użyciem posiadanego przeze mnie sprzętu i
+    oprogramowania, uzyskać dalszego znaczącego skrócenia czasu pracy.
 
     \subsection{Kod}
-    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie
-    GitHub:
+    Stworzony przeze mnie kod został zamieszczony w trzech repozytoriach w serwisie GitHub:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New},
 
@@ -1233,8 +1232,8 @@ Wiśniewski}
     \end{enumerate}
 
     Dla każdego z tych repozytorium istnieje odpowiadający pakiet menadżera pakietów pip
-    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem języka
-    Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
+    zamieszczony na serwerze PyPI. Zostały one utworzone w sposób zgodny z ekosystemem
+    języka Python. Pozwala to w bardzo prosty sposób rozpocząć korzystanie z programu poprzez
     instalację następujących pakietów:
     \begin{enumerate}
       \item cssfinder\cite{CSSFinder_New_PyPI},
@@ -1244,15 +1243,74 @@ Wiśniewski}
       \item cssfinder\_backend\_rust\cite{CSSFinder_New_Rust_PyPI},
     \end{enumerate}
 
-    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera
-    języka Python w wersji 3.8 lub nowszej.
+    Pakiety są kompatybilne z systemami Linux, MacOS i Windows. Wymagają interpretera języka
+    Python w wersji 3.8 lub nowszej.
   \end{sloppypar}
   \newpage
+
+
   \begin{sloppypar}
     \medskip
-
-
     \printbibliography
     [heading=bibintoc, title={Odwołania}]
+  \end{sloppypar}
+
+  \newpage
+
+
+  \begin{sloppypar}
+    \raggedleft \normalsize Załącznik nr 3 do zarządzenia Rektora UG nr 70/R/15
+
+    \vspace{2.5cm}
+
+
+    \centering
+    \Large \textbf{OŚWIADCZENIE}
+
+    \vspace{2.5cm}
+
+
+    Wyrażam zgodę na udostępnienie osobom zainteresowanym mojej pracy dyplomowej dla
+    celów naukowo-badawczych. Zgoda na udostępnienie pracy dyplomowej nie oznacza wyrażenia
+    zgody na kopiowanie pracy dyplomowej w całości lub w części.
+
+    \vspace{2.5cm}
+    \centering
+
+
+    \hspace{1.2cm} 26.06.2023 \hspace{6.5cm}
+    \includegraphics[height=1cm]{"resources/signature.jpg"}
+    \hspace{3.5cm} \\ \hspace{0.7cm} \dotfill \hspace{3cm} \dotfill \hspace{1cm} \\
+    \hspace{1cm} \small{data} \hspace{8cm} \small{podpis}
+  \end{sloppypar}
+
+  \newpage
+
+
+  \begin{sloppypar}
+    \raggedleft \normalsize Załącznik nr 1 do zarządzenia Rektora UG nr 70/R/15 ze zm.
+
+    \vspace{2.5cm}
+
+
+    \centering
+    \Large \textbf{OŚWIADCZENIE}
+
+    \vspace{2.5cm}
+
+
+    Oświadczam, że przedłożona praca dyplomowa została przygotowana przeze mnie
+    samodzielnie, nie narusza praw autorskich, interesów prawnych i materialnych innych
+    osób oraz wykorzystanie materiałów wytworzonych przez generatywne narzędzia
+    sztucznej inteligencji odbyło się w zakresie uzgodnionym z promotorem.
+
+    \vspace{2.5cm}
+    \centering
+
+
+    \hspace{1.2cm} 26.06.2023 \hspace{6.5cm}
+    \includegraphics[height=1cm]{"resources/signature.jpg"}
+    \hspace{3.5cm} \\ \hspace{0.7cm} \dotfill \hspace{3cm} \dotfill \hspace{1cm} \\ \hspace{1cm}
+    \small{data} \hspace{8cm} \small{podpis}
   \end{sloppypar}
 \end{document}
