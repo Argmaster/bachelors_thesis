@@ -40,6 +40,7 @@
         "podfunkcji",
         "podprojektu",
         "qubitach",
+        "rekompilowane",
         "Rossum",
         "rustc",
         "Ryzen",
@@ -63,8 +64,8 @@
     ],
     "[latex]": {
         "editor.wordWrap": "wordWrapColumn",
-        "editor.wrappingIndent": "same",
-        "editor.wordWrapColumn": 110,
+        "editor.wrappingIndent": "none",
+        "editor.wordWrapColumn": 180,
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "indentRainbow.ignoreErrorLanguages": ["bibtex", "markdown", "latex", "tex"],

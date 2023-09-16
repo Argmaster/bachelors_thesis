@@ -1,0 +1,22 @@
+Praca pod tytułem "Optymalizacja oprogramowania do detekcji splątania kwantowego" dotyczy
+optymalizacji wydajności programu CSSFinder, służącego do detekcji splątania kwantowego.
+Program ten jest oparty o algorytm Gilberta i dokonuje analizy stanu kwantowego opisanego
+macierzą gęstości. Celem pracy była znacząca redukcja czasu wykonania programu, aby umożliwić
+analizę większej ilości stanów kwantowych.
+W ramach tej pracy rozpatruję wydajność czasową pięciu alternatywnych implementacji algorytmu.
+Trzy z nich powstały w języku Python w oparciu o bibliotekę NumPy, dwie w języku Rust z
+użyciem biblioteki Ndarray. Poszczególne implementacje sięgały również po dodatkowe rozwiązania
+pozwalające na skrócenie czasu pracy. Oprócz efektów zmiany narzędzi, wykorzystanych do
+zaimplementowania programu, badałem również wpływ precyzji wykorzystywanych liczb
+zmiennoprzecinkowych na wydajność. Każda z implementacji powstała w dwóch wariantach.
+Pierwszy został oparty o liczby podwójnej precyzji, a drugi wykorzystywał liczby podwójnej
+precyzji. Do testów wykorzystano sześć macierzy gęstości o różnych rozmiarach, wszystkie
+pomiary powtarzano pięciokrotnie.
+Udało mi się osiągnąć znaczące skrócenie czasu pracy programu. Najwydajniejsza implementacja,
+z pośród napisanych w języku Python, była do 4.3× szybsza dla układu 6 kubitów względem
+oryginalnego programu, niezależnie od precyzji obliczeń.
+W przypadku wariantów napisanych z użyciem języka Rust największe skrócenie czasu pracy
+wyniosło 7.4× dla układu 6 kubitów, w przypadku obliczeń pojedynczej precyzji.
+W przypadku mniejszych układów skrócenie czasu pracy było również istotne i zostało
+opisane w pracy.
+Stworzony kod został opublikowany w serwisach GitHub oraz PyPI na licencji MIT.
